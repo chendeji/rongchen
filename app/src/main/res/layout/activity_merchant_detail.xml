@@ -1,0 +1,136 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.chendeji.rongchen.ui.merchant.MerchantDetailActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_merchant_detail"
+        style="@style/ToolBar_Style">
+
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:id="@+id/sv_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- 商户顶部图像布局 代碼完成-->
+            <com.chendeji.rongchen.ui.merchant.view.MerchantTopImageView
+                android:id="@+id/ctiv_commontopimageview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- 商戶各個部分信息 分塊展示 代碼完成 -->
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/horizontal_10dp"
+                android:elevation="2dp"
+                app:cardCornerRadius="4dp">
+
+                <RelativeLayout
+                    android:id="@+id/rl_merchant_contact_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="@dimen/horizontal_10dp">
+
+                    <com.rey.material.widget.Button
+                        android:id="@+id/bt_call_merchant"
+                        style="@style/FlatColorButtonRippleStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:text="@string/make_call"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+                        android:textColor="@color/common_button_textcolor"
+                        app:rd_delayClick="afterRelease" />
+
+                    <TextView
+                        android:id="@+id/tv_address"
+                        style="@style/common_max_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerInParent="true"
+                        android:layout_toLeftOf="@id/bt_call_merchant"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/horizontal_10dp"
+                android:elevation="2dp"
+                app:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:id="@+id/ll_deal_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_group_purchase_count"
+                        style="@style/common_max_text_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textColor="@color/common_button_textcolor"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/horizontal_10dp"
+                android:elevation="2dp"
+                app:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:id="@+id/ll_comment_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_comment_title"
+                        style="@style/common_max_text_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@string/comment_title"
+                        android:textColor="@color/common_button_textcolor"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

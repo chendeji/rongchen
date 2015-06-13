@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chendeji.rongchen.ui.map.MapActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bt_take_bus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_directions_bus_black_48dp"
+                android:gravity="center"
+                android:text="公交"
+                android:textColor="@color/blue" />
+
+            <Button
+                android:id="@+id/bt_drive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_directions_car_black_48dp"
+                android:gravity="center"
+                android:text="自驾"
+                android:textColor="@color/blue" />
+
+            <Button
+                android:id="@+id/bt_walk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_directions_walk_black_48dp"
+                android:gravity="center"
+                android:text="步行"
+                android:textColor="@color/blue" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/merchant_list_item_height"
+    android:padding="@dimen/horizontal_10dp"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/iv_merchant_item_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:background="@drawable/ic_launcher"
+        android:scaleType="center" />
+
+    <TextView
+        android:id="@+id/tv_merchant_item_title"
+        style="@style/common_max_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_merchant_item_image"
+        android:layout_marginLeft="@dimen/horizontal_16dp_margin"
+        android:layout_toRightOf="@id/iv_merchant_item_image"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="商户名称"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <com.chendeji.rongchen.common.view.CommonRatingBar
+        android:id="@+id/iv_merchant_item_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_merchant_item_image"
+        android:layout_alignLeft="@id/tv_merchant_item_title" />
+
+    <com.chendeji.rongchen.common.view.SpanableTextView
+        android:id="@+id/st_merhant_item_avg_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_merchant_item_image"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>

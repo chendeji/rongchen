@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/iv_merchant_avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:scaleType="center"
+         />
+
+    <TextView
+        android:id="@+id/tv_item_merchant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/iv_merchant_avatar"
+        android:textSize="15sp" />
+
+    <com.chendeji.rongchen.common.view.CommonRatingBar
+        android:id="@+id/iv_merchant_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_item_merchant_name"
+        android:layout_below="@+id/tv_item_merchant_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
+
+
+    <TextView
+        android:id="@+id/tv_merchant_commont_count"
+        style="@style/item_small_gray_text"
+        android:layout_below="@id/tv_item_merchant_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/iv_merchant_rating" />
+
+    <TextView
+        android:id="@+id/tv_avg_price"
+        style="@style/item_right_small_gray_text"
+        android:layout_marginRight="5dp"
+        android:layout_alignBaseline="@id/tv_merchant_commont_count"
+        android:layout_alignParentRight="true" />
+
+</merge>

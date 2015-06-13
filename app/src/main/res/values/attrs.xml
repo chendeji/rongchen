@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SwipyRefreshLayout">
+        <attr name="direction">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+            <enum name="both" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="FloatingActionMenu">
+        <attr name="radius" format="dimension"/>
+        <attr name="animation">
+            <enum name="order" value="0"/>
+        </attr>
+    </declare-styleable>
+</resources>

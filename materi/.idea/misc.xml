@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleLocalSettings">
+    <option name="modificationStamps">
+      <map>
+        <entry key="$USER_HOME$/Documents/my_project/Rongcheng" value="4263452081000" />
+        <entry key="$PROJECT_DIR$/../../../../AndroidRecyclerViewDemo-master" value="4274631360000" />
+        <entry key="$PROJECT_DIR$/../../../../AndroidstudioProjects/rongcheng" value="5670029420000" />
+        <entry key="$PROJECT_DIR$/../../../../AndroidstudioProjects/rongcheng/rongcheng" value="5670029420000" />
+        <entry key="$PROJECT_DIR$/../../../../material-master" value="5729320929000" />
+        <entry key="$PROJECT_DIR$/../../../AndroidMaterialDesignToolbar-master" value="4291040934000" />
+        <entry key="$PROJECT_DIR$/../../../android-PullRefreshLayout-master" value="5723473432000" />
+        <entry key="$PROJECT_DIR$/../../../android-PullRefreshLayout-master/sample" value="5723701926000" />
+        <entry key="$PROJECT_DIR$/../../AndroidMaterialDesignToolbar-master" value="4294102411000" />
+        <entry key="$PROJECT_DIR$/../../AndroidStaggeredGrid-master" value="5616535536000" />
+        <entry key="$PROJECT_DIR$/../../ArcAnimator-master" value="5705443920000" />
+        <entry key="$PROJECT_DIR$/../../ArcAnimator-master/sample" value="5715221117000" />
+        <entry key="$PROJECT_DIR$/../../BabushkaText-master" value="5717621139000" />
+        <entry key="$PROJECT_DIR$/../../MaterialDesignDemo" value="5730623623000" />
+        <entry key="$PROJECT_DIR$/../../MaterialDesignLibrary-master" value="5730627748000" />
+        <entry key="$PROJECT_DIR$/../../SwipyRefreshLayout-master" value="5732496008000" />
+        <entry key="$PROJECT_DIR$/../../android-PullRefreshLayout-master" value="5723702008000" />
+        <entry key="$PROJECT_DIR$/.." value="5729322817000" />
+        <entry key="$PROJECT_DIR$/../../material-ripple-master" value="7153984750000" />
+        <entry key="$PROJECT_DIR$/../../../material-ripple-master" value="7153984750000" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+</project>
+

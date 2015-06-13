@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/iv_deal_avator"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/horizontal_16dp_margin"
+        android:background="@drawable/ic_launcher" />
+
+
+    <TextView
+        android:id="@+id/tv_deal_name"
+        style="@style/common_middle_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/horizontal_16dp_margin"
+        android:layout_toRightOf="@id/iv_deal_avator"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textStyle="bold" />
+
+
+</merge>

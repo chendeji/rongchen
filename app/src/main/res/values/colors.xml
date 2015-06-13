@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">@android:color/white</color>
+    <color name="black">#000000</color>
+    <color name="dimgray">#696969</color><!--暗灰色 -->
+    <color name="gray">#EEEEEE</color><!--暗灰色 -->
+    <color name="gray_text">#5F5F5F</color>
+
+    <color name="dark_red">#9E0719</color>
+    <color name="light_red">#FFC93437</color>
+    <color name="yellow">#FFF7D23E</color>
+    <color name="green">#FF34A350</color>
+    <color name="blue">#2196F3</color>
+
+
+    <color name="colorPrimary">#FF03A9F4</color>
+    <color name="colorPrimaryDark">#ff0171c9</color>
+    <color name="colorAccent">#FF00E5FF</color>
+    <color name="colorControlNormal">#FF78909C</color>
+    <color name="colorControlActivated">#FF03A9F4</color>
+    <color name="colorSwitchThumbNormal">#FF78909C</color>
+    <color name="common_button_textcolor">#FF2196F3</color>
+
+</resources>

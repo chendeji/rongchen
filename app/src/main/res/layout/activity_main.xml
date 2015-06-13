@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.chendeji.rongchen.ui.merchant.MerchantListActivity">
+
+    <!--<com.handmark.pulltorefresh.library.PullToRefreshListView-->
+    <!--android:id="@+id/lv_merchant_list"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"/>-->
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        style="@style/ToolBar_Style" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.chendeji.rongchen.common.view.SwipyRefreshLayout
+            android:id="@+id/sr_reflesh_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:clipToPadding="false"
+                android:fadingEdge="none"
+                android:paddingTop="@dimen/horizontal_10dp" />
+
+            <!--<ListView-->
+            <!--android:id="@+id/lv_merchants"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="@dimen/horizontal_16dp_margin"-->
+            <!--android:paddingRight="@dimen/horizontal_16dp_margin"-->
+            <!--android:divider="@android:color/transparent"-->
+            <!--android:scrollbars="none"-->
+            <!--android:listSelector="@android:color/transparent"-->
+            <!--android:cacheColorHint="@android:color/transparent"-->
+            <!--android:dividerHeight="@dimen/horizontal_10dp"></ListView>-->
+
+        </com.chendeji.rongchen.common.view.SwipyRefreshLayout>
+
+        <com.rey.material.widget.FloatingActionButton
+            android:id="@+id/fab_image"
+            style="@style/Main_FAB_Light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp" />
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,79 @@
+<resources>
+
+    <style name="item_small_gray_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="item_right_small_gray_text" parent="item_small_gray_text">
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="common_rating_bar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/common_ratingbar</item>
+        <item name="android:minHeight">25dp</item>
+        <item name="android:maxHeight">25dp</item>
+        <item name="android:isIndicator">true</item>
+    </style>
+    
+    <style name="common_small_text_size">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="common_middle_text_size">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="common_max_text_size">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="common_huge_text_size">
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="ToolBar_Style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/horizental_24dp_margin</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+    </style>
+
+    <style name="SimpleDialog" parent="Material.App.Dialog.Simple">
+        <item name="di_inAnimation">@anim/anim_scale_in</item>
+        <item name="di_outAnimation">@anim/anim_scale_out</item>
+    </style>
+
+    <style name="COMMON_BLUR_TEXT_WIDGET_SMALL" parent="common_small_text_size">
+        <item name="android:textColor">@color/common_button_textcolor</item>
+    </style>
+
+    <style name="COMMON_BLUR_TEXT_WIDGET_MIDDLE" parent="common_middle_text_size">
+        <item name="android:textColor">@color/common_button_textcolor</item>
+    </style>
+
+    <style name="COMMON_BLUR_TEXT_WIDGET_MAX" parent="common_max_text_size">
+        <item name="android:textColor">@color/common_button_textcolor</item>
+    </style>
+
+    <style name="COMMON_BLUR_TEXT_WIDGET_HUGE" parent="common_huge_text_size">
+        <item name="android:textColor">@color/common_button_textcolor</item>
+    </style>
+
+    <style name="Main_FAB_Light" parent="Material.Widget.FloatingActionButton.Light">
+        <item name="fab_backgroundColor">?attr/colorPrimary</item>
+        <!--<item name="rd_backgroundColor">?attr/colorPrimary</item>-->
+        <item name="rd_rippleColor">?attr/colorPrimaryDark</item>
+    </style>
+
+    <style name="FlatColorButtonRippleStyle" parent="Material.Drawable.Ripple.Touch.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_backgroundColor">#33219AFF</item>
+        <item name="rd_rippleColor">#33219AFF</item>
+        <item name="rd_cornerRadius">4dp</item>
+    </style>
+
+</resources>
