@@ -1,7 +1,6 @@
 package com.chendeji.rongchen.ui.map;
 
 import android.os.Bundle;
-import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,12 +9,14 @@ import android.view.MenuItem;
 import android.widget.RadioGroup;
 
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.common.map.IMap;
 import com.chendeji.rongchen.common.map.MapManager;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.rey.material.widget.ListView;
 import com.rey.material.widget.TextView;
 
-public class RouteActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
+public class RouteActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,
+        ViewPager.OnPageChangeListener {
 
     public static final int REQUEST_KEY = 100;
     private int mRouteType;
@@ -39,13 +40,15 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
     private double[] end_point_location;
     private double[] start_point_location;
     private Merchant merchant;
+    private IMap iMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_road_line_planning);
 
-        start_point_location = MapManager.getManager().getMap().getLocation();
+        iMap = MapManager.getManager().getMap();
+        start_point_location = iMap.getLocation();
         route_type = getIntent().getIntExtra(RouteActivity.ROUTE_TYPE, -1);
         merchant = (Merchant) getIntent().getSerializableExtra(RouteActivity.END_POINT_LOCATION_KEY);
         end_point_location = new double[]{merchant.latitude, merchant.longitude};
@@ -61,7 +64,7 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
     }
 
     private void startRoute() {
-
+        iMap.startRoute(this, start_point_location, end_point_location, route_type);
     }
 
     private void setData() {
@@ -127,4 +130,6 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
     public void onPageScrollStateChanged(int state) {
 
     }
+
+
 }

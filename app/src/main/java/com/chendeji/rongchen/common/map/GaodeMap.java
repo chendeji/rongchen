@@ -19,6 +19,11 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.BusRouteResult;
+import com.amap.api.services.route.DriveRouteResult;
+import com.amap.api.services.route.RouteSearch;
+import com.amap.api.services.route.WalkRouteResult;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
 
@@ -27,7 +32,7 @@ import java.io.Serializable;
 /**
  * Created by chendeji on 19/4/15.
  */
-public class GaodeMap implements IMap, LocationSource, AMapLocationListener {
+public class GaodeMap implements IMap, LocationSource, AMapLocationListener, RouteSearch.OnRouteSearchListener {
     private static final String TAG = GaodeMap.class.getSimpleName();
 
     private Context mContext;
@@ -46,9 +51,15 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener {
     private Marker merchantMarker;
     private LatLng mMerchantLocation;   //商户的地址
     private boolean isShowMerchantPosition;
+    private String mCity;
+    private RouteSearch routeSearch;
 
     public GaodeMap(Context context) {
         this.mContext = context;
+    }
+
+    public String getLocalCity(){
+        return this.mCity;
     }
 
     @Override
@@ -90,6 +101,8 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener {
         double latitude = aMapLocation.getLatitude();
         double longitude = aMapLocation.getLongitude();
         Logger.i(TAG, "latitude:" + latitude + "longitude:" + longitude);
+
+        this.mCity = aMapLocation.getCity();
 
         //TODO 设置标识，是否在路线规划
         if (onLocationChangeListener != null && !isShowMerchantPosition) {
@@ -264,6 +277,19 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener {
 
     }
 
+    @Override
+    public void startRoute(Context context, double[] start_point_location, double[] end_point_location, int route_type) {
+        routeSearch = new RouteSearch(context);
+        routeSearch.setRouteSearchListener(this);
+
+        RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
+                new LatLonPoint(start_point_location[0], start_point_location[1]),
+                new LatLonPoint(end_point_location[0], end_point_location[1]));
+
+        RouteSearch.BusRouteQuery query = new RouteSearch.BusRouteQuery(fromAndTo, RouteSearch.BusLeaseWalk, getLocalCity(), 0);
+        routeSearch.calculateBusRouteAsyn(query);
+    }
+
 //    @Override
 //    public void setOnMarkeClickListener(OnMapMarkeClickListener listener) {
 //        this.mOnMarkClickListener = listener;
@@ -291,5 +317,20 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener {
         if (location == null)
             throw new NullPointerException("定位失敗");
         return location;
+    }
+
+    @Override
+    public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
+
     }
 }

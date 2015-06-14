@@ -43,6 +43,11 @@ public class BaiduMap implements IMap {
     }
 
     @Override
+    public String getLocalCity() {
+        return null;
+    }
+
+    @Override
     public void onResume() {
 
     }
@@ -59,6 +64,11 @@ public class BaiduMap implements IMap {
 
     @Override
     public void showRoute(Serializable serializableExtra) {
+
+    }
+
+    @Override
+    public void startRoute(Context context, double[] start_point_location, double[] end_point_location, int route_type) {
 
     }
 
