@@ -116,8 +116,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
                 //TODO 开启地图导航
                 Intent intent = new Intent(MerchantDetailActivity.this, MapActivity.class);
                 Logger.i("chendeji","latitude:" + merchant.latitude + "longitude:"+merchant.longitude);
-                double[] location = new double[]{merchant.latitude, merchant.longitude};
-                intent.putExtra(MapActivity.LOCATION_KEY, location);
+                intent.putExtra(MapActivity.LOCATION_KEY, merchant);
                 MerchantDetailActivity.this.startActivity(intent);
             }
         });

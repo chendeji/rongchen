@@ -86,21 +86,57 @@
         </RelativeLayout>
 
     </LinearLayout>
+    <RadioGroup
+        android:id="@+id/rg_route_type_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rt_bus_button"
+            android:padding="@dimen/horizontal_16dp_margin"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_directions_bus_black_48dp"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:text="公交"
+            />
+        <RadioButton
+            android:id="@+id/rt_car_button"
+            android:padding="@dimen/horizontal_16dp_margin"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:drawableLeft="@drawable/ic_directions_car_black_48dp"
+            android:text="汽车"
+            />
+        <RadioButton
+            android:id="@+id/rt_walk_button"
+            android:padding="@dimen/horizontal_16dp_margin"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:drawableLeft="@drawable/ic_directions_walk_black_48dp"
+            android:text="步行"
+            />
+
+    </RadioGroup>
+    <View
+        android:id="@+id/route_type_direction"
+        android:layout_width="@dimen/horizontal_16dp_margin"
+        android:layout_height="3dp"
+        android:background="@color/blue"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_route"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.v4.view.PagerTitleStrip
-            android:id="@+id/pager_title_strip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="@color/white"
-            android:paddingBottom="@dimen/horizontal_10dp"
-            android:textColor="@color/common_button_textcolor" />
-
     </android.support.v4.view.ViewPager>
 
 </LinearLayout>

@@ -13,6 +13,7 @@ import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.map.IMap;
 import com.chendeji.rongchen.common.map.MapManager;
+import com.chendeji.rongchen.model.merchant.Merchant;
 import com.rey.material.app.SimpleDialog;
 
 import java.io.Serializable;
@@ -28,8 +29,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     private Button take_bus;
     private Button drive;
     private Button walk;
-    private double[] location;
     private SimpleDialog.Builder builder;
+    private Merchant merchant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         initEvent();
         map_container = (LinearLayout) findViewById(R.id.ll_map);
         map = MapManager.getManager().getMap();
-        location = getIntent().getDoubleArrayExtra(LOCATION_KEY);
-        map.show(this,map_container,savedInstanceState, location);
+        merchant = (Merchant) getIntent().getSerializableExtra(LOCATION_KEY);
+        map.show(this,map_container,savedInstanceState, new double[]{merchant.latitude, merchant.longitude});
     }
 
 
@@ -77,7 +78,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     private void startRoute(int route_type) {
         Intent intent = new Intent(this, RouteActivity.class);
         intent.putExtra(RouteActivity.ROUTE_TYPE, route_type);
-        intent.putExtra(RouteActivity.END_POINT_LOCATION_KEY, location);
+        intent.putExtra(RouteActivity.END_POINT_LOCATION_KEY, merchant);
         startActivityForResult(intent, RouteActivity.REQUEST_KEY);
     }
 
