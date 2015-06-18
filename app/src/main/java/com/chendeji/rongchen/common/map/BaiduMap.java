@@ -63,12 +63,17 @@ public class BaiduMap implements IMap {
     }
 
     @Override
-    public void showRoute(Serializable serializableExtra) {
+    public void showRoute(Object path) {
 
     }
 
     @Override
     public void startRoute(Context context, double[] start_point_location, double[] end_point_location, int route_type) {
+
+    }
+
+    @Override
+    public void setOnSearchRouteListener(OnSearchRouteListener listener) {
 
     }
 

@@ -21,4 +21,18 @@
     <color name="colorSwitchThumbNormal">#FF78909C</color>
     <color name="common_button_textcolor">#FF2196F3</color>
 
+
+    <array name="progress_colors">
+        <item>#FF3F8AF8</item>
+        <item>#FFD8433C</item>
+        <item>#FFF2AF3A</item>
+        <item>#FF279B5E</item>
+    </array>
+
+    <array name="in_colors">
+        <item>#FFB5D4FF</item>
+        <item>#FFDEEAFC</item>
+        <item>#FFFAFFFE</item>
+    </array>
+
 </resources>

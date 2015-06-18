@@ -14,6 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMapException;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.NaviPara;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
@@ -114,6 +118,13 @@ public class MerchantDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO 开启地图导航
+//                try {
+//                    NaviPara para = new NaviPara();
+//                    para.setTargetPoint(new LatLng(merchant.latitude, merchant.longitude));
+//                    AMapUtils.openAMapNavi(para, MerchantDetailActivity.this);
+//                } catch (AMapException e) {
+//                    ToastUtil.showLongToast(MerchantDetailActivity.this, e.getErrorMessage());
+//                }
                 Intent intent = new Intent(MerchantDetailActivity.this, MapActivity.class);
                 Logger.i("chendeji","latitude:" + merchant.latitude + "longitude:"+merchant.longitude);
                 intent.putExtra(MapActivity.LOCATION_KEY, merchant);

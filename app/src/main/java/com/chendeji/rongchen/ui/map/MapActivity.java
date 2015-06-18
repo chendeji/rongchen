@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.amap.api.services.route.Path;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.map.IMap;
 import com.chendeji.rongchen.common.map.MapManager;
 import com.chendeji.rongchen.model.merchant.Merchant;
+import com.chendeji.rongchen.ui.map.view.CommonRouteListView;
 import com.rey.material.app.SimpleDialog;
 
 import java.io.Serializable;
@@ -85,9 +87,9 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
         if (requestCode == RESULT_OK){
-            Serializable routeResult = intent.getSerializableExtra(RouteActivity.Route);
+            Path path = intent.getParcelableExtra(CommonRouteListView.PATH);
             Logger.i(TAG, "routeResult:"+requestCode);
-            map.showRoute(routeResult);
+            map.showRoute(path);
         }
         super.startActivityForResult(intent, requestCode);
     }
@@ -159,18 +161,21 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()){
             case R.id.bt_take_bus:
                 //乘坐公交
-                mRoute = RouteActivity.BUS_ROUTE;
+                mRoute = IMap.BUS_ROUTE;
+                startRoute(mRoute);
                 break;
             case R.id.bt_drive:
                 //开车
-                mRoute = RouteActivity.CAR_ROUTE;
+                mRoute = IMap.CAR_ROUTE;
+                //直接显示导航路径
                 break;
             case R.id.bt_walk:
                 //步行
-                mRoute = RouteActivity.WALK_ROUTE;
+                mRoute = IMap.WALK_ROUTE;
+                //直接显示导航路径
                 break;
         }
-        startRoute(mRoute);
+
     }
 
 }

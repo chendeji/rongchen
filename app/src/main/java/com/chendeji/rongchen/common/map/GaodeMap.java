@@ -10,6 +10,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
@@ -19,10 +20,16 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.overlay.BusRouteOverlay;
+import com.amap.api.maps.overlay.DrivingRouteOverlay;
+import com.amap.api.maps.overlay.WalkRouteOverlay;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.BusPath;
 import com.amap.api.services.route.BusRouteResult;
+import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveRouteResult;
 import com.amap.api.services.route.RouteSearch;
+import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
@@ -50,15 +57,15 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     private Marker locationMarker;
     private Marker merchantMarker;
     private LatLng mMerchantLocation;   //商户的地址
-    private boolean isShowMerchantPosition;
     private String mCity;
     private RouteSearch routeSearch;
+    private OnSearchRouteListener mOnSearchRouteListener;
 
     public GaodeMap(Context context) {
         this.mContext = context;
     }
 
-    public String getLocalCity(){
+    public String getLocalCity() {
         return this.mCity;
     }
 
@@ -77,7 +84,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     @Override
     public void activate(OnLocationChangedListener onLocationChangedListener) {
         this.onLocationChangeListener = onLocationChangedListener;
-        if (proxy == null){
+        if (proxy == null) {
             proxy = LocationManagerProxy.getInstance(mContext);
             proxy.requestLocationData(LocationProviderProxy.AMapNetwork, 2000, 10, this);
         }
@@ -105,23 +112,15 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         this.mCity = aMapLocation.getCity();
 
         //TODO 设置标识，是否在路线规划
-        if (onLocationChangeListener != null && !isShowMerchantPosition) {
-            //如果开启路线规划，那么就要进行跳跃到手机当前坐标
-            onLocationChangeListener.onLocationChanged(aMapLocation);
-        }
-
-        if (isShowMerchantPosition){
-            CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                    .target(mMerchantLocation)
-                    .zoom(18)
-                    .build());
-            isShowMerchantPosition = false;
-        }
+//        if (onLocationChangeListener != null && !isLocationMerchant) {
+//            //如果开启路线规划，那么就要进行跳跃到手机当前坐标
+//            onLocationChangeListener.onLocationChanged(aMapLocation);
+//        }
 
         if (latitude != 0 && longitude != 0) {
             location = new double[]{latitude, longitude};
 
-            if (locationMarker != null){
+            if (locationMarker != null) {
                 locationMarker.setPosition(new LatLng(latitude, longitude));
                 //TODO 设置旋转角度
                 //locationMarker.setRotateAngle();
@@ -161,7 +160,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         if (mListener != null) {
             mListener = null;
         }
-        if (mContext != null){
+        if (mContext != null) {
             mContext = null;
         }
         deactivate();
@@ -170,32 +169,36 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     @Override
     public void show(Context context, ViewGroup map_container, Bundle savedInstanceState, double[] location) {
         this.mContext = context;
-        this.isShowMerchantPosition = true;
         this.mMerchantLocation = new LatLng(location[0], location[1]);
         if (mapView == null) {
             mapView = new MapView(context);
             mapView.onCreate(savedInstanceState);
             map_container.addView(mapView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            if (map == null){
+            if (map == null) {
                 map = mapView.getMap();
 
                 MyLocationStyle style = new MyLocationStyle();
-                style.anchor(0.5f,1.0f);
-                style.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_navigation_black_48dp));
+                style.anchor(0.5f, 1.0f);
+                style.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker));
                 style.radiusFillColor(context.getResources().getColor(android.R.color.transparent));
                 style.strokeWidth(0);
                 map.setMyLocationStyle(style);
 
                 map.setLocationSource(this);
-                map.getUiSettings().setMyLocationButtonEnabled(true);
-                map.setMyLocationEnabled(true);
+//                map.getUiSettings().setMyLocationButtonEnabled(true);
+//                map.setMyLocationEnabled(true);
                 map.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
                 merchantMarker = map.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp))
                         .draggable(false)
                         .position(mMerchantLocation));
-                merchantMarker.setTitle(context.getString(R.string.click_me));
+
+//                CameraUpdateFactory.newLatLng(mMerchantLocation);
+//                CameraUpdateFactory.zoomTo(18);
+
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(mMerchantLocation, 18));
+
 
 
 //                locationMarker = map.addMarker(new MarkerOptions()
@@ -243,16 +246,16 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 
     @Override
     public void onDestroy() {
-        if (locationMarker != null){
+        if (locationMarker != null) {
             locationMarker.remove();
             locationMarker = null;
         }
-        if (merchantMarker != null){
+        if (merchantMarker != null) {
             merchantMarker.remove();
             merchantMarker = null;
         }
 
-        if (map != null){
+        if (map != null) {
             map.clear();
             map = null;
         }
@@ -271,23 +274,76 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     }
 
     @Override
-    public void showRoute(Serializable serializableExtra) {
-        if (serializableExtra == null)
+    public void showRoute(Object path, int routeType) {
+        if (path == null)
             return;
+
+        switch (routeType){
+            case CAR_ROUTE:
+                BusPath busPath = (BusPath) path;
+                BusRouteOverlay busRouteOverlay = new BusRouteOverlay(mContext, map,
+                        busPath, new LatLonPoint(location[0], location[1]),
+                        new LatLonPoint(mMerchantLocation.latitude, mMerchantLocation.longitude));
+                busRouteOverlay.removeFromMap();
+                busRouteOverlay.addToMap();
+                busRouteOverlay.zoomToSpan();
+                break;
+            case BUS_ROUTE:
+                DrivePath drivePath = (DrivePath) path;
+                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(mContext,map,
+                        drivePath,new LatLonPoint(location[0], location[1]),
+                        new LatLonPoint(mMerchantLocation.latitude, mMerchantLocation.longitude));
+                drivingRouteOverlay.removeFromMap();
+                drivingRouteOverlay.addToMap();
+                drivingRouteOverlay.zoomToSpan();
+                break;
+            case WALK_ROUTE:
+                WalkPath walkPath = (WalkPath) path;
+                WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(mContext,map,
+                        walkPath,new LatLonPoint(location[0], location[1]),
+                        new LatLonPoint(mMerchantLocation.latitude, mMerchantLocation.longitude));
+                walkRouteOverlay.removeFromMap();
+                walkRouteOverlay.addToMap();
+                walkRouteOverlay.zoomToSpan();
+                break;
+        }
 
     }
 
     @Override
     public void startRoute(Context context, double[] start_point_location, double[] end_point_location, int route_type) {
-        routeSearch = new RouteSearch(context);
-        routeSearch.setRouteSearchListener(this);
-
+        if (routeSearch == null) {
+            routeSearch = new RouteSearch(context);
+            routeSearch.setRouteSearchListener(this);
+        }
         RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
                 new LatLonPoint(start_point_location[0], start_point_location[1]),
                 new LatLonPoint(end_point_location[0], end_point_location[1]));
 
-        RouteSearch.BusRouteQuery query = new RouteSearch.BusRouteQuery(fromAndTo, RouteSearch.BusLeaseWalk, getLocalCity(), 0);
-        routeSearch.calculateBusRouteAsyn(query);
+        if (mOnSearchRouteListener != null)
+            mOnSearchRouteListener.onBeginSearch();
+
+        switch (route_type) {
+            case BUS_ROUTE:
+                RouteSearch.BusRouteQuery busRouteQuery = new RouteSearch.BusRouteQuery(fromAndTo, RouteSearch.BusLeaseWalk, getLocalCity(), 0);
+                routeSearch.calculateBusRouteAsyn(busRouteQuery);
+                break;
+            case CAR_ROUTE:
+                RouteSearch.DriveRouteQuery driveRouteQuery = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingMultiStrategy, null, null, getLocalCity());
+                routeSearch.calculateDriveRouteAsyn(driveRouteQuery);
+                break;
+            case WALK_ROUTE:
+                RouteSearch.WalkRouteQuery walkRouteQuery = new RouteSearch.WalkRouteQuery(fromAndTo, RouteSearch.WalkDefault);
+                routeSearch.calculateWalkRouteAsyn(walkRouteQuery);
+                break;
+        }
+
+
+    }
+
+    @Override
+    public void setOnSearchRouteListener(OnSearchRouteListener listener) {
+        this.mOnSearchRouteListener = listener;
     }
 
 //    @Override
@@ -321,16 +377,22 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 
     @Override
     public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
-
+        if (mOnSearchRouteListener != null) {
+            mOnSearchRouteListener.onSearcheDone(IMap.BUS_ROUTE, busRouteResult);
+        }
     }
 
     @Override
     public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
-
+        if (mOnSearchRouteListener != null) {
+            mOnSearchRouteListener.onSearcheDone(IMap.CAR_ROUTE, driveRouteResult);
+        }
     }
 
     @Override
     public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
-
+        if (mOnSearchRouteListener != null) {
+            mOnSearchRouteListener.onSearcheDone(IMap.WALK_ROUTE, walkRouteResult);
+        }
     }
 }

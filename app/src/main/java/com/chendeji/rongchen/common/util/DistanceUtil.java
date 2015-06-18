@@ -1,5 +1,7 @@
 package com.chendeji.rongchen.common.util;
 
+import android.text.TextUtils;
+
 import java.text.DecimalFormat;
 
 /**
@@ -45,6 +47,15 @@ public class DistanceUtil {
             return mFormat.format((float)distance / _1KM);
         }
 
+        return null;
+    }
+
+    public static String getDistance(float distance){
+        DecimalFormat format = new DecimalFormat("#.0");
+        String str_distance = format.format(distance);
+        if (!TextUtils.isEmpty(str_distance.trim())){
+            return str_distance;
+        }
         return null;
     }
 }
