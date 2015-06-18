@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.BusPath;
 import com.amap.api.services.route.BusRouteResult;
 import com.amap.api.services.route.DrivePath;
@@ -21,6 +22,7 @@ import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.map.IMap;
+import com.chendeji.rongchen.common.map.MapManager;
 import com.chendeji.rongchen.common.util.DistanceUtil;
 
 /**
@@ -35,6 +37,7 @@ public class CommonRouteListView extends RelativeLayout implements AdapterView.O
     private ListView routeList;
 
     public static final String PATH = "path";
+    public static final String TYPE = "type";
 
     public CommonRouteListView(Context context, RouteResult routeResult, int route_type) {
         super(context);
@@ -81,19 +84,27 @@ public class CommonRouteListView extends RelativeLayout implements AdapterView.O
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         RouteResult result = (RouteResult) parent.getItemAtPosition(position);
+        LatLonPoint startPos = result.getStartPos();
+        LatLonPoint targetPos = result.getTargetPos();
+        double[] start = new double[]{startPos.getLatitude(), startPos.getLongitude()};
+        double[] end = new double[]{targetPos.getLatitude(), targetPos.getLongitude()};
+
+        IMap map = MapManager.getManager().getMap();
         switch (mRouteType) {
             case IMap.BUS_ROUTE:
                 BusRouteResult busRouteResult = (BusRouteResult) result;
-                Intent intent = new Intent();
-                intent.putExtra(PATH, busRouteResult.getPaths().get(position));
-                ((Activity) getContext()).setResult(Activity.RESULT_OK, intent);
-                ((Activity) getContext()).finish();
+                map.showRoute(busRouteResult.getPaths().get(position), IMap.BUS_ROUTE);
                 break;
             case IMap.CAR_ROUTE:
+                DriveRouteResult driveRouteResult = (DriveRouteResult) result;
+                map.showRoute(driveRouteResult.getPaths().get(position), IMap.BUS_ROUTE);
                 break;
             case IMap.WALK_ROUTE:
+                WalkRouteResult walkRouteResult = (WalkRouteResult) result;
+                map.showRoute(walkRouteResult.getPaths().get(position), IMap.BUS_ROUTE);
                 break;
         }
+        ((Activity) getContext()).finish();
     }
 
     class RouteAdapter extends BaseAdapter {

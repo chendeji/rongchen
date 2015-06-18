@@ -63,7 +63,7 @@ public class BaiduMap implements IMap {
     }
 
     @Override
-    public void showRoute(Object path) {
+    public void showRoute(Object path, int routeType) {
 
     }
 

@@ -60,6 +60,10 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     private String mCity;
     private RouteSearch routeSearch;
     private OnSearchRouteListener mOnSearchRouteListener;
+    private boolean isStartNavigation;
+    private DrivingRouteOverlay drivingRouteOverlay;
+    private WalkRouteOverlay walkRouteOverlay;
+    private BusRouteOverlay busRouteOverlay;
 
     public GaodeMap(Context context) {
         this.mContext = context;
@@ -112,15 +116,18 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         this.mCity = aMapLocation.getCity();
 
         //TODO 设置标识，是否在路线规划
-//        if (onLocationChangeListener != null && !isLocationMerchant) {
-//            //如果开启路线规划，那么就要进行跳跃到手机当前坐标
-//            onLocationChangeListener.onLocationChanged(aMapLocation);
-//        }
+        if (onLocationChangeListener != null && isStartNavigation) {
+            //如果开启路线规划，那么就要进行跳跃到手机当前坐标
+            onLocationChangeListener.onLocationChanged(aMapLocation);
+        }
+
+//        locationMarker.setPosition(new LatLng(latitude,longitude));
 
         if (latitude != 0 && longitude != 0) {
             location = new double[]{latitude, longitude};
 
             if (locationMarker != null) {
+                Logger.i("chendeji", "更新定位marker位置");
                 locationMarker.setPosition(new LatLng(latitude, longitude));
                 //TODO 设置旋转角度
                 //locationMarker.setRotateAngle();
@@ -179,7 +186,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 
                 MyLocationStyle style = new MyLocationStyle();
                 style.anchor(0.5f, 1.0f);
-                style.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker));
+                style.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_navigation_black_48dp));
                 style.radiusFillColor(context.getResources().getColor(android.R.color.transparent));
                 style.strokeWidth(0);
                 map.setMyLocationStyle(style);
@@ -189,28 +196,27 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 //                map.setMyLocationEnabled(true);
                 map.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
-                merchantMarker = map.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp))
-                        .draggable(false)
-                        .position(mMerchantLocation));
-
-//                CameraUpdateFactory.newLatLng(mMerchantLocation);
-//                CameraUpdateFactory.zoomTo(18);
+                addMerchantMarke();
+                addLocationMarke();
 
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(mMerchantLocation, 18));
-
-
-
-//                locationMarker = map.addMarker(new MarkerOptions()
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_navigation_black_48dp))
-//                        .draggable(false));
-
-//                initMarkerEvent();
-
             }
         } else {
             mapView.onResume();
         }
+    }
+
+    private void addMerchantMarke(){
+        merchantMarker = map.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp))
+                .draggable(false)
+                .position(mMerchantLocation));
+    }
+
+    private void addLocationMarke(){
+        locationMarker = map.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker))
+                .draggable(false));
     }
 
 //    private void initMarkerEvent() {
@@ -277,37 +283,36 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     public void showRoute(Object path, int routeType) {
         if (path == null)
             return;
-
-        switch (routeType){
-            case CAR_ROUTE:
+        isStartNavigation = true;
+        removeRouteOverlay();
+        switch (routeType) {
+            case BUS_ROUTE:
                 BusPath busPath = (BusPath) path;
-                BusRouteOverlay busRouteOverlay = new BusRouteOverlay(mContext, map,
+                busRouteOverlay = new BusRouteOverlay(mContext, map,
                         busPath, new LatLonPoint(location[0], location[1]),
                         new LatLonPoint(mMerchantLocation.latitude, mMerchantLocation.longitude));
-                busRouteOverlay.removeFromMap();
                 busRouteOverlay.addToMap();
                 busRouteOverlay.zoomToSpan();
                 break;
-            case BUS_ROUTE:
+            case CAR_ROUTE:
                 DrivePath drivePath = (DrivePath) path;
-                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(mContext,map,
-                        drivePath,new LatLonPoint(location[0], location[1]),
+                drivingRouteOverlay = new DrivingRouteOverlay(mContext, map,
+                        drivePath, new LatLonPoint(location[0], location[1]),
                         new LatLonPoint(mMerchantLocation.latitude, mMerchantLocation.longitude));
-                drivingRouteOverlay.removeFromMap();
                 drivingRouteOverlay.addToMap();
                 drivingRouteOverlay.zoomToSpan();
                 break;
             case WALK_ROUTE:
                 WalkPath walkPath = (WalkPath) path;
-                WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(mContext,map,
-                        walkPath,new LatLonPoint(location[0], location[1]),
+                walkRouteOverlay = new WalkRouteOverlay(mContext, map,
+                        walkPath, new LatLonPoint(location[0], location[1]),
                         new LatLonPoint(mMerchantLocation.latitude, mMerchantLocation.longitude));
-                walkRouteOverlay.removeFromMap();
                 walkRouteOverlay.addToMap();
                 walkRouteOverlay.zoomToSpan();
                 break;
         }
 
+        addLocationMarke();
     }
 
     @Override
@@ -380,6 +385,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         if (mOnSearchRouteListener != null) {
             mOnSearchRouteListener.onSearcheDone(IMap.BUS_ROUTE, busRouteResult);
         }
+        removeRouteOverlay();
     }
 
     @Override
@@ -387,6 +393,14 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         if (mOnSearchRouteListener != null) {
             mOnSearchRouteListener.onSearcheDone(IMap.CAR_ROUTE, driveRouteResult);
         }
+        isStartNavigation = true;
+        removeRouteOverlay();
+        //加载路径到地图上去
+        drivingRouteOverlay = new DrivingRouteOverlay(mContext, map,
+                driveRouteResult.getPaths().get(0), driveRouteResult.getStartPos(),
+                driveRouteResult.getTargetPos());
+        drivingRouteOverlay.addToMap();
+        drivingRouteOverlay.zoomToSpan();
     }
 
     @Override
@@ -394,5 +408,22 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         if (mOnSearchRouteListener != null) {
             mOnSearchRouteListener.onSearcheDone(IMap.WALK_ROUTE, walkRouteResult);
         }
+        isStartedLocation = true;
+        removeRouteOverlay();
+        walkRouteOverlay = new WalkRouteOverlay(mContext, map,
+                walkRouteResult.getPaths().get(0), walkRouteResult.getStartPos(),
+                walkRouteResult.getTargetPos());
+        walkRouteOverlay.addToMap();
+        walkRouteOverlay.zoomToSpan();
     }
+
+    private void removeRouteOverlay(){
+        if (busRouteOverlay != null)
+            busRouteOverlay.removeFromMap();
+        if (drivingRouteOverlay != null)
+            drivingRouteOverlay.removeFromMap();
+        if (walkRouteOverlay != null)
+            walkRouteOverlay.removeFromMap();
+    }
+
 }

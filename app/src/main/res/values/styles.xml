@@ -76,6 +76,14 @@
         <item name="rd_cornerRadius">4dp</item>
     </style>
 
+    <style name="InOutColorsCircularProgressDrawableStyle" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_inAnimDuration">800</item>
+        <item name="cpd_inStepPercent">0.5</item>
+        <item name="cpd_inStepColors">@array/in_colors</item>
+        <item name="cpd_outAnimDuration">400</item>
+        <item name="cpd_strokeColors">@array/progress_colors</item>
+    </style>
+
 
 
 </resources>

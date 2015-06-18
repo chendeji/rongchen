@@ -9,11 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.amap.api.maps.AMapException;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.NaviPara;
 import com.amap.api.services.route.Path;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.map.IMap;
 import com.chendeji.rongchen.common.map.MapManager;
+import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.ui.map.view.CommonRouteListView;
 import com.rey.material.app.SimpleDialog;
@@ -81,18 +86,19 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         Intent intent = new Intent(this, RouteActivity.class);
         intent.putExtra(RouteActivity.ROUTE_TYPE, route_type);
         intent.putExtra(RouteActivity.END_POINT_LOCATION_KEY, merchant);
-        startActivityForResult(intent, RouteActivity.REQUEST_KEY);
+        startActivity(intent);
     }
 
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        if (requestCode == RESULT_OK){
-            Path path = intent.getParcelableExtra(CommonRouteListView.PATH);
-            Logger.i(TAG, "routeResult:"+requestCode);
-            map.showRoute(path);
-        }
-        super.startActivityForResult(intent, requestCode);
-    }
+//    @Override
+//    public void startActivityForResult(Intent intent, int requestCode) {
+//        Logger.i("chendeji", "返回回来的请求吗：routeResult:"+requestCode);
+//        if (requestCode == RESULT_OK){
+//            Path path = intent.getParcelableExtra(CommonRouteListView.PATH);
+//            int route_type = intent.getIntExtra(CommonRouteListView.TYPE, -1);
+//            map.showRoute(path, route_type);
+//        }
+//        super.startActivityForResult(intent, requestCode);
+//    }
 
     private void initEvent() {
         take_bus.setOnClickListener(this);
@@ -158,6 +164,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int mRoute = 0;
+        double[] start = map.getLocation();
+        double[] end = new double[]{merchant.latitude, merchant.longitude};
         switch (v.getId()){
             case R.id.bt_take_bus:
                 //乘坐公交
@@ -166,16 +174,22 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.bt_drive:
                 //开车
-                mRoute = IMap.CAR_ROUTE;
                 //直接显示导航路径
+//                map.startRoute(this, start, end, IMap.CAR_ROUTE);
+                NaviPara para = new NaviPara();
+                para.setTargetPoint(new LatLng(merchant.latitude, merchant.longitude));
+                try {
+                    AMapUtils.openAMapNavi(para, this);
+                } catch (AMapException e) {
+                    ToastUtil.showLongToast(this, e.getErrorMessage());
+                }
                 break;
             case R.id.bt_walk:
                 //步行
-                mRoute = IMap.WALK_ROUTE;
                 //直接显示导航路径
+                map.startRoute(this, start, end, IMap.WALK_ROUTE);
                 break;
         }
-
     }
 
 }
