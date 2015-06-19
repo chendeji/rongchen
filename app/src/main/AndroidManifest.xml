@@ -96,6 +96,15 @@
             android:name=".ui.map.RouteActivity"
             android:label="@string/title_activity_road_line_planning" >
         </activity>
+        <activity
+            android:name=".ui.city.ChooseCityActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_choose_city" >
+        </activity>
+        <activity
+            android:name=".ui.category.DealCategoryActivity"
+            android:label="@string/title_activity_deal_category" >
+        </activity>
     </application>
 
 </manifest>

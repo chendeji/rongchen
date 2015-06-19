@@ -14,4 +14,10 @@
             <enum name="order" value="0"/>
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="CommonSearchLayout">
+        <attr name="left_image" format="reference"/>
+        <attr name="cancel_image" format="reference"/>
+        <attr name="edit_text_hint" format="reference|string"/>
+    </declare-styleable>
 </resources>

@@ -46,7 +46,7 @@ import java.util.List;
  * @date 2015 -01-02 16:10:58
  * @see
  */
-public class MerchantListActivity extends AppCompatActivity implements UITaskCallBack<List<Merchant>>,SwipyRefreshLayout.OnRefreshListener {
+public class MerchantListActivity extends AppCompatActivity implements UITaskCallBack<List<Merchant>>, SwipyRefreshLayout.OnRefreshListener {
 
     private static final int DEFUALT_PAGENUM = 1;
 
@@ -101,13 +101,14 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
         private int scrolledDistance = 0;
         private int demotextDy = 0;
         private boolean controlsVisible = true;
+
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
             //show views if first item is first visible position and views are hidden
             if (firstVisibleItem == 0) {
-                if(!controlsVisible) {
+                if (!controlsVisible) {
                     onShow();
                     controlsVisible = true;
                 }
@@ -122,22 +123,24 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
                     scrolledDistance = 0;
                 }
             }
-            if((controlsVisible && dy>0) || (!controlsVisible && dy<0)) {
+            if ((controlsVisible && dy > 0) || (!controlsVisible && dy < 0)) {
                 scrolledDistance += dy;
             }
 
             demotextDy += dy;
-            Logger.i("chendeji","dy-------------"+demotextDy);
+            Logger.i("chendeji", "dy-------------" + demotextDy);
 
         }
+
         public abstract void onHide();
+
         public abstract void onShow();
     }
 
-    class MerchantItemDecoration extends RecyclerView.ItemDecoration{
+    class MerchantItemDecoration extends RecyclerView.ItemDecoration {
         private int space;
 
-        public MerchantItemDecoration(int space){
+        public MerchantItemDecoration(int space) {
             this.space = space;
         }
 
@@ -152,14 +155,14 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     @Override
     public void onRefresh(SwipyRefreshLayoutDirection direction) {
         //刷新数据
-        if (direction == SwipyRefreshLayoutDirection.TOP){
+        if (direction == SwipyRefreshLayoutDirection.TOP) {
             refreshData();
-        } else if (direction == SwipyRefreshLayoutDirection.BOTTOM){
+        } else if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
             loadMoreData();
         }
     }
 
-    public void stopRefresh(){
+    public void stopRefresh() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -207,7 +210,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     private void hideViews() {
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) actionButton.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
-        actionButton.animate().translationY(actionButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+        actionButton.animate().translationY(actionButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 
     @SuppressLint("NewApi")
@@ -223,13 +226,11 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
         mMerchantRecycleView.addOnScrollListener(new HidingScrollListener() {
             @Override
             public void onHide() {
-                //TODO 隐藏FAB
                 hideViews();
             }
 
             @Override
             public void onShow() {
-                //TODO 显示FAB
                 showViews();
             }
         });
@@ -239,6 +240,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
             public void onClick(View v) {
                 //floating action button click!
                 //show dialog
+                //TODO 弹出半弧形的选项提示动画。
 
             }
         });

@@ -47,5 +47,9 @@
     <string name="click_me">请点击我</string>
     <string name="title_activity_road_line_planning">RoadLinePlanningActivity</string>
     <string name="check_route">查找路线</string>
+    <string name="title_activity_choose_city">ChooseCityActivity</string>
+    <string name="title_activity_deal_category">DealCategoryActivity</string>
+    <string name="enter_key_word">输入城市关键字</string>
+    <string name="choose_city">选择城市</string>
 
 </resources>

@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.chendeji.rongchen.ui.city.ChooseCityActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_choose_city"
+        style="@style/ToolBar_Style"></android.support.v7.widget.Toolbar>
+
+    <com.chendeji.rongchen.common.view.CommonSearchLayout
+        android:id="@+id/sl_search_city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_margin="@dimen/horizontal_10dp"
+        app:cancel_image="@android:drawable/ic_menu_close_clear_cancel"
+        app:edit_text_hint="@string/enter_key_word"
+        app:left_image="@android:drawable/ic_menu_search" />
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<EditText-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="5"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:drawableLeft="@android:drawable/ic_menu_search"-->
+    <!--android:hint="@string/enter_key_word" />-->
+    <!--<ImageView-->
+    <!--android:layout_gravity="center"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@android:drawable/ic_menu_close_clear_cancel"/>-->
+    <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:id="@+id/ll_fragment_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    </LinearLayout>
+</LinearLayout>

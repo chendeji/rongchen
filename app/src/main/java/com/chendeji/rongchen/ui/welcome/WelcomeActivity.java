@@ -12,6 +12,7 @@ import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.map.IMap;
 import com.chendeji.rongchen.common.map.MapManager;
+import com.chendeji.rongchen.ui.city.ChooseCityActivity;
 import com.chendeji.rongchen.ui.merchant.MerchantListActivity;
 
 
@@ -50,6 +51,10 @@ public class WelcomeActivity extends AppCompatActivity implements IMap.IMapLocat
     @Override
     public void onLocationFail() {
         ToastUtil.showLongToast(this, "定位失败");
+        Intent intent = new Intent(this, ChooseCityActivity.class);
+        startActivity(intent);
+        MapManager.getManager().getMap().unregisteListener();
+        finish();
     }
 
     @Override
