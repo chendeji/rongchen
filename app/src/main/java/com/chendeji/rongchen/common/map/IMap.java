@@ -19,6 +19,8 @@ public interface IMap extends StaticClassReleace{
     public static final int BUS_ROUTE = 1;
     public static final int WALK_ROUTE = 2;
 
+    void setContext(Context context);
+
     interface OnSearchRouteListener{
         void onBeginSearch();
         void onSearcheDone(int routeType, RouteResult result);

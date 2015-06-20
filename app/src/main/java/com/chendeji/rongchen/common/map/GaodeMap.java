@@ -46,7 +46,6 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     private LocationManagerProxy proxy;
 
     private double[] location;
-    private boolean isStartedLocation;
     private IMapLocationListener mListener;
 
     private MapView mapView;
@@ -77,7 +76,6 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     public void release() {
         if (mContext != null)
             mContext = null;
-        isStartedLocation = false;
         if (mListener != null)
             mListener = null;
         if (proxy != null) {
@@ -138,7 +136,6 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         if (location == null) {
             mListener.onLocationFail();
         }
-        isStartedLocation = false;
 
     }
 
@@ -160,6 +157,11 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    @Override
+    public void setContext(Context context) {
+        this.mContext = context;
     }
 
     @Override
@@ -365,9 +367,6 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 
     @Override
     public void startLocation(IMapLocationListener listener) {
-        if (isStartedLocation)
-            return;
-        isStartedLocation = true;
         this.mListener = listener;
         proxy = LocationManagerProxy.getInstance(mContext);
         proxy.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 0, this);
@@ -408,7 +407,6 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         if (mOnSearchRouteListener != null) {
             mOnSearchRouteListener.onSearcheDone(IMap.WALK_ROUTE, walkRouteResult);
         }
-        isStartedLocation = true;
         removeRouteOverlay();
         walkRouteOverlay = new WalkRouteOverlay(mContext, map,
                 walkRouteResult.getPaths().get(0), walkRouteResult.getStartPos(),

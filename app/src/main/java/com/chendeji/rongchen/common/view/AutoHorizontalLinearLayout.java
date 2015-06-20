@@ -71,24 +71,24 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
                 int childWidth = childView.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
                 int childHeight = childView.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
 
+                //1，添加宽度
+                //2，判断宽度是否超过父类布局的宽度
+                //3，超过换行添加行高，没超过继续添加行宽
+
+                rowWidth += childWidth + mSpace;
+                rowHeight = childHeight + mSpace;
                 if (rowWidth > widthSize) {
                     //换行,记录当前得到的最宽的宽度
                     width = Math.max(width, rowWidth);
                     //现在是已经换行了，那么当前的行宽就是现在的子View的宽度
                     rowWidth = childWidth + mSpace;
                     //换行了，那么就要加上一行的高度
-                    rowHeight = childHeight + mSpace;
                     height += rowHeight;
                 } else {
-                    rowWidth += childWidth + mSpace;
-                    rowHeight = Math.max(rowHeight, childHeight + mSpace);
+                    //如果没有换行，那么也要记录行高
+                    height = Math.max(height, rowHeight);
                 }
 
-                //最后一个控件
-                if (i == childCount - 1){
-                    width = Math.max(width, rowWidth);
-                    height += rowHeight;
-                }
             }
         }
 
@@ -110,18 +110,29 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
         if (!changed)
             return;
         int childCount = getChildCount();
-        int width = getWidth();
+        int fatherWidth = getWidth();
+
+        int childLeft = l;  //子view的left位置
+        int childTop = t;   //ziview的top位置
 
         int rowWidth = 0;
         int rowHeith = 0;
+
         View child;
         for (int i = 0; i < childCount; i++) {
             child = getChildAt(i);
             MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+
             int childWidth = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
             int childHeight = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
-            
-            if (rowWidth > width){
+
+            rowWidth += childWidth + mSpace;
+            rowWidth = childHeight + mSpace;
+
+            if (rowWidth > fatherWidth){
+                //换行
+
+            } else {
 
             }
 

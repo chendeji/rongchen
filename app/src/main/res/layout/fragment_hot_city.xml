@@ -26,6 +26,7 @@
             android:id="@+id/hll_recent_search_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/black"
             android:layout_margin="@dimen/horizontal_10dp"
             app:space="@dimen/horizontal_10dp">
 
@@ -42,6 +43,7 @@
             android:id="@+id/hll_hot_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/black"
             android:layout_margin="@dimen/horizontal_10dp"
             app:space="@dimen/horizontal_10dp">
 

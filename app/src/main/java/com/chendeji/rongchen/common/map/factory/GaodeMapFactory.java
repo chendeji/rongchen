@@ -24,6 +24,7 @@ public class GaodeMapFactory implements IMapFactory {
     public IMap getInstance(Context context) {
         if (map == null)
             map = new GaodeMap(context);
+        map.setContext(context);
         return map;
     }
 

@@ -89,7 +89,6 @@ public class HotCityFragment extends Fragment {
         city.setOnClickListener(listener);
         city.setGravity(Gravity.CENTER);
         city.setPadding(padding, padding, padding, padding);
-        city.setLayoutParams(null);
         recent_city.addView(city);
 
         //热门城市数据填充
@@ -101,7 +100,6 @@ public class HotCityFragment extends Fragment {
             city.setOnClickListener(listener);
             city.setGravity(Gravity.CENTER);
             city.setPadding(padding, padding, padding, padding);
-            city.setLayoutParams(null);
             hot_city.addView(city);
         }
         super.onStart();

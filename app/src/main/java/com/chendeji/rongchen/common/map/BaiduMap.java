@@ -26,6 +26,11 @@ public class BaiduMap implements IMap {
     }
 
     @Override
+    public void setContext(Context context) {
+        this.mContext = context;
+    }
+
+    @Override
     public void unregisteListener() {
         if (listener != null){
             listener = null;

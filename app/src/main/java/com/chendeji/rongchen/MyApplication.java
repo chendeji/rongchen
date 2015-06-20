@@ -65,7 +65,7 @@ public class MyApplication extends Application {
 
         //初始化地图
         MapManager manager = MapManager.getManager();
-        manager.init(getApplicationContext());
+        manager.init(this);
         manager.setOffset_type(Offset_Type.GAODE);  //设定高德地图为坐标偏移
 
         super.onCreate();
