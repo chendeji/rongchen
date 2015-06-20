@@ -39,6 +39,10 @@ public class AppConst {
         String ERROR = "error";
     }
 
+    public static interface RequestParams{
+        String DEFUALT_CITY = "北京";
+    }
+
 
 
 }

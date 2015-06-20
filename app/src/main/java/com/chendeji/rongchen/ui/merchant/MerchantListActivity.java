@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -26,6 +27,7 @@ import com.chendeji.rongchen.common.view.SwipyRefreshLayoutDirection;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.model.Offset_Type;
 import com.chendeji.rongchen.model.Platform;
+import com.chendeji.rongchen.server.AppConst;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 import com.chendeji.rongchen.ui.merchant.adpter.MerchantRecycleAdapter;
 import com.chendeji.rongchen.ui.merchant.task.GetMerchantListTask;
@@ -49,6 +51,7 @@ import java.util.List;
 public class MerchantListActivity extends AppCompatActivity implements UITaskCallBack<List<Merchant>>, SwipyRefreshLayout.OnRefreshListener {
 
     private static final int DEFUALT_PAGENUM = 1;
+    public static final String CITY = "city";
 
     /**
      * 商户列表适配器
@@ -68,6 +71,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     private AsyncTask getMerchantListTask;
     private RecyclerView mMerchantRecycleView;
     private MerchantRecycleAdapter merchantAdapter;
+    private String mCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +194,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
 //                , Offset_Type.GAODE, Offset_Type.GAODE, Platform.HTML5).excuteProxy((Void[]) null);
 
         //城市定位接口
-        getMerchantListTask = new GetMerchantListTask(this, this, "福州", "", Sort.DEFAULT, mCurrentPage, DEFAULT_LIMITE
+        getMerchantListTask = new GetMerchantListTask(this, this, mCity, "", Sort.DEFAULT, mCurrentPage, DEFAULT_LIMITE
                 , Offset_Type.DEFUALT, Offset_Type.DEFUALT, Platform.HTML5).excuteProxy((Void[]) null);
     }
 
@@ -198,6 +202,12 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
      * 初始化数据以及适配器
      */
     private void initData() {
+        //初始化筛选数据
+        this.mCity = getIntent().getStringExtra(CITY);
+        if (TextUtils.isEmpty(mCity)){
+            this.mCity = AppConst.RequestParams.DEFUALT_CITY;
+        }
+
         if (merchantAdapter == null) {
             //适配器管理数据
 //            merchantAdapter = new MerchantRecycleAdapter(this, new ArrayList<Merchant>());

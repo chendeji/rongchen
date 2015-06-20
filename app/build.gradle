@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     sourceSets {
-        main{
+        main {
             jniLibs.srcDirs = ['libs']
         }
     }
@@ -42,9 +42,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:cardview-v7:22.2.0'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
     compile files('libs/universal-image-loader-1.9.2-with-sources.jar')
     compile files('libs/fastjson-1.1.27-android.jar')
     compile files('libs/commons-codec-1.6.jar')
@@ -52,4 +49,8 @@ dependencies {
     compile project(':materi')
     compile files('libs/AMap_Services_V2.4.0.jar')
     compile files('libs/AMap_3DMap_V2.4.1.jar')
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:support-v4:22.2.0'
 }

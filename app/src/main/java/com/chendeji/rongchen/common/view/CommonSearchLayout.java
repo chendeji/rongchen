@@ -92,8 +92,12 @@ public class CommonSearchLayout extends RelativeLayout {
     }
 
     private void initData() {
+        //主页面初始化时调用
         ed_text.setHint(hint);
         hideCancelButton();
+        if (keyWordChanged != null){
+            keyWordChanged.onKeyClear();
+        }
     }
 
     private void hideCancelButton(){

@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chendeji.rongchen.ui.city.fragment.HotCityFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <!--<TextView android:layout_width="match_parent" android:layout_height="match_parent"-->
+    <!--android:text="@string/hello_blank_fragment" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/horizontal_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/common_max_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="最近搜索城市"
+            android:textColor="@color/common_button_textcolor" />
+
+        <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout
+            android:id="@+id/hll_recent_search_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/horizontal_10dp"
+            app:space="@dimen/horizontal_10dp">
+
+        </com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout>
+
+        <TextView
+            style="@style/common_max_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hot_city"
+            android:textColor="@color/common_button_textcolor" />
+
+        <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout
+            android:id="@+id/hll_hot_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/horizontal_10dp"
+            app:space="@dimen/horizontal_10dp">
+
+        </com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

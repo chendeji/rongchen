@@ -20,4 +20,8 @@
         <attr name="cancel_image" format="reference"/>
         <attr name="edit_text_hint" format="reference|string"/>
     </declare-styleable>
+    
+    <declare-styleable name="AutoHorizontalLinearLayout">
+        <attr name="space" format="dimension|integer"/>
+    </declare-styleable>
 </resources>

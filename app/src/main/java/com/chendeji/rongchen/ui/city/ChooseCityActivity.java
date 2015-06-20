@@ -1,5 +1,7 @@
 package com.chendeji.rongchen.ui.city;
 
+import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,11 +14,15 @@ import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
 import com.chendeji.rongchen.common.view.CommonSearchLayout;
+import com.chendeji.rongchen.ui.city.fragment.HotCityFragment;
+import com.chendeji.rongchen.ui.merchant.MerchantListActivity;
 
-public class ChooseCityActivity extends AppCompatActivity implements CommonSearchLayout.OnSearchKeyWordChanged {
+public class ChooseCityActivity extends AppCompatActivity implements CommonSearchLayout.OnSearchKeyWordChanged,
+        HotCityFragment.OnHotCityClicked {
 
     private LinearLayout fragmentHolder;
     private CommonSearchLayout searchLayout;
+    private HotCityFragment hotCityFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,12 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
         setSupportActionBar(toolbar);
 
         initComponent();
+        initFragment();
+    }
+
+    private void initFragment() {
+        hotCityFragment = HotCityFragment.newInstance(null, null);
+        getSupportFragmentManager().beginTransaction().add(R.id.ll_fragment_holder, hotCityFragment).commit();
     }
 
     private void initComponent() {
@@ -44,7 +56,7 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_choose_city, menu);
+//        getMenuInflater().inflate(R.menu.menu_choose_city, menu);
         return true;
     }
 
@@ -67,11 +79,22 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
     public void onKeyChanged(String keyWord) {
         //TODO 搜索关键字变更的时候，要刷新碎片中列表的数据
         Logger.i("chendeji", "onKeyChanged");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.hide(hotCityFragment).commit();
     }
 
     @Override
     public void onKeyClear() {
         //TODO 在清除内容的时候要变更碎片
         Logger.i("chendeji", "onKeyClear");
+        getSupportFragmentManager().beginTransaction().show(hotCityFragment).commit();
+
+    }
+
+    @Override
+    public void onCityClicked(String city) {
+        Intent intent = new Intent(this, MerchantListActivity.class);
+        intent.putExtra(MerchantListActivity.CITY, city);
+        startActivity(intent);
     }
 }
