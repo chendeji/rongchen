@@ -70,6 +70,7 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
                 MarginLayoutParams lp = (MarginLayoutParams) childView.getLayoutParams();
                 int childWidth = childView.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
                 int childHeight = childView.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
+
                 if (rowWidth > widthSize) {
                     //换行,记录当前得到的最宽的宽度
                     width = Math.max(width, rowWidth);
@@ -81,7 +82,12 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
                 } else {
                     rowWidth += childWidth + mSpace;
                     rowHeight = Math.max(rowHeight, childHeight + mSpace);
-                    height = Math.max(height, rowHeight);
+                }
+
+                //最后一个控件
+                if (i == childCount - 1){
+                    width = Math.max(width, rowWidth);
+                    height += rowHeight;
                 }
             }
         }
@@ -114,7 +120,7 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
             MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
             int childWidth = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
             int childHeight = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
-
+            
             if (rowWidth > width){
 
             }

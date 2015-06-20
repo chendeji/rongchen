@@ -78,7 +78,7 @@ public class HotCityFragment extends Fragment {
 
     @Override
     public void onStart() {
-        Logger.i("chendeji","onStart");
+        Logger.i("chendeji", "onStart");
 
         OnCityButtonClickedListener listener = new OnCityButtonClickedListener();
         int padding = getActivity().getResources().getDimensionPixelSize(R.dimen.horizontal_10dp);
@@ -89,6 +89,7 @@ public class HotCityFragment extends Fragment {
         city.setOnClickListener(listener);
         city.setGravity(Gravity.CENTER);
         city.setPadding(padding, padding, padding, padding);
+        city.setLayoutParams(null);
         recent_city.addView(city);
 
         //热门城市数据填充
@@ -100,12 +101,13 @@ public class HotCityFragment extends Fragment {
             city.setOnClickListener(listener);
             city.setGravity(Gravity.CENTER);
             city.setPadding(padding, padding, padding, padding);
+            city.setLayoutParams(null);
             hot_city.addView(city);
         }
         super.onStart();
     }
 
-    private class OnCityButtonClickedListener implements View.OnClickListener{
+    private class OnCityButtonClickedListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
