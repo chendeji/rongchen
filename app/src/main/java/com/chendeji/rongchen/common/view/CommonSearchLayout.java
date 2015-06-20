@@ -32,12 +32,13 @@ public class CommonSearchLayout extends RelativeLayout {
 
     private OnSearchKeyWordChanged keyWordChanged;
 
-    public interface OnSearchKeyWordChanged{
+    public interface OnSearchKeyWordChanged {
         void onKeyChanged(String keyWord);
+
         void onKeyClear();
     }
 
-    public void setKeyWordChangedListener(OnSearchKeyWordChanged listener){
+    public void setKeyWordChangedListener(OnSearchKeyWordChanged listener) {
         this.keyWordChanged = listener;
     }
 
@@ -75,15 +76,15 @@ public class CommonSearchLayout extends RelativeLayout {
         ed_text = (EditText) viewContainer.findViewById(R.id.et_city_input);
         cancel_image = (ImageView) viewContainer.findViewById(R.id.iv_right_cancel_image);
 
-        if (left_image != null){
+        if (left_image != null) {
             search_image.setImageDrawable(left_image);
-        }else{
+        } else {
             search_image.setImageDrawable(getContext().getResources().getDrawable(android.R.drawable.ic_menu_search));
         }
 
-        if (right_cancel_image != null){
+        if (right_cancel_image != null) {
             cancel_image.setImageDrawable(right_cancel_image);
-        }else{
+        } else {
             cancel_image.setImageDrawable(getContext().getResources().getDrawable(android.R.drawable.ic_menu_close_clear_cancel));
         }
 
@@ -95,16 +96,16 @@ public class CommonSearchLayout extends RelativeLayout {
         //主页面初始化时调用
         ed_text.setHint(hint);
         hideCancelButton();
-        if (keyWordChanged != null){
+        if (keyWordChanged != null) {
             keyWordChanged.onKeyClear();
         }
     }
 
-    private void hideCancelButton(){
+    private void hideCancelButton() {
         cancel_image.setVisibility(View.INVISIBLE);
     }
 
-    private void showCancelButton(){
+    private void showCancelButton() {
         cancel_image.setVisibility(View.VISIBLE);
     }
 
@@ -113,7 +114,7 @@ public class CommonSearchLayout extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 ed_text.setText("");
-                if (keyWordChanged != null){
+                if (keyWordChanged != null) {
                     keyWordChanged.onKeyClear();
                 }
             }
@@ -134,12 +135,16 @@ public class CommonSearchLayout extends RelativeLayout {
                 int length = search_key.length();
                 if (length > 0) {
                     showCancelButton();
+                    //回调函数
+                    if (keyWordChanged != null) {
+                        keyWordChanged.onKeyChanged(search_key);
+                    }
+                } else if (length == 0) {
+                    hideCancelButton();
+                    if (keyWordChanged != null) {
+                        keyWordChanged.onKeyClear();
+                    }
                 }
-                //回调函数
-                if (keyWordChanged != null) {
-                    keyWordChanged.onKeyChanged(search_key);
-                }
-
             }
         });
     }
