@@ -20,7 +20,6 @@ import com.chendeji.rongchen.ui.merchant.MerchantListActivity;
 public class ChooseCityActivity extends AppCompatActivity implements CommonSearchLayout.OnSearchKeyWordChanged,
         HotCityFragment.OnHotCityClicked {
 
-    private LinearLayout fragmentHolder;
     private CommonSearchLayout searchLayout;
     private HotCityFragment hotCityFragment;
 
@@ -48,7 +47,6 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
     }
 
     private void initComponent() {
-        fragmentHolder = (LinearLayout) findViewById(R.id.ll_fragment_holder);
         searchLayout = (CommonSearchLayout) findViewById(R.id.sl_search_city);
         searchLayout.setKeyWordChangedListener(this);
     }
@@ -96,5 +94,15 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
         Intent intent = new Intent(this, MerchantListActivity.class);
         intent.putExtra(MerchantListActivity.CITY, city);
         startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (hotCityFragment != null){
+            getSupportFragmentManager().beginTransaction().remove(hotCityFragment).commit();
+            hotCityFragment = null;
+        }
+        super.onDestroy();
     }
 }

@@ -166,6 +166,10 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         int mRoute = 0;
         double[] start = map.getLocation();
         double[] end = new double[]{merchant.latitude, merchant.longitude};
+        if (start == null) {
+            ToastUtil.showLongToast(this, getString(R.string.location_faile));
+            return;
+        }
         switch (v.getId()){
             case R.id.bt_take_bus:
                 //乘坐公交

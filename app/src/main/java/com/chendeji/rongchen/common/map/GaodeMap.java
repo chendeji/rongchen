@@ -374,8 +374,6 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 
     @Override
     public double[] getLocation() {
-        if (location == null)
-            throw new NullPointerException("定位失敗");
         return location;
     }
 
