@@ -1,6 +1,7 @@
 package com.chendeji.rongchen.ui.city.fragment;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -73,22 +74,19 @@ public class HotCityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hot_city, container, false);
         recent_city = (AutoHorizontalLinearLayout) view.findViewById(R.id.hll_recent_search_city);
         hot_city = (AutoHorizontalLinearLayout) view.findViewById(R.id.hll_hot_city);
+        initData();
         return view;
     }
 
-    @Override
-    public void onStart() {
-        Logger.i("chendeji", "onStart");
-
+    public void initData(){
         OnCityButtonClickedListener listener = new OnCityButtonClickedListener();
-        int padding = getActivity().getResources().getDimensionPixelSize(R.dimen.horizontal_10dp);
         Button city;
         //最近搜索城市数据填充
         city = new Button(getActivity());
+        city.setTextColor(Color.WHITE);
         city.setText("福州");
+        city.setBackgroundResource(R.drawable.city_button_bg);
         city.setOnClickListener(listener);
-        city.setGravity(Gravity.CENTER);
-        city.setPadding(padding, padding, padding, padding);
         recent_city.addView(city);
 
         //热门城市数据填充
@@ -96,13 +94,12 @@ public class HotCityFragment extends Fragment {
         int hot_cities_count = hot_cities.length;
         for (int i = 0; i < hot_cities_count; i++) {
             city = new Button(getActivity());
+            city.setTextColor(Color.WHITE);
+            city.setBackgroundResource(R.drawable.city_button_bg);
             city.setText(hot_cities[i]);
             city.setOnClickListener(listener);
-            city.setGravity(Gravity.CENTER);
-            city.setPadding(padding, padding, padding, padding);
             hot_city.addView(city);
         }
-        super.onStart();
     }
 
     private class OnCityButtonClickedListener implements View.OnClickListener {

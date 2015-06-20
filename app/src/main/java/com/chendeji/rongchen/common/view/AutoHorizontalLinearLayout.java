@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chendeji.rongchen.R;
-import com.chendeji.rongchen.common.util.Logger;
 
 /**
  * Created by chendeji on 19/6/15.
@@ -18,6 +17,11 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
 
     private final int SPACE = 10;
     private int mSpace;
+
+    private int par_padding_left;
+    private int par_padding_right;
+    private int par_padding_top;
+    private int par_padding_bottom;
 
     public AutoHorizontalLinearLayout(Context context) {
         super(context);
@@ -38,6 +42,12 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AutoHorizontalLinearLayout);
         mSpace = (int) a.getDimension(R.styleable.AutoHorizontalLinearLayout_space, SPACE);
         a.recycle();
+
+        par_padding_left = getPaddingLeft();
+        par_padding_right = getPaddingRight();
+        par_padding_top = getPaddingTop();
+        par_padding_bottom = getPaddingBottom();
+
     }
 
     @Override
@@ -49,7 +59,7 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
         int width = 0;
-        int height = 0;
+        int height = par_padding_top;
 
         //一行宽度
         int rowWidth = 0;
@@ -88,55 +98,44 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
                     //如果没有换行，那么也要记录行高
                     height = Math.max(height, rowHeight);
                 }
-
             }
+            //循环遍历完之后要将最后一行下面的space减掉
+            height -= mSpace;
         }
-
-        Logger.d(TAG, "width : " + width);
-        Logger.d(TAG, "height : " + height);
-        Logger.d(TAG, "widthSize : " + widthSize);
-        Logger.d(TAG, "heightSize : " + heightSize);
 
         int finalWidth = widthMode == MeasureSpec.AT_MOST ? width : widthSize;
         int finalHeight = heightMode == MeasureSpec.AT_MOST ? height : heightSize;
-        Logger.d(TAG, "finalWidth:" + finalWidth);
-        Logger.d(TAG, "finalHeight:" + finalHeight);
 
-        setMeasuredDimension(finalWidth, finalHeight);
+        setMeasuredDimension(finalWidth , finalHeight + par_padding_bottom + par_padding_top);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (!changed)
             return;
+
         int childCount = getChildCount();
-        int fatherWidth = getWidth();
+        int row = 0;
 
-        int childLeft = l;  //子view的left位置
-        int childTop = t;   //ziview的top位置
-
-        int rowWidth = 0;
-        int rowHeith = 0;
+        int childRight = par_padding_left;     //子View的相对父控件的左边的距离
+        int childBottom = 0;    //子view的相对父控件的顶部的距离
 
         View child;
         for (int i = 0; i < childCount; i++) {
             child = getChildAt(i);
-            MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+            int childWidth = child.getMeasuredWidth();
+            int childHeight = child.getMeasuredHeight();
 
-            int childWidth = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
-            int childHeight = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
-
-            rowWidth += childWidth + mSpace;
-            rowWidth = childHeight + mSpace;
-
-            if (rowWidth > fatherWidth){
-                //换行
-
-            } else {
-
+            childRight += childWidth + mSpace;
+            if (childRight > r) {
+                childRight = childWidth + mSpace + par_padding_left;
+                row++;
             }
 
+            childBottom = row * (childHeight + mSpace) + childHeight + mSpace + par_padding_top;
+            child.layout(childRight - (childWidth + mSpace), childBottom - (childHeight + mSpace), childRight - mSpace, childBottom - mSpace);
         }
+
 
     }
 

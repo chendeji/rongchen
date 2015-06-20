@@ -19,15 +19,15 @@
             style="@style/common_max_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="最近搜索城市"
-            android:textColor="@color/common_button_textcolor" />
+            android:textStyle="bold"
+            android:text="最近搜索城市" />
 
         <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout
             android:id="@+id/hll_recent_search_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
             android:layout_margin="@dimen/horizontal_10dp"
+            android:padding="@dimen/horizontal_10dp"
             app:space="@dimen/horizontal_10dp">
 
         </com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout>
@@ -36,15 +36,15 @@
             style="@style/common_max_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hot_city"
-            android:textColor="@color/common_button_textcolor" />
+            android:textStyle="bold"
+            android:text="@string/hot_city" />
 
         <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout
             android:id="@+id/hll_hot_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
             android:layout_margin="@dimen/horizontal_10dp"
+            android:padding="@dimen/horizontal_10dp"
             app:space="@dimen/horizontal_10dp">
 
         </com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout>
