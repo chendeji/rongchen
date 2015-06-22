@@ -1,5 +1,6 @@
 package com.chendeji.rongchen.server;
 
+import com.chendeji.rongchen.server.iinterface.ICityOperation;
 import com.chendeji.rongchen.server.iinterface.ICommentOperation;
 import com.chendeji.rongchen.server.iinterface.IDealOperation;
 import com.chendeji.rongchen.server.iinterface.IMerchantOperation;
@@ -13,6 +14,7 @@ public class AppServerFactory {
     private IMerchantOperation merchantOperation ;
     private ICommentOperation commentOperation;
     private IDealOperation dealOperation;
+    private ICityOperation mCityOperation;
 
     private AppServerFactory(){};
     private static AppServerFactory factory;
@@ -30,6 +32,10 @@ public class AppServerFactory {
         this.commentOperation = operation;
     }
 
+    public void setCityOperation(ICityOperation operation){
+        this.mCityOperation = operation;
+    }
+
     public void setDealOperation(IDealOperation operation){
         this.dealOperation = operation;
     }
@@ -42,6 +48,9 @@ public class AppServerFactory {
     }
     public ICommentOperation getCommentOperation(){
         return this.commentOperation;
+    }
+    public ICityOperation getCityOperation(){
+        return this.mCityOperation;
     }
 
 }

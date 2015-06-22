@@ -27,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/horizontal_10dp"
-            android:padding="@dimen/horizontal_10dp"
             app:space="@dimen/horizontal_10dp">
 
         </com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout>
@@ -44,7 +43,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/horizontal_10dp"
-            android:padding="@dimen/horizontal_10dp"
             app:space="@dimen/horizontal_10dp">
 
         </com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout>

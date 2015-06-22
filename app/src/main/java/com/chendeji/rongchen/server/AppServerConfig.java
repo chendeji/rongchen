@@ -1,5 +1,6 @@
 package com.chendeji.rongchen.server;
 
+import com.chendeji.rongchen.server.imp.CityOperation;
 import com.chendeji.rongchen.server.imp.CommentOperation;
 import com.chendeji.rongchen.server.imp.DealOperation;
 import com.chendeji.rongchen.server.imp.MerchantOperation;
@@ -41,6 +42,7 @@ public class AppServerConfig {
         appFactory.setMerchantOperation(new MerchantOperation());
         appFactory.setCommentOperation(new CommentOperation());
         appFactory.setDealOperation(new DealOperation());
+        appFactory.setCityOperation(new CityOperation());
 
 
     }
@@ -54,6 +56,7 @@ public class AppServerConfig {
             appFactory.setMerchantOperation(null);
             appFactory.setCommentOperation(null);
             appFactory.setDealOperation(null);
+            appFactory.setCityOperation(null);
         }
 
     }

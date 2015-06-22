@@ -195,7 +195,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
 
         //城市定位接口
         getMerchantListTask = new GetMerchantListTask(this, this, mCity, "", Sort.DEFAULT, mCurrentPage, DEFAULT_LIMITE
-                , Offset_Type.DEFUALT, Offset_Type.DEFUALT, Platform.HTML5).excuteProxy((Void[]) null);
+                , Offset_Type.GAODE, Offset_Type.GAODE, Platform.HTML5).excuteProxy((Void[]) null);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.chendeji.rongchen.ui.city;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,14 +15,22 @@ import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
 import com.chendeji.rongchen.common.view.CommonSearchLayout;
+import com.chendeji.rongchen.model.ReturnMes;
+import com.chendeji.rongchen.ui.city.fragment.CitiesFragment;
 import com.chendeji.rongchen.ui.city.fragment.HotCityFragment;
+import com.chendeji.rongchen.ui.city.task.CitySearchTask;
+import com.chendeji.rongchen.ui.common.UITaskCallBack;
 import com.chendeji.rongchen.ui.merchant.MerchantListActivity;
 
+import java.util.List;
+
 public class ChooseCityActivity extends AppCompatActivity implements CommonSearchLayout.OnSearchKeyWordChanged,
-        HotCityFragment.OnHotCityClicked {
+        HotCityFragment.OnHotCityClicked, CitiesFragment.OnCityListItemClickedListener {
 
     private CommonSearchLayout searchLayout;
     private HotCityFragment hotCityFragment;
+    private CitiesFragment citiesFragment;
+    private AsyncTask<Void, Void, ReturnMes<List<String>>> citySearchTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +48,22 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
 
         initComponent();
         initFragment();
+        initData();
+    }
+
+    private void initData() {
+        //更新应用的城市数据库信息
+        citySearchTask = new CitySearchTask(this,null).excuteProxy((Void[]) null);
     }
 
     private void initFragment() {
         hotCityFragment = HotCityFragment.newInstance(null, null);
-        getSupportFragmentManager().beginTransaction().add(R.id.ll_fragment_holder, hotCityFragment).commit();
+        citiesFragment = CitiesFragment.newInstance(null, null);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.ll_fragment_holder, hotCityFragment)
+                .add(R.id.ll_fragment_holder, citiesFragment)
+                .hide(citiesFragment).show(hotCityFragment)
+                .commit();
     }
 
     private void initComponent() {
@@ -77,15 +97,21 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
     public void onKeyChanged(String keyWord) {
         //TODO 搜索关键字变更的时候，要刷新碎片中列表的数据
         Logger.i("chendeji", "onKeyChanged");
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.hide(hotCityFragment).commit();
+        getSupportFragmentManager().beginTransaction()
+                .hide(hotCityFragment)
+                .show(citiesFragment)
+                .commit();
+        citiesFragment.searchKeyChanged(keyWord);
     }
 
     @Override
     public void onKeyClear() {
         //TODO 在清除内容的时候要变更碎片
         Logger.i("chendeji", "onKeyClear");
-        getSupportFragmentManager().beginTransaction().show(hotCityFragment).commit();
+        getSupportFragmentManager().beginTransaction()
+                .show(hotCityFragment)
+                .hide(citiesFragment)
+                .commit();
 
     }
 
@@ -100,9 +126,29 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
     @Override
     protected void onDestroy() {
         if (hotCityFragment != null){
-            getSupportFragmentManager().beginTransaction().remove(hotCityFragment).commit();
             hotCityFragment = null;
         }
+        if (citiesFragment != null){
+            citiesFragment = null;
+        }
+        cancelTask();
         super.onDestroy();
+    }
+
+    @Override
+    public void onFragmentInteraction(String city) {
+        Intent intent = new Intent(this, MerchantListActivity.class);
+        intent.putExtra(MerchantListActivity.CITY, city);
+        startActivity(intent);
+        finish();
+    }
+
+    private void cancelTask(){
+        if (citySearchTask != null){
+            if (!citySearchTask.isCancelled()){
+                citySearchTask.cancel(true);
+                citySearchTask = null;
+            }
+        }
     }
 }

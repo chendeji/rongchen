@@ -2,23 +2,36 @@ package com.chendeji.rongchen.ui.city.fragment;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.common.util.Logger;
+import com.chendeji.rongchen.common.view.CommonProgressDialog;
+import com.chendeji.rongchen.model.ReturnMes;
+import com.chendeji.rongchen.ui.city.task.CitySearchOnDateBaseTask;
+import com.chendeji.rongchen.ui.city.task.CitySearchTask;
+import com.chendeji.rongchen.ui.common.UITaskCallBack;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CitiesFragment.OnFragmentInteractionListener} interface
+ * {@link OnCityListItemClickedListener} interface
  * to handle interaction events.
  * Use the {@link CitiesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CitiesFragment extends Fragment {
+public class CitiesFragment extends Fragment implements AdapterView.OnItemClickListener, UITaskCallBack<ReturnMes<List<String>>> {
+
+    private static final String TAG = CitiesFragment.class.getSimpleName();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,7 +41,9 @@ public class CitiesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnCityListItemClickedListener mListener;
+    private CommonProgressDialog progressDialog;
+    private AsyncTask<Void, Void, ReturnMes<List<String>>> searchDateBaseTask;
 
     /**
      * Use this factory method to create a new instance of
@@ -66,13 +81,32 @@ public class CitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cities, container, false);
+        ListView city_list = (ListView) view.findViewById(R.id.lv_city_list);
+        city_list.setOnItemClickListener(this);
         return view;
     }
 
+    public void searchKeyChanged(String keyWord){
+        // 搜索关键字变更了，要更新listview中的数据
+        //1,查找到数据库对应的数据
+        //2,更新列表
+        starSearchCity(keyWord);
+    }
+
+    private void starSearchCity(String keyWord) {
+        searchDateBaseTask = new CitySearchOnDateBaseTask(getActivity(),this).excuteProxy((Void[])null);
+    }
+
+    @Override
+    public void onResume() {
+        Logger.i(TAG, "onResume");
+        super.onResume();
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(String city) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction(city);
         }
     }
 
@@ -80,7 +114,7 @@ public class CitiesFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnCityListItemClickedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -88,9 +122,64 @@ public class CitiesFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        cancelTask();
+        super.onPause();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (progressDialog != null){
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+        cancelTask();
+    }
+
+    private void cancelTask(){
+        if (searchDateBaseTask != null){
+            if (!searchDateBaseTask.isCancelled()){
+                searchDateBaseTask.cancel(true);
+                searchDateBaseTask = null;
+            }
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String city = (String) parent.getItemAtPosition(position);
+        onButtonPressed(city);
+    }
+
+    @Override
+    public void onPreExecute() {
+        //TODO 显示加载进度条Dialog
+        showLoadingDialog();
+    }
+
+    private void showLoadingDialog() {
+        if (progressDialog == null) {
+            progressDialog = new CommonProgressDialog(getActivity());
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+
+    private void hideLoadingDialog(){
+        if (progressDialog != null)
+            progressDialog.hide();
+    }
+
+    @Override
+    public void onPostExecute(ReturnMes<List<String>> returnMes) {
+        hideLoadingDialog();
+    }
+
+    @Override
+    public void onNetWorkError() {
+
     }
 
     /**
@@ -103,9 +192,9 @@ public class CitiesFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnCityListItemClickedListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(String city);
     }
 
 }

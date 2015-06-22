@@ -6,18 +6,21 @@ package com.chendeji.rongchen.server;
  */
 public class AppConst {
 
-    public static String MERCHANT_BASE_URL = "v1/business";
-    public static String FIND_MERCHANTS = "find_businesses?";
-    public static String GET_SINGLE_BUSINESS = "get_single_business?";
+    public static final String METADATA = "v1/metadata";
+    public static final String GET_CITIES_WITH_BUSINESSES = "get_cities_with_businesses?";
 
-    public static String COMMENT_BASE_URL = "v1/review";
-    public static String GET_RECENT_REVIEWS = "get_recent_reviews?";
+    public static final String MERCHANT_BASE_URL = "v1/business";
+    public static final String FIND_MERCHANTS = "find_businesses?";
+    public static final String GET_SINGLE_BUSINESS = "get_single_business?";
 
-    public static String DEAL_BASE_URL = "v1/deal";
-    public static String GET_SINGLE_DEAL = "get_single_deal?";
+    public static final String COMMENT_BASE_URL = "v1/review";
+    public static final String GET_RECENT_REVIEWS = "get_recent_reviews?";
 
-    public static String OK = "OK";
-    public static String ERROR = "ERROR";
+    public static final String DEAL_BASE_URL = "v1/deal";
+    public static final String GET_SINGLE_DEAL = "get_single_deal?";
+
+    public static final String OK = "OK";
+    public static final String ERROR = "ERROR";
 
     public static interface AppBaseConst{
         /** 大众点评基本访问路径*/

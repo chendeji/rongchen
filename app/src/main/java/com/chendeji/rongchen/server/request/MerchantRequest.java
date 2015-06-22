@@ -69,10 +69,13 @@ public final class MerchantRequest{
         if(offset_type != Offset_Type.DEFUALT){
             parame.put("offset_type", String.valueOf(offset_type.getValue()));
             if (offset_type == Offset_Type.GAODE){
-                double latitude = map.getLocation()[0];
-                double longitude = map.getLocation()[1];
-                parame.put("latitude",String.valueOf(latitude));
-                parame.put("longitude",String.valueOf(longitude));
+                double[] location = map.getLocation();
+                if (location != null){
+                    double latitude = location[0];
+                    double longitude = location[1];
+                    parame.put("latitude",String.valueOf(latitude));
+                    parame.put("longitude",String.valueOf(longitude));
+                }
             }
         }
         if(out_offset_type != Offset_Type.DEFUALT){
