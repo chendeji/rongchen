@@ -35,7 +35,7 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtil.translucentStatusBar(this);
+//        StatusBarUtil.translucentStatusBar(this);
 
         //1，通过访问接口获取最新的支持团购商户搜索的城市列表
         //2，第一次加载就显示加载进度条，后面默认使用数据库缓存了。
@@ -53,7 +53,22 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
 
     private void initData() {
         //更新应用的城市数据库信息
-        citySearchTask = new CitySearchTask(this,null).excuteProxy((Void[]) null);
+        citySearchTask = new CitySearchTask(this, new UITaskCallBack<ReturnMes<List<String>>>() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(ReturnMes<List<String>> returnMes) {
+
+            }
+
+            @Override
+            public void onNetWorkError() {
+
+            }
+        }).excuteProxy((Void[]) null);
     }
 
     private void initFragment() {

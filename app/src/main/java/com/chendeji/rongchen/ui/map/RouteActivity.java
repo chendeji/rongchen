@@ -55,7 +55,7 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtil.translucentStatusBar(this);
+//        StatusBarUtil.translucentStatusBar(this);
         setContentView(R.layout.activity_road_line_planning);
 
         iMap = MapManager.getManager().getMap();

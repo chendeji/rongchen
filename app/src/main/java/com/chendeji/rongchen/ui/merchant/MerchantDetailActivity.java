@@ -102,7 +102,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtil.translucentStatusBar(this);
+//        StatusBarUtil.translucentStatusBar(this);
         setContentView(R.layout.activity_merchant_detail);
         getIntentData();
         //1，头部图像视图 （完成）

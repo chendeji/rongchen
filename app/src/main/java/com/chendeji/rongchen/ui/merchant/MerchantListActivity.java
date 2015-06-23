@@ -76,7 +76,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtil.translucentStatusBar(this);
+//        StatusBarUtil.translucentStatusBar(this);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);

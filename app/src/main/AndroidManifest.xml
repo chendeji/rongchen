@@ -25,16 +25,12 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppTheme" >
+        android:theme="@style/BaseTheme" >
 
-        <!-- <activity android:name=".ui.RecycleViewDemoActivity"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
+        <meta-data android:name="DATABASE" android:value="rongchen.db" />
+        <meta-data android:name="VERSION" android:value="2" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.chendeji.rongchen.model" />
 
         <activity
             android:name=".ui.welcome.WelcomeActivity"
@@ -64,26 +60,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="53eab95e819e8a76b1def54b6def6609" />
-        <!-- 高德地图的release-key -->
-        <!-- <meta-data -->
-        <!-- android:name="com.amap.api.v2.apikey" -->
-        <!-- android:value="18cff9bcbb3808a46f56a40965998cde" /> -->
 
-
-        <!-- 百度地图的key -->
-        <!-- <meta-data -->
-        <!-- android:name="com.baidu.lbsapi.API_KEY" -->
-        <!-- android:value="aG5UpkbDGLYIc6q8d2XiePGT" /> -->
-
-
-        <!-- <service -->
-        <!-- android:name="com.baidu.location.f" -->
-        <!-- android:enabled="true" -->
-        <!-- android:process=":remote"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="com.baidu.location.service_v2.2"></action> -->
-        <!-- </intent-filter> -->
-        <!-- </service> -->
         <activity
             android:name=".ui.ShowImageActivity"
             android:label="@string/title_activity_show_image" >

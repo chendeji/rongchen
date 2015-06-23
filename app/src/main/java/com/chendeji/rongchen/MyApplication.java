@@ -1,6 +1,7 @@
 package com.chendeji.rongchen;
 
 import com.chendeji.rongchen.common.map.MapManager;
+import com.chendeji.rongchen.dao.DBFactory;
 import com.chendeji.rongchen.model.Offset_Type;
 import com.chendeji.rongchen.server.AppServerConfig;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -68,6 +69,9 @@ public class MyApplication extends Application {
         manager.init(this);
         manager.setOffset_type(Offset_Type.GAODE);  //设定高德地图为坐标偏移
 
+        //初始化数据库
+        DBFactory.getInstance().init(this);
+
         super.onCreate();
 
     }
@@ -90,6 +94,7 @@ public class MyApplication extends Application {
     public void onTerminate() {
         ImageLoader.getInstance().destroy();
         AppServerConfig.destoryFactory();
+        DBFactory.getInstance().destroy();
         MapManager.getManager().release();
         super.onTerminate();
     }

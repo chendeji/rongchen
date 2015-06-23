@@ -1,11 +1,12 @@
 package com.chendeji.rongchen.model.merchant;
 
-import com.chendeji.rongchen.model.Regions;
+import com.orm.SugarRecord;
+import com.orm.dsl.Column;
+import com.orm.dsl.Ignore;
+import com.orm.dsl.Table;
 
 import java.io.Serializable;
 import java.util.List;
-
-import com.chendeji.rongchen.model.Categories;
 
 /**
  * @author chendeji
@@ -14,9 +15,11 @@ import com.chendeji.rongchen.model.Categories;
  * <p/>
  * ${tags}
  */
-public class Merchant implements Serializable{
+@Table(name = "Merchant")
+public class Merchant extends SugarRecord implements Serializable{
 
     /** 商户id*/
+    @Column(name = "business_id", unique = true, notNull = true)
     public long business_id;
 
     /** 商户名称*/
@@ -35,10 +38,10 @@ public class Merchant implements Serializable{
     public String city;
 
     /** 城市片区*/
-    public Regions regions;
+    public List<String> regions;
 
     /** 分类*/
-    public Categories categories;
+    public List<String> categories;
 
     /** 纬度*/
     public double latitude;
@@ -68,11 +71,17 @@ public class Merchant implements Serializable{
 //            return this.value;
 //        }
 //    }
+    @Ignore
     public static final int PRODUCT_GRADE_NONE = 0;
+    @Ignore
     public static final int PRODUCT_GRADE_NORMAL = 1;
+    @Ignore
     public static final int PRODUCT_GRADE_STILL = 2;
+    @Ignore
     public static final int PRODUCT_GRADE_GOOD = 3;
+    @Ignore
     public static final int PRODUCT_GRADE_PRITY_GOOD = 4;
+    @Ignore
     public static final int PRODUCT_GRADE_VARY_GOOD = 5;
 
     /** 食品评价*/
@@ -89,11 +98,17 @@ public class Merchant implements Serializable{
 //        }
 //    }
 
+    @Ignore
     public static final int DECORATION_GRADE_NONE = 0;
+    @Ignore
     public static final int DECORATION_GRADE_NORMAL = 1;
+    @Ignore
     public static final int DECORATION_GRADE_STILL = 2;
+    @Ignore
     public static final int DECORATION_GRADE_GOOD = 3;
+    @Ignore
     public static final int DECORATION_GRADE_PRITY_GOOD = 4;
+    @Ignore
     public static final int DECORATION_GRADE_VERY_GOOD = 5;
     /** 环境评价*/
     public int decoration_grade;
@@ -109,11 +124,17 @@ public class Merchant implements Serializable{
 //        }
 //    }
 
+    @Ignore
     public static final int SERVICE_GRADE_NONE = 0;
+    @Ignore
     public static final int SERVICE_GRADE_NORMAL = 1;
+    @Ignore
     public static final int SERVICE_GRADE_STILL = 2;
+    @Ignore
     public static final int SERVICE_GRADE_GOOD = 3;
+    @Ignore
     public static final int SERVICE_GRADE_PRITY_GOOD = 4;
+    @Ignore
     public static final int SERVICE_GRADE_VERY_GOOD = 5;
     /** 服务评价*/
     public int service_grade;
@@ -128,14 +149,19 @@ public class Merchant implements Serializable{
     public float service_score;
 
     public int review_count;
+
     public String review_list_url;
 
     public int distance;
+
     public String business_url;
+
     public String photo_url;
+
     public String s_photo_url;
 
     public int photo_count;
+
     public String photo_list_url;
 
 //    public enum Has_Coupon{
@@ -148,7 +174,10 @@ public class Merchant implements Serializable{
 //            return this.value;
 //        }
 //    }
+
+    @Ignore
     public static final int HAS_COUPONS = 1;
+    @Ignore
     public static final int HASNT_COUPONS = 0;
 
     /** 是否有优惠劵*/
@@ -171,24 +200,72 @@ public class Merchant implements Serializable{
 //        }
 //    }
 
+    @Ignore
     public static final int HAS_DEALS = 1;
+    @Ignore
     public static final int HASNT_DEALS = 0;
 
     /** 是否有团购*/
     public int has_deal;
+
     /** 团购数量*/
     public int deal_count;
+
     /** 团购列表*/
     public List<SimpleGroupBuyInfo> deals;
 
+    @Ignore
     public static final int ONLINE_RESERVATION_ABLE = 1;
+    @Ignore
     public static final int ONLINE_RESERVATION_ANTT_ABLE = 0;
 
     /** 是否有在线预订*/
     public int has_online_reservation;
+
     /** 在线预订页面链接，目前仅返回HTML5站点链接*/
     public String online_reservation_url;
 
 
-
+    @Override
+    public String toString() {
+        return "Merchant{" +
+                "business_id=" + business_id +
+                ", name='" + name + '\'' +
+                ", branch_name='" + branch_name + '\'' +
+                ", address='" + address + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", city='" + city + '\'' +
+                ", regions=" + regions +
+                ", categories=" + categories +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", avg_price=" + avg_price +
+                ", avg_rating=" + avg_rating +
+                ", rating_img_url='" + rating_img_url + '\'' +
+                ", rating_s_img_url='" + rating_s_img_url + '\'' +
+                ", product_grade=" + product_grade +
+                ", decoration_grade=" + decoration_grade +
+                ", service_grade=" + service_grade +
+                ", product_score=" + product_score +
+                ", decoration_score=" + decoration_score +
+                ", service_score=" + service_score +
+                ", review_count=" + review_count +
+                ", review_list_url='" + review_list_url + '\'' +
+                ", distance=" + distance +
+                ", business_url='" + business_url + '\'' +
+                ", photo_url='" + photo_url + '\'' +
+                ", s_photo_url='" + s_photo_url + '\'' +
+                ", photo_count=" + photo_count +
+                ", photo_list_url='" + photo_list_url + '\'' +
+                ", has_coupon=" + has_coupon +
+                ", coupon_id=" + coupon_id +
+                ", coupon_description='" + coupon_description + '\'' +
+                ", coupon_url='" + coupon_url + '\'' +
+                ", has_deal=" + has_deal +
+                ", deal_count=" + deal_count +
+                ", deals=" + deals +
+                ", has_online_reservation=" + has_online_reservation +
+                ", online_reservation_url='" + online_reservation_url + '\'' +
+                '}';
+    }
 }

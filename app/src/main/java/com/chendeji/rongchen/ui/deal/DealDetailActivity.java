@@ -67,7 +67,7 @@ public class DealDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtil.translucentStatusBar(this);
+//        StatusBarUtil.translucentStatusBar(this);
         setContentView(R.layout.activity_deal_detail);
         info = (SimpleGroupBuyInfo) getIntent().getExtras().getSerializable(DEAL_KEY);
 

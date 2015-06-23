@@ -25,12 +25,13 @@ public class WelcomeActivity extends AppCompatActivity implements IMap.IMapLocat
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,  WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        onLocationFail();
     }
 
     @Override
     protected void onResume() {
         Logger.i(TAG, "onResume");
-        MapManager.getManager().getMap().startLocation(this);
+//        MapManager.getManager().getMap().startLocation(this);
         super.onResume();
     }
 

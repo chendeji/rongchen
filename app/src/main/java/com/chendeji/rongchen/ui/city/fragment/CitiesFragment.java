@@ -13,12 +13,18 @@ import android.widget.ListView;
 
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
+import com.chendeji.rongchen.common.util.ToastUtil;
+import com.chendeji.rongchen.common.view.CommonLoadingProgressView;
 import com.chendeji.rongchen.common.view.CommonProgressDialog;
+import com.chendeji.rongchen.dao.tables.CityTable;
 import com.chendeji.rongchen.model.ReturnMes;
+import com.chendeji.rongchen.model.city.City;
+import com.chendeji.rongchen.ui.city.adapter.CityAdapter;
 import com.chendeji.rongchen.ui.city.task.CitySearchOnDateBaseTask;
 import com.chendeji.rongchen.ui.city.task.CitySearchTask;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +50,10 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
     private OnCityListItemClickedListener mListener;
     private CommonProgressDialog progressDialog;
     private AsyncTask<Void, Void, ReturnMes<List<String>>> searchDateBaseTask;
+    private CommonLoadingProgressView progressView;
+    private CityAdapter adapter;
+    private long thisTime;
+    private long lastTime;
 
     /**
      * Use this factory method to create a new instance of
@@ -81,12 +91,16 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cities, container, false);
+        progressView = (CommonLoadingProgressView) view.findViewById(R.id.common_loading_layout);
         ListView city_list = (ListView) view.findViewById(R.id.lv_city_list);
+        adapter = new CityAdapter(getActivity());
+        city_list.setAdapter(adapter);
         city_list.setOnItemClickListener(this);
         return view;
     }
 
     public void searchKeyChanged(String keyWord){
+
         // 搜索关键字变更了，要更新listview中的数据
         //1,查找到数据库对应的数据
         //2,更新列表
@@ -94,7 +108,7 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void starSearchCity(String keyWord) {
-        searchDateBaseTask = new CitySearchOnDateBaseTask(getActivity(),this).excuteProxy((Void[])null);
+        searchDateBaseTask = new CitySearchOnDateBaseTask(getActivity(),this, keyWord).excuteProxy((Void[])null);
     }
 
     @Override
@@ -135,6 +149,10 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
             progressDialog.dismiss();
             progressDialog = null;
         }
+        if (progressView != null){
+            progressView.setVisible(View.GONE);
+            progressView = null;
+        }
         cancelTask();
     }
 
@@ -153,33 +171,31 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
         onButtonPressed(city);
     }
 
+    private void showProgress(){
+        progressView.setVisible(View.VISIBLE);
+    }
+    private void hideProgress(){
+        progressView.setVisible(View.GONE);
+    }
+
     @Override
     public void onPreExecute() {
-        //TODO 显示加载进度条Dialog
-        showLoadingDialog();
-    }
-
-    private void showLoadingDialog() {
-        if (progressDialog == null) {
-            progressDialog = new CommonProgressDialog(getActivity());
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
-    }
-
-    private void hideLoadingDialog(){
-        if (progressDialog != null)
-            progressDialog.hide();
+//        showLoadingDialog();
+        showProgress();
     }
 
     @Override
     public void onPostExecute(ReturnMes<List<String>> returnMes) {
-        hideLoadingDialog();
+//        hideLoadingDialog();
+        //加载数据
+        List<String> cities = returnMes.object;
+        adapter.setData(cities);
+        hideProgress();
     }
 
     @Override
     public void onNetWorkError() {
-
+        ToastUtil.showLongToast(getActivity(), getString(R.string.no_net_work_toast));
     }
 
     /**
@@ -195,6 +211,19 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
     public interface OnCityListItemClickedListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(String city);
+    }
+
+    private void showLoadingDialog() {
+        if (progressDialog == null) {
+            progressDialog = new CommonProgressDialog(getActivity());
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+
+    private void hideLoadingDialog(){
+        if (progressDialog != null)
+            progressDialog.hide();
     }
 
 }

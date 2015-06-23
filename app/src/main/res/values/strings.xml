@@ -27,28 +27,21 @@
     <string name="show_more_merchant">显示更多商户</string>
     <string name="buy_imediatly">立即抢购</string>
 
-    <integer-array name="google_colors">
-        <item>@color/light_red</item>
-        <item>@color/blue</item>
-        <item>@color/yellow</item>
-        <item>@color/green</item>
-    </integer-array>
-
     <string name="title_activity_recycle_view_demo">RecycleViewDemoActivity</string>
     <string name="make_call">电话</string>
-    <string name="title_activity_show_image">ShowImageActivity</string>
+    <string name="title_activity_show_image">图集</string>
     <string name="merchant_info">商户详情</string>
     <string name="deal_info">团购详情</string>
-    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_map">地图</string>
     <string name="begin_local_navigation">设置该位置为终点？</string>
     <string name="begin_navigation">生成路线</string>
     <string name="positive">确定</string>
     <string name="negative">取消</string>
     <string name="click_me">请点击我</string>
-    <string name="title_activity_road_line_planning">RoadLinePlanningActivity</string>
+    <string name="title_activity_road_line_planning">路线规划</string>
     <string name="check_route">查找路线</string>
-    <string name="title_activity_choose_city">ChooseCityActivity</string>
-    <string name="title_activity_deal_category">DealCategoryActivity</string>
+    <string name="title_activity_choose_city">选择城市</string>
+    <string name="title_activity_deal_category">选择分类</string>
     <string name="enter_key_word">输入城市关键字</string>
     <string name="choose_city">选择城市</string>
 
@@ -57,6 +50,7 @@
     <string name="current_city">当前城市</string>
     <string name="hot_city">热门城市</string>
     <string name="location_faile">定位失败，请重新定位</string>
+    <string name="database_nothing">数据库没有该类数据</string>
 
     <string-array name="hot_cities">
         <item>北京</item>
