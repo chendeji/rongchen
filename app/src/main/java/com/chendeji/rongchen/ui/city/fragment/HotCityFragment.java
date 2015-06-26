@@ -13,6 +13,12 @@ import android.widget.Button;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout;
+import com.chendeji.rongchen.common.view.CommonLoadingProgressView;
+import com.chendeji.rongchen.model.ReturnMes;
+import com.chendeji.rongchen.ui.city.task.GetRecentSearchCityTask;
+import com.chendeji.rongchen.ui.common.UITaskCallBack;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,18 +29,17 @@ import com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout;
  * create an instance of this fragment.
  */
 public class HotCityFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnHotCityClicked mListener;
     private AutoHorizontalLinearLayout recent_city;
     private AutoHorizontalLinearLayout hot_city;
+    private CommonLoadingProgressView progressView;
 
     /**
      * Use this factory method to create a new instance of
@@ -44,7 +49,6 @@ public class HotCityFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment HotCityFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static HotCityFragment newInstance(String param1, String param2) {
         HotCityFragment fragment = new HotCityFragment();
         Bundle args = new Bundle();
@@ -74,22 +78,60 @@ public class HotCityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hot_city, container, false);
         recent_city = (AutoHorizontalLinearLayout) view.findViewById(R.id.hll_recent_search_city);
         hot_city = (AutoHorizontalLinearLayout) view.findViewById(R.id.hll_hot_city);
+        progressView = (CommonLoadingProgressView) view.findViewById(R.id.common_loading_layout);
         initData();
         return view;
     }
 
+    private void showProgress(){
+        if (progressView != null){
+            progressView.show();
+        }
+    }
+    private void hideProgress(){
+        if (progressView != null){
+            progressView.hide();
+        }
+    }
+
     public void initData(){
-        OnCityButtonClickedListener listener = new OnCityButtonClickedListener();
-        Button city;
-        //最近搜索城市数据填充
-        city = new Button(getActivity());
-        city.setTextColor(Color.WHITE);
-        city.setText("福州");
-        city.setBackgroundResource(R.drawable.city_button_bg);
-        city.setOnClickListener(listener);
-        recent_city.addView(city);
+        final OnCityButtonClickedListener listener = new OnCityButtonClickedListener();
+        //开启子线程去完成数据库提取最近搜索城市的任务
+        new GetRecentSearchCityTask(getActivity(), new UITaskCallBack<ReturnMes<List<String>>>() {
+            @Override
+            public void onPreExecute() {
+                showProgress();
+            }
+
+            @Override
+            public void onPostExecute(ReturnMes<List<String>> returnMes) {
+                hideProgress();
+                List<String> stringList = returnMes.object;
+                Button cityView;
+                // 最近搜索城市数据填充
+                if (stringList != null && !stringList.isEmpty()){
+                    for (String city : stringList){
+                        cityView = new Button(getActivity());
+                        cityView.setTextColor(Color.WHITE);
+                        cityView.setText(city);
+                        cityView.setBackgroundResource(R.drawable.city_button_bg);
+                        cityView.setOnClickListener(listener);
+                        recent_city.addView(cityView);
+                    }
+                }else {
+                    recent_city.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNetWorkError() {
+
+            }
+        }).excuteProxy((Void[])null);
+
 
         //热门城市数据填充
+        Button city;
         String[] hot_cities = getActivity().getResources().getStringArray(R.array.hot_cities);
         int hot_cities_count = hot_cities.length;
         for (int i = 0; i < hot_cities_count; i++) {
@@ -110,7 +152,6 @@ public class HotCityFragment extends Fragment {
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(View view) {
         Button city = (Button) view;
         if (mListener != null) {
@@ -146,7 +187,6 @@ public class HotCityFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnHotCityClicked {
-        // TODO: Update argument type and name
         public void onCityClicked(String city);
     }
 

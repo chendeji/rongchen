@@ -1,0 +1,21 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chendeji.rongchen.ui.category.fragment.CategoryListFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/tb_category"
+        android:id="@+id/rv_categroy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <com.chendeji.rongchen.common.view.CommonLoadingProgressView
+        android:layout_below="@id/tb_category"
+        android:id="@+id/common_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

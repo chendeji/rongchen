@@ -4,10 +4,11 @@ package com.chendeji.rongchen.server;
  * 用于定义应用的常量
  * Created by chendeji on 27/9/14.
  */
-public class AppConst {
+public final class AppConst {
 
     public static final String METADATA = "v1/metadata";
     public static final String GET_CITIES_WITH_BUSINESSES = "get_cities_with_businesses?";
+    public static final String GET_CATEGORIES_WITH_BUSINESSES = "get_categories_with_businesses?";
 
     public static final String MERCHANT_BASE_URL = "v1/business";
     public static final String FIND_MERCHANTS = "find_businesses?";
@@ -44,6 +45,8 @@ public class AppConst {
 
     public static interface RequestParams{
         String DEFUALT_CITY = "北京";
+        String DEFUALT_CATEGORY = "美食";
+        String ALL = "全部";
     }
 
 

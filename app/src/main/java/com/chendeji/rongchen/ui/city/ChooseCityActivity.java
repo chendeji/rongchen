@@ -9,13 +9,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
+import com.chendeji.rongchen.common.view.CommonLoadingProgressView;
 import com.chendeji.rongchen.common.view.CommonSearchLayout;
 import com.chendeji.rongchen.model.ReturnMes;
+import com.chendeji.rongchen.ui.category.DealCategoryActivity;
 import com.chendeji.rongchen.ui.city.fragment.CitiesFragment;
 import com.chendeji.rongchen.ui.city.fragment.HotCityFragment;
 import com.chendeji.rongchen.ui.city.task.CitySearchTask;
@@ -132,7 +136,15 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
 
     @Override
     public void onCityClicked(String city) {
-        Intent intent = new Intent(this, MerchantListActivity.class);
+        goChooseCategory(city);
+    }
+
+    private void goChooseCategory(String city){
+        SettingFactory factory = SettingFactory.getInstance();
+        factory.setCurrentCity(city);
+        factory.addRecentSearchCity(city);
+
+        Intent intent = new Intent(this, DealCategoryActivity.class);
         intent.putExtra(MerchantListActivity.CITY, city);
         startActivity(intent);
         finish();
@@ -152,10 +164,7 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
 
     @Override
     public void onFragmentInteraction(String city) {
-        Intent intent = new Intent(this, MerchantListActivity.class);
-        intent.putExtra(MerchantListActivity.CITY, city);
-        startActivity(intent);
-        finish();
+        goChooseCategory(city);
     }
 
     private void cancelTask(){

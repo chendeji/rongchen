@@ -71,8 +71,7 @@ public class MerchantRecycleAdapter extends RecyclerView.Adapter<MerchantRecycle
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 进入到商户的详细页面
-
+                // 进入到商户的详细页面
                 Intent intent = new Intent(mContext, MerchantDetailActivity.class);
                 intent.putExtra(MerchantDetailActivity.MERCHANT_ID, merchant.business_id);
                 mContext.startActivity(intent);

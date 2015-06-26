@@ -48,7 +48,6 @@ public class DealItemView extends RelativeLayout {
         dealName.setText(info.description);
         String photo_url = info.url;
         String groupBugID = info.id;
-        //TODO 根据id去后台找数据
         ImageLoader.getInstance().displayImage(photo_url, imageView, ImageLoaderOptionsUtil.listItemOptions);
     }
 

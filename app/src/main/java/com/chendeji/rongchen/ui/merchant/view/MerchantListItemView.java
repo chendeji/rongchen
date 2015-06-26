@@ -106,7 +106,6 @@ public class MerchantListItemView extends CardView {
                 .build());
         mMerchantAvgPrice.display();
 
-        //TODO 下载图片的功能
         String s_photo_url = merchant.s_photo_url;
         mMerchantAvatar.setTag(s_photo_url);
 

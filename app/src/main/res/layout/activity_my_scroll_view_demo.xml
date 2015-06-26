@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.chendeji.rongchen.ui.MyScrollViewDemoActivity">
+
+
+    <com.chendeji.rongchen.common.view.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout
+            android:id="@+id/ahll_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout>
+
+    </com.chendeji.rongchen.common.view.MyScrollView>
+
+</RelativeLayout>

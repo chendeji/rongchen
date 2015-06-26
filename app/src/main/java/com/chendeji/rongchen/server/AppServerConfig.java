@@ -1,5 +1,6 @@
 package com.chendeji.rongchen.server;
 
+import com.chendeji.rongchen.server.imp.CategoryOperation;
 import com.chendeji.rongchen.server.imp.CityOperation;
 import com.chendeji.rongchen.server.imp.CommentOperation;
 import com.chendeji.rongchen.server.imp.DealOperation;
@@ -43,7 +44,7 @@ public class AppServerConfig {
         appFactory.setCommentOperation(new CommentOperation());
         appFactory.setDealOperation(new DealOperation());
         appFactory.setCityOperation(new CityOperation());
-
+        appFactory.setCategoryOperation(new CategoryOperation());
 
     }
 

@@ -26,16 +26,24 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/BaseTheme" >
-
-        <meta-data android:name="DATABASE" android:value="rongchen.db" />
-        <meta-data android:name="VERSION" android:value="2" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.chendeji.rongchen.model" />
+        <meta-data
+            android:name="DATABASE"
+            android:value="rongchen.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.chendeji.rongchen.model" />
 
         <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:label="@string/app_name"
             android:uiOptions="splitActionBarWhenNarrow" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -75,12 +83,16 @@
         </activity>
         <activity
             android:name=".ui.city.ChooseCityActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_choose_city" >
+            android:label="@string/title_activity_choose_city"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".ui.category.DealCategoryActivity"
             android:label="@string/title_activity_deal_category" >
+        </activity>
+        <activity
+            android:name=".ui.MyScrollViewDemoActivity"
+            android:label="@string/title_activity_my_scroll_view_demo" >
         </activity>
     </application>
 

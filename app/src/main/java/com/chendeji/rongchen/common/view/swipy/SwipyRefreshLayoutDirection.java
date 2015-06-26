@@ -1,4 +1,4 @@
-package com.chendeji.rongchen.common.view;
+package com.chendeji.rongchen.common.view.swipy;
 
 /**
  * Created by oliviergoutay on 1/23/15.

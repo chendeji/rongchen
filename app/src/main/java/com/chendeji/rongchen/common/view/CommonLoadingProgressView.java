@@ -39,8 +39,16 @@ public class CommonLoadingProgressView extends RelativeLayout {
 
     }
 
+    public void show(){
+        setVisible(View.VISIBLE);
+    }
 
-    public void setVisible(int visible){
+    public void hide(){
+        setVisible(View.GONE);
+    }
+
+
+    private void setVisible(int visible){
         switch (visible){
             case View.VISIBLE:
                 if (progressView != null){

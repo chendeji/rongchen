@@ -13,6 +13,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -63,6 +64,9 @@ public class MyApplication extends Application {
 
         //初始化注入接口
         AppServerConfig.getInstance().initServerFactory();
+
+        //初始化应用的设置信息
+        SettingFactory.getInstance().init(this);
 
         //初始化地图
         MapManager manager = MapManager.getManager();

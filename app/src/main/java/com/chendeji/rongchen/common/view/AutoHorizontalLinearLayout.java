@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.common.util.Logger;
 
 /**
  * Created by chendeji on 19/6/15.
@@ -67,14 +68,17 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
         int rowHeight = 0;
 
         //wrap_content
-        if (widthMode == MeasureSpec.AT_MOST
-                || heightMode == MeasureSpec.AT_MOST) {
+        if ((widthMode == MeasureSpec.AT_MOST || widthMode == MeasureSpec.UNSPECIFIED)
+                || (heightMode == MeasureSpec.AT_MOST || heightMode == MeasureSpec.UNSPECIFIED)) {
             //这个时候需要自己计算宽度和高度
             //先计算每个子view的测量宽高
             int childCount = getChildCount();
             View childView;
             for (int i = 0; i < childCount; i++) {
                 childView = getChildAt(i);
+                int visitable = childView.getVisibility();
+                if (visitable == View.GONE)
+                    continue;
                 measureChild(childView, widthMeasureSpec, heightMeasureSpec);
 
                 MarginLayoutParams lp = (MarginLayoutParams) childView.getLayoutParams();
@@ -103,10 +107,10 @@ public class AutoHorizontalLinearLayout extends ViewGroup {
             height -= mSpace;
         }
 
-        int finalWidth = widthMode == MeasureSpec.AT_MOST ? width : widthSize;
-        int finalHeight = heightMode == MeasureSpec.AT_MOST ? height : heightSize;
+        int finalWidth = (widthMode == MeasureSpec.AT_MOST || widthMode == MeasureSpec.UNSPECIFIED) ? width : widthSize;
+        int finalHeight = (heightMode == MeasureSpec.AT_MOST || heightMode == MeasureSpec.UNSPECIFIED) ? height : heightSize;
 
-        setMeasuredDimension(finalWidth , finalHeight + par_padding_bottom + par_padding_top);
+        setMeasuredDimension(finalWidth, finalHeight + par_padding_bottom + par_padding_top);
     }
 
     @Override

@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.chendeji.rongchen.common.view.SwipyRefreshLayout
+        <com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayout
             android:id="@+id/sr_reflesh_holder"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -46,7 +46,7 @@
             <!--android:cacheColorHint="@android:color/transparent"-->
             <!--android:dividerHeight="@dimen/horizontal_10dp"></ListView>-->
 
-        </com.chendeji.rongchen.common.view.SwipyRefreshLayout>
+        </com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayout>
 
         <com.rey.material.widget.FloatingActionButton
             android:id="@+id/fab_image"

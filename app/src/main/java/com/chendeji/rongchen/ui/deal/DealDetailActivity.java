@@ -79,7 +79,7 @@ public class DealDetailActivity extends AppCompatActivity {
     }
 
     private void getDealData() {
-        //TODO 编写接口
+        // 编写接口
         getDealDetailTask = new GetDealDetailInfoTask(this, new UITaskCallBack<ReturnMes<Deal>>() {
 
             @Override

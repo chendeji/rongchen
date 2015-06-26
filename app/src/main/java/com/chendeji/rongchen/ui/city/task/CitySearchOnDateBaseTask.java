@@ -3,8 +3,7 @@ package com.chendeji.rongchen.ui.city.task;
 import android.content.Context;
 
 import com.chendeji.rongchen.R;
-import com.chendeji.rongchen.common.util.ToastUtil;
-import com.chendeji.rongchen.dao.tables.CityTable;
+import com.chendeji.rongchen.dao.tables.city.CityTable;
 import com.chendeji.rongchen.model.ErrorInfo;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.city.City;

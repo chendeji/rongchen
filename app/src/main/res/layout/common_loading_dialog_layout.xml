@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <!-- TODO 显示一个Processbar -->
+    <!-- 显示一个Processbar -->
     <com.rey.material.widget.ProgressView
         android:id="@+id/common_loading_progress"
         android:layout_width="32dp"

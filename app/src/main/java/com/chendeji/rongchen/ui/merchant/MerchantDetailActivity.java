@@ -117,7 +117,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
         marchant_contact_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 开启地图导航
+                // 开启地图导航
 //                try {
 //                    NaviPara para = new NaviPara();
 //                    para.setTargetPoint(new LatLng(merchant.latitude, merchant.longitude));

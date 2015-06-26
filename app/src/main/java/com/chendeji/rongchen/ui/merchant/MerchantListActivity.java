@@ -19,11 +19,10 @@ import android.widget.FrameLayout;
 
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
-import com.chendeji.rongchen.common.util.StatusBarUtil;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.view.CommonFooterView;
-import com.chendeji.rongchen.common.view.SwipyRefreshLayout;
-import com.chendeji.rongchen.common.view.SwipyRefreshLayoutDirection;
+import com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayout;
+import com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayoutDirection;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.model.Offset_Type;
 import com.chendeji.rongchen.model.Platform;

@@ -77,7 +77,7 @@ public class DealTopImageView extends RelativeLayout implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        //TODO 跳到图片展示页面
+        // 跳到图片展示页面
         Intent intent = new Intent(getContext(), ShowImageActivity.class);
         ArrayList<String> photo_urls = new ArrayList<String>();
         photo_urls.addAll(mDeal.more_image_urls);

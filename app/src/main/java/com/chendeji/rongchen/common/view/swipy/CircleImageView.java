@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.chendeji.rongchen.common.view;
+package com.chendeji.rongchen.common.view.swipy;
 
 import android.content.Context;
 import android.content.res.Resources;

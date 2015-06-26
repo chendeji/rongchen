@@ -1,7 +1,6 @@
 package com.chendeji.rongchen.ui.city.fragment;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,15 +15,11 @@ import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.view.CommonLoadingProgressView;
 import com.chendeji.rongchen.common.view.CommonProgressDialog;
-import com.chendeji.rongchen.dao.tables.CityTable;
 import com.chendeji.rongchen.model.ReturnMes;
-import com.chendeji.rongchen.model.city.City;
 import com.chendeji.rongchen.ui.city.adapter.CityAdapter;
 import com.chendeji.rongchen.ui.city.task.CitySearchOnDateBaseTask;
-import com.chendeji.rongchen.ui.city.task.CitySearchTask;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,12 +33,10 @@ import java.util.List;
 public class CitiesFragment extends Fragment implements AdapterView.OnItemClickListener, UITaskCallBack<ReturnMes<List<String>>> {
 
     private static final String TAG = CitiesFragment.class.getSimpleName();
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -63,7 +56,6 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
      * @param param2 Parameter 2.
      * @return A new instance of fragment CitiesFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static CitiesFragment newInstance(String param1, String param2) {
         CitiesFragment fragment = new CitiesFragment();
         Bundle args = new Bundle();
@@ -117,7 +109,6 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
         super.onResume();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(String city) {
         if (mListener != null) {
             mListener.onFragmentInteraction(city);
@@ -150,7 +141,7 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
             progressDialog = null;
         }
         if (progressView != null){
-            progressView.setVisible(View.GONE);
+            progressView.hide();
             progressView = null;
         }
         cancelTask();
@@ -172,10 +163,10 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void showProgress(){
-        progressView.setVisible(View.VISIBLE);
+        progressView.show();
     }
     private void hideProgress(){
-        progressView.setVisible(View.GONE);
+        progressView.hide();
     }
 
     @Override
@@ -209,7 +200,6 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnCityListItemClickedListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(String city);
     }
 

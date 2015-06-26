@@ -1,4 +1,4 @@
-package com.chendeji.rongchen.dao.tables;
+package com.chendeji.rongchen.dao.tables.city;
 
 /**
  * Created by chendeji on 22/6/15.
