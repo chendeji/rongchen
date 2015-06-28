@@ -45,6 +45,26 @@ public class GetMerchantDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<
     }
 
     @Override
+    protected void fromDBDataError() {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<Merchant> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<Merchant> getDataFromDB() {
+        return null;
+    }
+
+    @Override
     protected ReturnMes<Merchant> doInBackground(Void... params) {
 
         ReturnMes<Merchant> merchantReturnMes = null;

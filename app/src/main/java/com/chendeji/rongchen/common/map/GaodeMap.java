@@ -32,6 +32,7 @@ import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
 
 import java.io.Serializable;
@@ -107,8 +108,15 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
             mListener.onLocationFail();
             return;
         }
+        String city = aMapLocation.getCity();
+//        String cityCode = aMapLocation.getCityCode();
+        SettingFactory factory = SettingFactory.getInstance();
+        factory.setCurrentCity(city);
+
         double latitude = aMapLocation.getLatitude();
         double longitude = aMapLocation.getLongitude();
+
+        factory.setCurrentLocation(latitude, longitude);
         Logger.i(TAG, "latitude:" + latitude + "longitude:" + longitude);
 
         this.mCity = aMapLocation.getCity();

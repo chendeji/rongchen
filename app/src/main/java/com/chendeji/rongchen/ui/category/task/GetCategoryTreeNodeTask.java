@@ -2,8 +2,10 @@ package com.chendeji.rongchen.ui.category.task;
 
 import android.content.Context;
 
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.view.treeview.model.TreeNode;
+import com.chendeji.rongchen.dao.tables.category.SubCategoryTable;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.category.Category;
 import com.chendeji.rongchen.model.category.SubCategory;
@@ -49,72 +51,114 @@ public class GetCategoryTreeNodeTask extends BaseUITask<Void, Void, ReturnMes<Li
     }
 
     @Override
-    protected ReturnMes<List<TreeNode>> doInBackground(Void... params) {
+    protected void fromDBDataError() {
 
-        //先获取数据
-        //编写后台访问接口
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<List<TreeNode>> getDataFromNetwork() {
         List<TreeNode> treeNodes = new ArrayList<>();
         ReturnMes<List<TreeNode>> treeReturnMes = new ReturnMes<>();
+        final String currentCity = SettingFactory.getInstance().getCurrentCity();
+        ReturnMes<List<Category>> returnMes;
+        List<Category> categories = null;
         try {
-            ReturnMes<List<Category>> returnMes;
-            List<Category> categories = Category.find(Category.class, null, new String[]{});
-            if (categories == null || categories.size() == 0) {
-                returnMes = AppServerFactory.getFactory().getCategoryOperation().getCategory("");
-                //获取数据之后将数据填充到数据库
-                if (returnMes != null) {
-                    categories = returnMes.object;
+            returnMes = AppServerFactory.getFactory().getCategoryOperation().getCategory(currentCity);
+            //获取数据之后将数据填充到数据库
+            if (returnMes != null) {
+                categories = returnMes.object;
+                if (categories != null && !categories.isEmpty()){
                     final List<Category> finalCategories = categories;
                     SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
                         @Override
                         public void manipulateInTransaction() {
                             for (Category category : finalCategories) {
+                                List<SubCategory> subCategories = category.getSubcategories();
+                                for (SubCategory subCategory : subCategories) {
+                                    subCategory.addBelongCity(currentCity);
+                                    subCategory.save();
+                                }
                                 category.save();
                             }
                         }
                     });
+                } else {
+                    treeReturnMes.status = returnMes.status;
+                    treeReturnMes.errorInfo = returnMes.errorInfo;
+                    return treeReturnMes;
                 }
-            }
 
-            TreeNode categoryNode;
-            TreeNode subCategoryNode;
-            TreeNode subCategroy1Node;
-            if (categories != null && !categories.isEmpty()) {
-                //1，开始填充treenode数据
-                for (Category category : categories) {
-                    categoryNode = new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, category.category_name));
-                    categoryNode.addChild(new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, AppConst.RequestParams.ALL)));
-                    List<SubCategory> subCategories = category.getSubcategories();
-                    if (subCategories != null && !subCategories.isEmpty()) {
-                        for (SubCategory subCategory : subCategories) {
-                            subCategoryNode = new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, subCategory.category_name));
-                            subCategoryNode.addChild(new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, AppConst.RequestParams.ALL)));
-                            List<String> subcategory1 = subCategory.getSubcategories();
-                            if (subcategory1 != null && !subcategory1.isEmpty()) {
-                                for (String subcategories1 : subcategory1) {
-                                    subCategroy1Node = new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, subcategories1));
-                                    subCategoryNode.addChild(subCategroy1Node);
-                                }
-                            }
-                            categoryNode.addChildren(subCategoryNode);
-                        }
-                    }
-                    treeNodes.add(categoryNode);
-                }
+            } else {
+                return null;
             }
-
-            if (!treeNodes.isEmpty()) {
-                treeReturnMes.status = AppConst.OK;
-                treeReturnMes.object = treeNodes;
-                return treeReturnMes;
-            }
-
+            //数据获取之后进行填充
+            getCategoryTreeNodes(treeNodes, categories, currentCity);
+            treeReturnMes.status = returnMes.status;
+            treeReturnMes.object = treeNodes;
         } catch (IOException e) {
             Logger.i(this.getClass().getSimpleName(), "解析错误");
         } catch (HttpException e) {
             Logger.i(this.getClass().getSimpleName(), "网络错误");
         }
-
-
         return treeReturnMes;
+    }
+
+    @Override
+    protected ReturnMes<List<TreeNode>> getDataFromDB() {
+        List<TreeNode> treeNodes = new ArrayList<>();
+        ReturnMes<List<TreeNode>> treeReturnMes = new ReturnMes<>();
+        String city = SettingFactory.getInstance().getCurrentCity();
+        //1，需要先判断一下数据库中是否有该城市相关的分类数据
+        List<SubCategory> subCategories = SubCategory.find(SubCategory.class, SubCategoryTable.STR_CITIES + "LIKE '%" + city + "%'", new String[]{});
+        if (subCategories == null || subCategories.isEmpty()){
+            return null;
+        }
+
+        List<Category> categories = Category.find(Category.class, null, new String[]{});
+
+        if (categories != null && !categories.isEmpty()){
+            getCategoryTreeNodes(treeNodes, categories, city);
+            if (!treeNodes.isEmpty()){
+                treeReturnMes.status = AppConst.OK;
+                treeReturnMes.object = treeNodes;
+                return treeReturnMes;
+            }
+        }
+
+        return null;
+    }
+
+    private void getCategoryTreeNodes(List<TreeNode> treeNodes, List<Category> categories, String city) {
+        TreeNode categoryNode;
+        TreeNode subCategoryNode;
+        TreeNode subCategroy1Node;
+        if (categories != null && !categories.isEmpty()) {
+            //1，开始填充treenode数据
+            for (Category category : categories) {
+                categoryNode = new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, category.category_name));
+                categoryNode.addChild(new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, AppConst.RequestParams.ALL)));
+                List<SubCategory> subCategories = category.getSubCategoryByCity(city);
+                if (subCategories != null && !subCategories.isEmpty()) {
+                    for (SubCategory subCategory : subCategories) {
+                        subCategoryNode = new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, subCategory.category_name));
+                        subCategoryNode.addChild(new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, AppConst.RequestParams.ALL)));
+                        List<String> subcategory1 = subCategory.getSubcategories();
+                        if (subcategory1 != null && !subcategory1.isEmpty()) {
+                            for (String subcategories1 : subcategory1) {
+                                subCategroy1Node = new TreeNode(new CategoryTreeItemHolder.CategoryTreeItem(0, subcategories1));
+                                subCategoryNode.addChild(subCategroy1Node);
+                            }
+                        }
+                        categoryNode.addChildren(subCategoryNode);
+                    }
+                }
+                treeNodes.add(categoryNode);
+            }
+        }
     }
 }

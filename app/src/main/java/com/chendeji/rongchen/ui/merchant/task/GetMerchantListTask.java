@@ -72,6 +72,26 @@ public class GetMerchantListTask extends BaseUITask<Void, Void, ReturnMes<List<M
     }
 
     @Override
+    protected void fromDBDataError() {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<List<Merchant>> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<List<Merchant>> getDataFromDB() {
+        return null;
+    }
+
+    @Override
     protected ReturnMes<List<Merchant>> doInBackground(Void... params) {
         try {
             AppServerFactory factory = AppServerFactory.getFactory();

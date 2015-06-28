@@ -45,6 +45,26 @@ public class CitySearchTask extends BaseUITask<Void, Void, ReturnMes<List<String
     }
 
     @Override
+    protected void fromDBDataError() {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<List<String>> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<List<String>> getDataFromDB() {
+        return null;
+    }
+
+    @Override
     protected ReturnMes<List<String>> doInBackground(Void... params) {
         try {
             //先查找数据库，如果数据库有东西就直接用数据库的。

@@ -24,10 +24,7 @@ public class DBFactory {
 
     private void initDB(Context context){
         SugarContext.init(context);
-
         //创建表格
-
-
     }
 
     public void destroy(){

@@ -46,6 +46,26 @@ public class GetCommentListTask extends BaseUITask<Void, Void, ReturnMes<List<Co
     }
 
     @Override
+    protected void fromDBDataError() {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<List<Comment>> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<List<Comment>> getDataFromDB() {
+        return null;
+    }
+
+    @Override
     protected ReturnMes<List<Comment>> doInBackground(Void... params) {
         AppServerFactory factory = AppServerFactory.getFactory();
         try {

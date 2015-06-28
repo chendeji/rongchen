@@ -7,6 +7,7 @@ public interface SubCategoryTable {
 
     String CATEGORY_NAME = "CATEGORYNAME";
     String SUBCATEGORIES = "SUBCATEGORIES";
+    String STR_CITIES = "STRCITIES";
     String PARENT_CATEGORY_NAME = "PARENTCATEGORYNAME";
 
 }

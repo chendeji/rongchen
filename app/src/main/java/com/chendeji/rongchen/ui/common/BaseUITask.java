@@ -38,9 +38,49 @@ public abstract class BaseUITask<V, P, R> extends AsyncTask<V, P, R> {
             return;
         //判断返回的服务端数据是否有错误
         if (r == null){
-            ToastUtil.showLongToast(mContext, "网络错误");
+            if (NetUtil.hasNetwork(mContext)) {
+                fromNetWorkDataError();
+            } else {
+                fromDBDataError();
+            }
             return;
         }
+    }
+
+    /**
+     * 从数据库查找数据失败之后（返回的结果为空了，会调用）
+     */
+    protected abstract void fromDBDataError();
+
+    /**
+     * 从网络查找数据失败之后（返回的结果为空了，会调用）
+     */
+    protected abstract void fromNetWorkDataError();
+
+    /**
+     * 在子线程中从网络获取数据
+     * @return
+     */
+    protected abstract R getDataFromNetwork();
+
+    /**
+     * 在子线程中从数据库获取数据
+     * @return
+     */
+    protected abstract R getDataFromDB();
+
+    @Override
+    protected R doInBackground(V... params) {
+        R r = null;
+        if (NetUtil.hasNetwork(mContext)) {
+            // 从网络获取数据
+            r = getDataFromNetwork();
+        } else {
+            // 从数据库获取数据
+            r = getDataFromDB();
+            mTaskCallBack.onNetWorkError();
+        }
+        return r;
     }
 
     /**
@@ -49,15 +89,8 @@ public abstract class BaseUITask<V, P, R> extends AsyncTask<V, P, R> {
      * @return 异步线程
      */
     public final AsyncTask<V,P,R> excuteProxy(V ...params){
-        /**
-         * 先判断一下网络
-         */
-        if (NetUtil.hasNetwork(mContext)){
-            return execute(params);
-        }else {
-            mTaskCallBack.onNetWorkError();
-            return null;
-        }
+        return execute(params);
+
     }
 
 }

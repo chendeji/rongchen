@@ -41,6 +41,26 @@ public class GetRecentSearchCityTask extends BaseUITask<Void, Void, ReturnMes<Li
     }
 
     @Override
+    protected void fromDBDataError() {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<List<String>> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<List<String>> getDataFromDB() {
+        return null;
+    }
+
+    @Override
     protected ReturnMes<List<String>> doInBackground(Void... params) {
 
         List<RecentSearchCity> recentSearchCities = SettingFactory.getInstance().getRecentSearchCity();

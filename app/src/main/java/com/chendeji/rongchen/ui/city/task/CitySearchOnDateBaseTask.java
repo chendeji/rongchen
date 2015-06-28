@@ -44,6 +44,26 @@ public class CitySearchOnDateBaseTask extends BaseUITask<Void, Void, ReturnMes<L
     }
 
     @Override
+    protected void fromDBDataError() {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<List<String>> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<List<String>> getDataFromDB() {
+        return null;
+    }
+
+    @Override
     protected ReturnMes<List<String>> doInBackground(Void... params) {
         // 启动后台数据库查找
         List<String> cities = new ArrayList<>();

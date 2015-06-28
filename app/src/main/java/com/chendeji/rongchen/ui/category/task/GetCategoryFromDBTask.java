@@ -48,6 +48,26 @@ public class GetCategoryFromDBTask extends BaseUITask<Void, Void, ReturnMes<List
     }
 
     @Override
+    protected void fromDBDataError() {
+        
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<List<String>> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<List<String>> getDataFromDB() {
+        return null;
+    }
+
+    @Override
     protected ReturnMes<List<String>> doInBackground(Void... params) {
         ReturnMes<List<String>> returnMes = new ReturnMes<>();
         returnMes.status = AppConst.ERROR;

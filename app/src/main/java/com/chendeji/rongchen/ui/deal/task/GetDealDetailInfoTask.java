@@ -57,4 +57,24 @@ public class GetDealDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<Deal
             ToastUtil.showLongToast(mContext, errorInfo.toString());
         }
     }
+
+    @Override
+    protected void fromDBDataError() {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<Deal> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<Deal> getDataFromDB() {
+        return null;
+    }
 }

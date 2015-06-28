@@ -48,6 +48,26 @@ public class GetCategoryTask extends BaseUITask<Void, Void, ReturnMes<List<Categ
     }
 
     @Override
+    protected void fromDBDataError() {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataError() {
+
+    }
+
+    @Override
+    protected ReturnMes<List<Category>> getDataFromNetwork() {
+        return null;
+    }
+
+    @Override
+    protected ReturnMes<List<Category>> getDataFromDB() {
+        return null;
+    }
+
+    @Override
     protected ReturnMes<List<Category>> doInBackground(Void... params) {
         //编写后台访问接口
         try {

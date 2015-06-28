@@ -18,10 +18,13 @@ public class SettingFactory {
     private static final String SETTING = "setting";
     private static final String CITY_SETTING = "city";
     private static final String CATEGORY = "category";
+    private static final String LATITUDE = "latitude";
+    private static final String LONGITUDE = "longitude";
 
     private SharedPreferences sharedPreferences;
 
     private static SettingFactory ourInstance = new SettingFactory();
+
 
     public static SettingFactory getInstance() {
         return ourInstance;
@@ -34,16 +37,16 @@ public class SettingFactory {
         sharedPreferences = context.getSharedPreferences(SETTING, Context.MODE_APPEND);
     }
 
-    public void setCurrentChoosedCategory(String category){
+    public void setCurrentChoosedCategory(String category) {
         if (TextUtils.isEmpty(category))
             return;
-        if (sharedPreferences != null){
+        if (sharedPreferences != null) {
             sharedPreferences.edit().putString(CATEGORY, category).commit();
         }
     }
 
-    public String getCurrentChoosedCategory(){
-        if (sharedPreferences != null){
+    public String getCurrentChoosedCategory() {
+        if (sharedPreferences != null) {
             return sharedPreferences.getString(CATEGORY, AppConst.RequestParams.DEFUALT_CATEGORY);
         }
         return null;
@@ -86,4 +89,25 @@ public class SettingFactory {
         return null;
     }
 
+    public void setCurrentLocation(double latitude, double longitude) {
+        if (sharedPreferences != null) {
+            sharedPreferences.edit()
+                    .putString(LATITUDE, String.valueOf(latitude))
+                    .putString(LONGITUDE, String.valueOf(longitude));
+        }
+    }
+
+    public double[] getCurrentLocation(){
+        if (sharedPreferences != null){
+            String str_latitude = sharedPreferences.getString(LATITUDE, "");
+            String str_longitude = sharedPreferences.getString(LONGITUDE, "");
+            if (TextUtils.isEmpty(str_latitude) || TextUtils.isEmpty(str_longitude)){
+                return null;
+            }
+            double latitude = Double.parseDouble(str_latitude);
+            double longitude = Double.parseDouble(str_longitude);
+            return new double[]{latitude, longitude};
+        }
+        return null;
+    }
 }
