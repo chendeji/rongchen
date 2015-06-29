@@ -79,13 +79,12 @@ public class DealCategoryActivity extends AppCompatActivity implements TreeNode.
         SettingFactory factory = SettingFactory.getInstance();
         if (node.isLeaf()){
             //叶子节点，就记录最近搜多分类，并跳入到商户列表界面
-            factory.setCurrentChoosedCategory(((CategoryTreeItemHolder.CategoryTreeItem) value).title);
-            Intent intent = new Intent(this, MerchantListActivity.class);
-            startActivity(intent);
-        } else if (AppConst.RequestParams.ALL.equals(item.title)){
-            //中间如果选择全部，也是直接记录最近分类，跳入到商户列表
-            String category = (String) node.getParent().getValue();
-            factory.setCurrentChoosedCategory(category);
+            if (AppConst.RequestParams.ALL.equals(item.title)){
+                String category = ((CategoryTreeItemHolder.CategoryTreeItem) node.getParent().getValue()).title;
+                factory.setCurrentChoosedCategory(category);
+            } else {
+                factory.setCurrentChoosedCategory(((CategoryTreeItemHolder.CategoryTreeItem) value).title);
+            }
             Intent intent = new Intent(this, MerchantListActivity.class);
             startActivity(intent);
         }

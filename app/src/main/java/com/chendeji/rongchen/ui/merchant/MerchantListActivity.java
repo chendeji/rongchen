@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.view.CommonFooterView;
@@ -71,6 +72,8 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     private RecyclerView mMerchantRecycleView;
     private MerchantRecycleAdapter merchantAdapter;
     private String mCity;
+
+    private Sort defualtSort = Sort.DEFAULT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +134,6 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
             }
 
             demotextDy += dy;
-            Logger.i("chendeji", "dy-------------" + demotextDy);
 
         }
 
@@ -188,12 +190,9 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
      * 从服务端拉数据
      */
     private void getData() {
-        //精确定位接口
-//        getMerchantListTask = new GetMerchantListTask(this, this, "福州", "", Sort.DISTANCE_FIRST, mCurrentPage, DEFAULT_LIMITE
-//                , Offset_Type.GAODE, Offset_Type.GAODE, Platform.HTML5).excuteProxy((Void[]) null);
 
-        //城市定位接口
-        getMerchantListTask = new GetMerchantListTask(this, this, mCity, "", Sort.DEFAULT, mCurrentPage, DEFAULT_LIMITE
+        //城市和定位混合使用的接口
+        getMerchantListTask = new GetMerchantListTask(this, this, defualtSort, mCurrentPage, DEFAULT_LIMITE
                 , Offset_Type.GAODE, Offset_Type.GAODE, Platform.HTML5).excuteProxy((Void[]) null);
     }
 

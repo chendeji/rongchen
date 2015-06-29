@@ -1,10 +1,6 @@
 package com.chendeji.rongchen.model.merchant;
 
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Column;
-import com.orm.dsl.Table;
-
 import java.io.Serializable;
 
 /**
@@ -14,10 +10,8 @@ import java.io.Serializable;
  * <p/>
  * ${tags}
  */
-@Table(name = "SimpleGroupBuyInfo")
-public class SimpleGroupBuyInfo extends SugarRecord implements Serializable{
+public class SimpleGroupBuyInfo implements Serializable{
 
-    @Column(name = "groupbuy_id", unique = true, notNull = true)
     public String id;
 
     public String description;

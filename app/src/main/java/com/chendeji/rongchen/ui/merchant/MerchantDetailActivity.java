@@ -66,6 +66,8 @@ public class MerchantDetailActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private Toolbar merchantTitleToolBar;
     private RelativeLayout marchant_contact_info;
+    private View deal_list_hoder;
+    private View comment_list_hoder;
 
     @Override
     protected void onPause() {
@@ -157,7 +159,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
             dealHolder.setFooterButtonText(getString(R.string.showmore));
             ll_deal_list.addView(dealHolder);
         } else {
-            ll_deal_list.setVisibility(View.GONE);
+            deal_list_hoder.setVisibility(View.GONE);
         }
 
         //填充商户评论数，这里需要重新去访问评论接口
@@ -178,7 +180,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
                     commentHolder.setFooterButtonText(getString(R.string.showmore_comments));
                     ll_comment_list.addView(commentHolder);
                 } else {
-                    ll_comment_list.setVisibility(View.GONE);
+                    comment_list_hoder.setVisibility(View.GONE);
                 }
             }
 
@@ -211,7 +213,9 @@ public class MerchantDetailActivity extends AppCompatActivity {
         call_merchant = (Button) findViewById(R.id.bt_call_merchant);
         groupPurchaseCount = (TextView) findViewById(R.id.tv_group_purchase_count);
         ll_deal_list = (LinearLayout) findViewById(R.id.ll_deal_list);
+        deal_list_hoder = findViewById(R.id.cv_deal_list_hoder);
         ll_comment_list = (LinearLayout) findViewById(R.id.ll_comment_list);
+        comment_list_hoder = findViewById(R.id.cv_comment_list_hoder);
     }
 
     /**

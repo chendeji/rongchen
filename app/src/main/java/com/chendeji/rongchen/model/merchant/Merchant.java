@@ -1,5 +1,8 @@
 package com.chendeji.rongchen.model.merchant;
 
+import android.text.TextUtils;
+
+import com.alibaba.fastjson.JSON;
 import com.orm.SugarRecord;
 import com.orm.dsl.Column;
 import com.orm.dsl.Ignore;
@@ -38,10 +41,10 @@ public class Merchant extends SugarRecord implements Serializable{
     public String city;
 
     /** 城市片区*/
-    public List<String> regions;
+    public String regions;
 
     /** 分类*/
-    public List<String> categories;
+    public String categories;
 
     /** 纬度*/
     public double latitude;
@@ -212,7 +215,10 @@ public class Merchant extends SugarRecord implements Serializable{
     public int deal_count;
 
     /** 团购列表*/
-    public List<SimpleGroupBuyInfo> deals;
+    public String deals;
+
+    @Ignore
+    public List<SimpleGroupBuyInfo> simpleGroupBuyInfos;
 
     @Ignore
     public static final int ONLINE_RESERVATION_ABLE = 1;
@@ -225,6 +231,14 @@ public class Merchant extends SugarRecord implements Serializable{
     /** 在线预订页面链接，目前仅返回HTML5站点链接*/
     public String online_reservation_url;
 
+    public List<SimpleGroupBuyInfo> getDeals() {
+        if (simpleGroupBuyInfos != null && !simpleGroupBuyInfos.isEmpty())
+            return simpleGroupBuyInfos;
+        if (TextUtils.isEmpty(deals))
+            return null;
+        simpleGroupBuyInfos = JSON.parseArray(deals, SimpleGroupBuyInfo.class);
+        return simpleGroupBuyInfos;
+    }
 
     @Override
     public String toString() {

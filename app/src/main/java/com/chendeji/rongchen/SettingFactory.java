@@ -93,7 +93,7 @@ public class SettingFactory {
         if (sharedPreferences != null) {
             sharedPreferences.edit()
                     .putString(LATITUDE, String.valueOf(latitude))
-                    .putString(LONGITUDE, String.valueOf(longitude));
+                    .putString(LONGITUDE, String.valueOf(longitude)).commit();
         }
     }
 

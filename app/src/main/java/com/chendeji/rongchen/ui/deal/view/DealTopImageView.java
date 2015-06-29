@@ -80,7 +80,7 @@ public class DealTopImageView extends RelativeLayout implements View.OnClickList
         // 跳到图片展示页面
         Intent intent = new Intent(getContext(), ShowImageActivity.class);
         ArrayList<String> photo_urls = new ArrayList<String>();
-        photo_urls.addAll(mDeal.more_image_urls);
+        photo_urls.addAll(mDeal.getMore_image_urls());
         intent.putStringArrayListExtra(ShowImageActivity.PHOTOS_KEY, photo_urls);
         getContext().startActivity(intent);
     }

@@ -1,16 +1,12 @@
 package com.chendeji.rongchen.model.groupbuy;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Column;
-import com.orm.dsl.Table;
+import java.io.Serializable;
 
 /**
  * Created by chendeji on 27/5/15.
  */
-@Table(name = "SimpleMerchantInfo")
-public class SimpleMerchantInfo extends SugarRecord {
+public class SimpleMerchantInfo implements Serializable{
 
-    @Column(name = "merchant_id", unique = true, notNull = true)
     public long id;
 
     public String name;

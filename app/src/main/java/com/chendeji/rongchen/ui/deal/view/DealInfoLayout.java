@@ -76,7 +76,7 @@ public class DealInfoLayout extends RelativeLayout {
                 .build());
         list_price.display();
         purchase_count.setText(String.format("已售%d",deal.purchase_count));
-        switch (deal.restrictions.is_refundable){
+        switch (deal.getRestrictions().is_refundable){
             case Restriction.REFUNDABLE:
                 is_refundable.setVisibility(View.VISIBLE);
                 break;

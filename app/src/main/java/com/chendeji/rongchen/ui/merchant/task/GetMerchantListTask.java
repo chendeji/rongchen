@@ -2,6 +2,7 @@ package com.chendeji.rongchen.ui.merchant.task;
 
 import android.content.Context;
 
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.model.Platform;
 import com.chendeji.rongchen.model.ReturnMes;
@@ -20,6 +21,7 @@ import com.chendeji.rongchen.model.Sort;
 import com.chendeji.rongchen.server.AppConst;
 import com.chendeji.rongchen.server.AppServerFactory;
 import com.chendeji.rongchen.server.HttpException;
+import com.orm.SugarTransactionHelper;
 
 /**
  * @author chendeji
@@ -30,8 +32,6 @@ import com.chendeji.rongchen.server.HttpException;
  */
 public class GetMerchantListTask extends BaseUITask<Void, Void, ReturnMes<List<Merchant>>> {
 
-    private String mCity;
-    private String mCategory;
     private Sort mSort;
     private int mPage;
     private int mLimit;
@@ -45,12 +45,10 @@ public class GetMerchantListTask extends BaseUITask<Void, Void, ReturnMes<List<M
      * @param context      上下文句柄
      * @param taskCallBack UI回调
      */
-    public GetMerchantListTask(Context context, UITaskCallBack taskCallBack, String city, String category
+    public GetMerchantListTask(Context context, UITaskCallBack taskCallBack
             , Sort sort, int page, int limit, Offset_Type offsetType
             , Offset_Type out_offset_type, Platform platform) {
         super(context, taskCallBack);
-        this.mCity = city;
-        this.mCategory = category;
         this.mSort = sort;
         this.mPage = page;
         this.mLimit = limit;
@@ -83,11 +81,44 @@ public class GetMerchantListTask extends BaseUITask<Void, Void, ReturnMes<List<M
 
     @Override
     protected ReturnMes<List<Merchant>> getDataFromNetwork() {
+        try {
+            AppServerFactory factory = AppServerFactory.getFactory();
+            IMerchantOperation operation = factory.getMerchantOperation();
+            final ReturnMes<List<Merchant>> merchants = operation.findMerchants(null, null, mSort
+                    , mPage, mLimit, mOffset_type, mOut_offset_type, mPlatform);
+
+            //缓存数据
+            SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
+                @Override
+                public void manipulateInTransaction() {
+                    if (merchants != null){
+                        List<Merchant> merchantList = merchants.object;
+                        for (Merchant merchant : merchantList){
+                            merchant.save();
+                        }
+                    }
+                }
+            });
+            return merchants;
+        } catch (IOException e) {
+            Logger.i(this.getClass().getSimpleName(), "解析错误");
+        } catch (HttpException e) {
+            Logger.i(this.getClass().getSimpleName(), "网络错误");
+        }
         return null;
     }
 
     @Override
     protected ReturnMes<List<Merchant>> getDataFromDB() {
+        //TODO 从数据库中拿到数据
+        SettingFactory factory = SettingFactory.getInstance();
+        String category = factory.getCurrentChoosedCategory();
+        String city = factory.getCurrentCity();
+        List<Merchant> merchants = Merchant.find(Merchant.class, "", new String[]{}, null,
+                "order by distance ASC",
+                "limit mlimit offset mpage");
+
+
         return null;
     }
 
@@ -96,7 +127,7 @@ public class GetMerchantListTask extends BaseUITask<Void, Void, ReturnMes<List<M
         try {
             AppServerFactory factory = AppServerFactory.getFactory();
             IMerchantOperation operation = factory.getMerchantOperation();
-            ReturnMes<List<Merchant>> merchants = operation.findMerchants(mCity, mCategory, mSort
+            ReturnMes<List<Merchant>> merchants = operation.findMerchants(null, null, mSort
                     , mPage, mLimit, mOffset_type, mOut_offset_type, mPlatform);
             return merchants;
         } catch (IOException e) {

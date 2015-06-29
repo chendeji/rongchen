@@ -1,5 +1,6 @@
 package com.chendeji.rongchen.server.imp;
 
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.model.Offset_Type;
 import com.chendeji.rongchen.model.Platform;
@@ -20,6 +21,12 @@ import java.util.List;
  * ${tags}
  */
 public class MerchantOperation implements IMerchantOperation {
+
+    @Override
+    public ReturnMes<List<Merchant>> findMerchant(int page, int limit, Offset_Type offset_type, Offset_Type out_offset_type, Platform platform) throws IOException, HttpException {
+        MerchantRequest request = new MerchantRequest();
+        return request.findMerchants(null, null, null, page, limit, offset_type, out_offset_type, platform);
+    }
 
     @Override
     public ReturnMes<List<Merchant>> findMerchants(String city, String category, Sort sort, int page,

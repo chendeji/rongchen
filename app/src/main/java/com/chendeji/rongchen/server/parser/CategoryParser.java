@@ -17,7 +17,6 @@ public class CategoryParser implements Parsable<List<Category>> {
 
     @Override
     public List<Category> parse(JSONObject object) {
-
         if(object == null || object.isEmpty()){
             return null;
         }

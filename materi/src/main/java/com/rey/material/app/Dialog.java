@@ -106,7 +106,6 @@ public class Dialog extends android.app.Dialog{
         super(context, style);
 
         //Override style to ensure not show window's title or background.
-        //TODO: find a way to ensure windowIsFloating attribute is false.
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(BlankDrawable.getInstance());
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

@@ -50,13 +50,6 @@ public class MerchantTopImageView extends RelativeLayout implements View.OnClick
 
     private void init(Context context, AttributeSet attrs) {
         View container = LayoutInflater.from(context).inflate(R.layout.merchant_top_image, this, true);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        params.height = MyApplication.SCREEN_HEIGTH / 4;
-        params.width = MyApplication.SCREEN_WIDTH ;
-
-        this.setLayoutParams(params);
-
         //加载子控件
         initComponent(container);
     }
@@ -77,7 +70,8 @@ public class MerchantTopImageView extends RelativeLayout implements View.OnClick
         iv_ratingBar = (CommonRatingBar) container.findViewById(R.id.iv_dingping_rating_image);
         //初始化事件
         imageView.setOnClickListener(this);
-
+        ViewGroup.LayoutParams params = imageView.getLayoutParams();
+        params.height = MyApplication.SCREEN_HEIGTH / 2;
     }
 
 

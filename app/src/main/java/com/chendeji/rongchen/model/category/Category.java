@@ -31,7 +31,7 @@ public class Category extends SugarRecord {
 
     public List<SubCategory> getSubCategoryByCity(String city) {
         subcategories = find(SubCategory.class, SubCategoryTable.PARENT_CATEGORY_NAME + "=? AND "
-                + SubCategoryTable.STR_CITIES + "LIKE '%" + city + "%'", new String[]{category_name});
+                + SubCategoryTable.STR_CITIES + " LIKE '%" + city + "%'", new String[]{category_name});
         return subcategories;
     }
 

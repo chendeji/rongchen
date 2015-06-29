@@ -10,6 +10,8 @@ import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.ui.common.ExtendableHolder;
 import com.chendeji.rongchen.ui.deal.DealDetailActivity;
 
+import java.util.List;
+
 /**
  *
  * Created by chendeji on 16/5/15.
@@ -44,22 +46,23 @@ public class DealExtendableHolder extends ExtendableHolder {
     private void fillDate(Merchant merchant, ViewGroup listHolder){
         //遍历该商户的所有团购，并列表出来
         DealItemView itemView = null;
+        List<SimpleGroupBuyInfo> infos = merchant.getDeals();
         //两种显示模式，如果数量操作三个，就显示底部的加载更多按钮，如果没有超过三个，直接全部显示，并隐藏底部的按钮
         int showCount = 0;
-        int i = listHolder.getChildCount() - 1;
-        if (i <= 0){
-            i = 0;
-            if (merchant.deal_count > 3){
+        int i = listHolder.getChildCount();
+        if (i == 0){
+            if (infos.size() > 3){
                 showCount = 3;
             } else {
-                showCount = merchant.deal_count;
+                showCount = infos.size();
             }
         } else {
-            showCount = merchant.deal_count;
+            showCount = infos.size();
         }
 
+        //TODO 有一个商户数据多出来
         for(; i < showCount; i++){
-            final SimpleGroupBuyInfo info = merchant.deals.get(i);
+            final SimpleGroupBuyInfo info = merchant.getDeals().get(i);
             itemView = new DealItemView(mContext);
             itemView.setComponentValue(info);
             itemView.setOnClickListener(new OnClickListener() {

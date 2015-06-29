@@ -1,5 +1,7 @@
 package com.chendeji.rongchen.model.groupbuy;
 
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.orm.SugarRecord;
 import com.orm.dsl.Column;
@@ -35,11 +37,29 @@ public class Deal extends SugarRecord {
 
     public String image_url;
 
-    public List<SimpleMerchantInfo> businesses;
+    public String businesses;
 
-    public List<String> more_image_urls;
+    public String more_image_urls;
 
-    public Restriction restrictions;
+    public String restrictions;
+
+    public Restriction getRestrictions() {
+        if (TextUtils.isEmpty(restrictions))
+            return null;
+        return JSON.parseObject(restrictions, Restriction.class);
+    }
+
+    public List<String> getMore_image_urls() {
+        if (TextUtils.isEmpty(more_image_urls))
+            return null;
+        return JSON.parseArray(more_image_urls, String.class);
+    }
+
+    public List<SimpleMerchantInfo> getBusinesses() {
+        if (TextUtils.isEmpty(businesses))
+            return null;
+        return JSON.parseArray(businesses, SimpleMerchantInfo.class);
+    }
 
     @Override
     public String toString() {

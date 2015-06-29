@@ -49,6 +49,8 @@ public class SubCategory extends SugarRecord{
             } else {
                 if (!oldStr_cities.contains(city)) {
                     str_cities = oldStr_cities + "," + city;
+                } else {
+                    str_cities = oldStr_cities;
                 }
             }
         } else {

@@ -7,6 +7,8 @@ import com.chendeji.rongchen.model.groupbuy.Deal;
 import com.chendeji.rongchen.model.groupbuy.SimpleMerchantInfo;
 import com.chendeji.rongchen.ui.common.ExtendableHolder;
 
+import java.util.List;
+
 /**
  * Created by chendeji on 30/5/15.
  */
@@ -36,25 +38,27 @@ public class SimpleMerchantExtendableHolder extends ExtendableHolder {
             return;
         }
 
+        List<SimpleMerchantInfo> infos = deal.getBusinesses();
+
         int showCount = 0;
         int childeCount = getItemHolder().getChildCount();
         int index = childeCount - 1;
 
         if (index <= 0){
             index = 0;
-            if (deal.businesses.size() > 1){
-                showCount = 1;
+            if (infos.size() > 3){
+                showCount = 3;
             } else {
-                showCount = deal.businesses.size();
+                showCount = infos.size();
             }
         } else {
-            showCount = deal.businesses.size();
+            showCount = infos.size();
         }
 
         SimpleMerchantItem item;
         for (;index < showCount; index++){
             //TODO 添加商户的item
-            SimpleMerchantInfo info = deal.businesses.get(index);
+            SimpleMerchantInfo info = infos.get(index);
             item = new SimpleMerchantItem(mContext, info);
             getItemHolder().addView(item);
         }

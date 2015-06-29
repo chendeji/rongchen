@@ -104,7 +104,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
-        if (aMapLocation == null) {
+        if (aMapLocation == null || aMapLocation.getAMapException().getErrorCode() != 0) {
             mListener.onLocationFail();
             return;
         }

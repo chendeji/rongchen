@@ -67,13 +67,14 @@
                         android:layout_toLeftOf="@id/bt_call_merchant"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:textStyle="bold" />
+                         />
 
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
+                android:id="@+id/cv_deal_list_hoder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/horizontal_10dp"
@@ -94,7 +95,7 @@
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:textColor="@color/common_button_textcolor"
-                        android:textStyle="bold" />
+                         />
 
                 </LinearLayout>
 
@@ -102,6 +103,7 @@
 
 
             <android.support.v7.widget.CardView
+                android:id="@+id/cv_comment_list_hoder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/horizontal_10dp"
@@ -123,7 +125,7 @@
                         android:padding="10dp"
                         android:text="@string/comment_title"
                         android:textColor="@color/common_button_textcolor"
-                        android:textStyle="bold" />
+                         />
 
                 </LinearLayout>
 

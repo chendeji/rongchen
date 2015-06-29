@@ -26,7 +26,7 @@ public class ImageLoaderOptionsUtil {
             .bitmapConfig(Bitmap.Config.RGB_565)
             .cacheInMemory(true)
             .cacheOnDisk(true)
-            .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+            .imageScaleType(ImageScaleType.EXACTLY)
             .build();
 
     public static DisplayImageOptions ratingbarImageOptions = new DisplayImageOptions.Builder()

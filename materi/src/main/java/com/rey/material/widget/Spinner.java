@@ -1242,7 +1242,6 @@ public class Spinner extends FrameLayout {
             }
 
             // Make sure we hide if our anchor goes away.
-            // TODO: This might be appropriate to push all the way down to PopupWindow,
             // but it may have other side effects to investigate first. (Text editing handles, etc.)
             final ViewTreeObserver vto = getViewTreeObserver();
             if (vto != null)            	

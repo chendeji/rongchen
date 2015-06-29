@@ -143,7 +143,7 @@ public class DealDetailActivity extends AppCompatActivity {
         deal_detail.setText(deal.details);
 
         //团购须知
-        special_tips.setText(deal.restrictions.special_tips);
+        special_tips.setText(deal.getRestrictions().special_tips);
     }
 
     private void showErrorImage() {
