@@ -54,17 +54,17 @@
                         android:background="@color/white"
                         android:padding="@dimen/horizontal_10dp">
 
-                        <com.rey.material.widget.Button
-                            android:id="@+id/bt_call_merchant"
-                            style="@style/FlatColorButtonRippleStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerInParent="true"
-                            android:text="@string/make_call"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-                            android:textColor="@color/common_button_textcolor"
-                            app:rd_delayClick="afterRelease" />
+                        <!--<com.rey.material.widget.Button-->
+                            <!--android:id="@+id/bt_call_merchant"-->
+                            <!--style="@style/FlatColorButtonRippleStyle"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_alignParentRight="true"-->
+                            <!--android:layout_centerInParent="true"-->
+                            <!--android:text="@string/make_call"-->
+                            <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"-->
+                            <!--android:textColor="@color/common_button_textcolor"-->
+                            <!--app:rd_delayClick="afterRelease" />-->
 
                         <TextView
                             android:id="@+id/tv_address"

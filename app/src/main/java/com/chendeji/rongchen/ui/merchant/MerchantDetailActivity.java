@@ -170,7 +170,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
         titleView = (TextView) findViewById(R.id.tv_toolbar_title);
 //        titleView.setText(getString(R.string.merchant_info));
         phone_button = (FloatingActionButton) findViewById(R.id.fab_button_phone);
-
+        phone_button.setIcon(getResources().getDrawable(R.drawable.ic_local_phone_white_48dp), false);
         //version 1.0.0
         marchant_contact_info = (RelativeLayout) findViewById(R.id.rl_merchant_contact_info);
 //        imageView = (MerchantTopImageView) findViewById(R.id.ctiv_commontopimageview);
@@ -184,7 +184,13 @@ public class MerchantDetailActivity extends AppCompatActivity {
     }
 
     private void initEvent() {
+        phone_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO 跳转到拨号界面，拨打电话
 
+            }
+        });
         myScrollView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
             @Override
             public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {

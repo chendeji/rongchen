@@ -42,9 +42,9 @@ public class SimpleMerchantExtendableHolder extends ExtendableHolder {
 
         int showCount = 0;
         int childeCount = getItemHolder().getChildCount();
-        int index = childeCount - 1;
+        int index = childeCount ;
 
-        if (index <= 0){
+        if (index == 0){
             index = 0;
             if (infos.size() > 3){
                 showCount = 3;
