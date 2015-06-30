@@ -168,12 +168,12 @@ public class MerchantDetailActivity extends AppCompatActivity {
         mOverlayView = findViewById(R.id.overlay);
         myScrollView = (MyScrollView) findViewById(R.id.scroll);
         titleView = (TextView) findViewById(R.id.tv_toolbar_title);
-//        titleView.setText(getString(R.string.merchant_info));
         phone_button = (FloatingActionButton) findViewById(R.id.fab_button_phone);
         phone_button.setIcon(getResources().getDrawable(R.drawable.ic_local_phone_white_48dp), false);
+
+
         //version 1.0.0
         marchant_contact_info = (RelativeLayout) findViewById(R.id.rl_merchant_contact_info);
-//        imageView = (MerchantTopImageView) findViewById(R.id.ctiv_commontopimageview);
         address = (TextView) findViewById(R.id.tv_address);
         call_merchant = (Button) findViewById(R.id.bt_call_merchant);
         groupPurchaseCount = (TextView) findViewById(R.id.tv_group_purchase_count);
@@ -181,6 +181,8 @@ public class MerchantDetailActivity extends AppCompatActivity {
         deal_list_hoder = findViewById(R.id.cv_deal_list_hoder);
         ll_comment_list = (LinearLayout) findViewById(R.id.ll_comment_list);
         comment_list_hoder = findViewById(R.id.cv_comment_list_hoder);
+        TextView comment_title = (TextView) findViewById(R.id.tv_comment_title);
+        comment_title.setText(getString(R.string.comment_title));
     }
 
     private void initEvent() {
@@ -196,23 +198,18 @@ public class MerchantDetailActivity extends AppCompatActivity {
             public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
                 int flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
                 int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
-                Logger.i("chendeji", "onScrollChanged:" + "scrollY:" + scrollY);
 
-                ViewHelper.setTranslationY(mOverlayView, Math.min(0, Math.max(-scrollY, minOverlayTransitionY)));
                 ViewHelper.setTranslationY(imageView, Math.min(0, Math.max(-scrollY / 2, minOverlayTransitionY)));
 
-                ViewHelper.setAlpha(mOverlayView, Math.min(1, Math.max(0, (float) scrollY / flexibleRange)));
-//                mOverlayView.setAlpha(Math.min(1, Math.max(0, (float) scrollY / flexibleRange)));
-
-                float titleScale = 1 + Math.min(MAX_TEXT_SCALE_DELTA, Math.max(0, (float)(flexibleRange - scrollY) / flexibleRange));
-                Logger.i("chendeji", "titleScale:" + titleScale);
+                ViewHelper.setTranslationY(mOverlayView, Math.min(0, Math.max(-scrollY, minOverlayTransitionY)));
+                ViewHelper.setAlpha(mOverlayView,1 - Math.max(0 ,(float)(flexibleRange - scrollY) / flexibleRange));
 
                 float titleAlpha = 1 - Math.min(1, Math.max(0, (float)(flexibleRange - scrollY) / flexibleRange));
                 ViewHelper.setAlpha(titleView, titleAlpha);
 
                 //计算出titleview最多能在Y轴上移动多少
-                int maxTitleTranY = (int) (mFlexibleSpaceImageHeight - titleView.getHeight() * titleScale);
-                int titleTranY = maxTitleTranY - scrollY;
+                int maxTitleTranY = (int) (mFlexibleSpaceImageHeight - titleView.getHeight());
+                int titleTranY = Math.max(0, maxTitleTranY - scrollY);
                 ViewHelper.setTranslationY(titleView, titleTranY);
 
                 //计算FAB的位置还有可移动范围
@@ -243,7 +240,11 @@ public class MerchantDetailActivity extends AppCompatActivity {
         myScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                myScrollView.scrollTo(0, mFlexibleSpaceImageHeight - mActionBarSize);
+//                myScrollView.scrollTo(0, mFlexibleSpaceImageHeight - mActionBarSize);
+                ViewHelper.setAlpha(mOverlayView, 0);
+                ViewHelper.setTranslationY(titleView, mFlexibleSpaceImageHeight - titleView.getHeight());
+                ViewHelper.setTranslationY(phone_button, mFlexibleSpaceImageHeight - phone_button.getHeight() / 2);
+                showFAB();
             }
         });
 
