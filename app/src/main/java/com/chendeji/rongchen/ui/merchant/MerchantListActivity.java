@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +34,8 @@ import com.chendeji.rongchen.ui.merchant.adpter.MerchantRecycleAdapter;
 import com.chendeji.rongchen.ui.merchant.task.GetMerchantListTask;
 
 import com.chendeji.rongchen.model.Sort;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.rey.material.widget.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -214,16 +217,20 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
         mMerchantRecycleView.setAdapter(merchantAdapter);
     }
 
-    @SuppressLint("NewApi")
     private void hideViews() {
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) actionButton.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
-        actionButton.animate().translationY(actionButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+        ViewPropertyAnimator.animate(actionButton)
+                .translationY(actionButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2))
+                .start();
+//        actionButton.animate().translationY(actionButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 
-    @SuppressLint("NewApi")
     private void showViews() {
-        actionButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+        ViewPropertyAnimator.animate(actionButton)
+                .translationY(0).setInterpolator(new AccelerateInterpolator(2))
+                .start();
+//        actionButton.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 
     /**

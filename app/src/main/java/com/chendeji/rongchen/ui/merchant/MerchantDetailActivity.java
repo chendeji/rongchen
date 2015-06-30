@@ -2,13 +2,18 @@ package com.chendeji.rongchen.ui.merchant;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -18,10 +23,16 @@ import com.amap.api.maps.AMapException;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.NaviPara;
+import com.chendeji.rongchen.MyApplication;
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.common.util.ImageLoaderOptionsUtil;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
 import com.chendeji.rongchen.common.util.ToastUtil;
+import com.chendeji.rongchen.common.view.MaterialTopImageView;
+import com.chendeji.rongchen.common.view.scrollview.MyScrollView;
+import com.chendeji.rongchen.common.view.scrollview.ObservableScrollViewCallbacks;
+import com.chendeji.rongchen.common.view.scrollview.ScrollState;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.comment.Comment;
 import com.chendeji.rongchen.model.merchant.Merchant;
@@ -33,20 +44,26 @@ import com.chendeji.rongchen.ui.merchant.view.CommentExtendableHolder;
 import com.chendeji.rongchen.ui.merchant.view.MerchantTopImageView;
 import com.chendeji.rongchen.ui.common.ExtendableHolder;
 import com.chendeji.rongchen.ui.merchant.view.DealExtendableHolder;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.rey.material.widget.FloatingActionButton;
 
 import java.util.List;
 
 /**
  * 商户详情界面
+ *
+ * @author ChenDJ
  * @ClassName:MerchantDetailActivity
  * @Function:
  * @Reason:
- * @author ChenDJ
  * @date 2015 -01-02 22:24:41
  * @see
  */
 public class MerchantDetailActivity extends AppCompatActivity {
 
+    private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     /**
      * key
      */
@@ -54,7 +71,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
 
     private Merchant merchant;
 
-    private MerchantTopImageView imageView;
+    private ImageView imageView;
     private TextView address;
     private Button call_merchant;
     private TextView groupPurchaseCount;
@@ -63,11 +80,19 @@ public class MerchantDetailActivity extends AppCompatActivity {
 
     private AsyncTask getCommentListTask;
     private AsyncTask getMerchantTask;
-    private ScrollView scrollView;
+    //    private ScrollView scrollView;
     private Toolbar merchantTitleToolBar;
     private RelativeLayout marchant_contact_info;
     private View deal_list_hoder;
     private View comment_list_hoder;
+    private int mFlexibleSpaceImageHeight;
+    private int mFlexibleSpaceShowFabOffset;
+    private int mActionBarSize;
+    private MyScrollView myScrollView;
+    private TextView titleView;
+    private FloatingActionButton phone_button;
+    private View mOverlayView;
+    private boolean fabIsShown;
 
     @Override
     protected void onPause() {
@@ -80,19 +105,20 @@ public class MerchantDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (merchant != null){
+        fabIsShown = false;
+        if (merchant != null) {
             merchant = null;
         }
 
-        if (getCommentListTask != null){
-            if (!getCommentListTask.isCancelled()){
+        if (getCommentListTask != null) {
+            if (!getCommentListTask.isCancelled()) {
                 getCommentListTask.cancel(true);
             }
             getCommentListTask = null;
         }
 
-        if (getMerchantTask != null){
-            if (!getMerchantTask.isCancelled()){
+        if (getMerchantTask != null) {
+            if (!getMerchantTask.isCancelled()) {
                 getMerchantTask.cancel(true);
             }
             getMerchantTask = null;
@@ -105,17 +131,116 @@ public class MerchantDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        StatusBarUtil.translucentStatusBar(this);
-        setContentView(R.layout.activity_merchant_detail);
-        getIntentData();
+        setContentView(R.layout.activity_material_merchant_detail);
+
+        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
+        mActionBarSize = StatusBarUtil.getActionBarSize(this);
+
         //1，头部图像视图 （完成）
         //2，商户地址，右边有一个电话按钮（完成）
         //3, 团购列表，超过3个，显示底部最后一栏，点击最后一栏展开剩余的所有团购（未完成）
         //4，评价列表显示评论的第一个，底部显示一个评论总数（未完成）
         initComponent();
         initEvent();
+        getIntentData();
+    }
+
+    /**
+     * 初始化控件值，控件需要用到的后台信息，放在控件加载完毕之后
+     *
+     * @函数名称 :initComponent
+     * @brief
+     * @author : ChenDJ
+     * @date : 2015-01-10 15:45:03
+     * @see
+     */
+    private void initComponent() {
+//        merchantTitleToolBar = (Toolbar) findViewById(R.id.tb_merchant_detail);
+//        setSupportActionBar(merchantTitleToolBar);
+//        merchantTitleToolBar.setTitle(getString(R.string.merchant_info));
+
+//        scrollView = (ScrollView) findViewById(R.id.sv_detail_container);
+
+        //version 1.0.3
+        //加载控件
+        imageView = (ImageView) findViewById(R.id.iv_top_image);
+        mOverlayView = findViewById(R.id.overlay);
+        myScrollView = (MyScrollView) findViewById(R.id.scroll);
+        titleView = (TextView) findViewById(R.id.tv_toolbar_title);
+//        titleView.setText(getString(R.string.merchant_info));
+        phone_button = (FloatingActionButton) findViewById(R.id.fab_button_phone);
+
+        //version 1.0.0
+        marchant_contact_info = (RelativeLayout) findViewById(R.id.rl_merchant_contact_info);
+//        imageView = (MerchantTopImageView) findViewById(R.id.ctiv_commontopimageview);
+        address = (TextView) findViewById(R.id.tv_address);
+        call_merchant = (Button) findViewById(R.id.bt_call_merchant);
+        groupPurchaseCount = (TextView) findViewById(R.id.tv_group_purchase_count);
+        ll_deal_list = (LinearLayout) findViewById(R.id.ll_deal_list);
+        deal_list_hoder = findViewById(R.id.cv_deal_list_hoder);
+        ll_comment_list = (LinearLayout) findViewById(R.id.ll_comment_list);
+        comment_list_hoder = findViewById(R.id.cv_comment_list_hoder);
     }
 
     private void initEvent() {
+
+        myScrollView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
+            @Override
+            public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+                int flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
+                int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
+                Logger.i("chendeji", "onScrollChanged:" + "scrollY:" + scrollY);
+
+                ViewHelper.setTranslationY(mOverlayView, Math.min(0, Math.max(-scrollY, minOverlayTransitionY)));
+                ViewHelper.setTranslationY(imageView, Math.min(0, Math.max(-scrollY / 2, minOverlayTransitionY)));
+
+                ViewHelper.setAlpha(mOverlayView, Math.min(1, Math.max(0, (float) scrollY / flexibleRange)));
+//                mOverlayView.setAlpha(Math.min(1, Math.max(0, (float) scrollY / flexibleRange)));
+
+                float titleScale = 1 + Math.min(MAX_TEXT_SCALE_DELTA, Math.max(0, (float)(flexibleRange - scrollY) / flexibleRange));
+                Logger.i("chendeji", "titleScale:" + titleScale);
+
+                float titleAlpha = 1 - Math.min(1, Math.max(0, (float)(flexibleRange - scrollY) / flexibleRange));
+                ViewHelper.setAlpha(titleView, titleAlpha);
+
+                //计算出titleview最多能在Y轴上移动多少
+                int maxTitleTranY = (int) (mFlexibleSpaceImageHeight - titleView.getHeight() * titleScale);
+                int titleTranY = maxTitleTranY - scrollY;
+                ViewHelper.setTranslationY(titleView, titleTranY);
+
+                //计算FAB的位置还有可移动范围
+                int maxFABTranY = mFlexibleSpaceImageHeight - phone_button.getHeight() / 2;
+                int FABTranY = Math.min(maxFABTranY, Math.max(mActionBarSize - phone_button.getHeight() / 2, maxFABTranY - scrollY));
+                ViewHelper.setTranslationY(phone_button, FABTranY);
+
+                if (FABTranY < mFlexibleSpaceShowFabOffset) {
+                    //hideFAB
+                    hideFAB();
+                } else {
+                    //showFAB
+                    showFAB();
+                }
+            }
+
+            @Override
+            public void onDownMotionEvent() {
+
+            }
+
+            @Override
+            public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+
+            }
+        });
+
+        myScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                myScrollView.scrollTo(0, mFlexibleSpaceImageHeight - mActionBarSize);
+            }
+        });
+
         marchant_contact_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,32 +253,52 @@ public class MerchantDetailActivity extends AppCompatActivity {
 //                    ToastUtil.showLongToast(MerchantDetailActivity.this, e.getErrorMessage());
 //                }
                 Intent intent = new Intent(MerchantDetailActivity.this, MapActivity.class);
-                Logger.i("chendeji","latitude:" + merchant.latitude + "longitude:"+merchant.longitude);
+                Logger.i("chendeji", "latitude:" + merchant.latitude + "longitude:" + merchant.longitude);
                 intent.putExtra(MapActivity.LOCATION_KEY, merchant);
                 MerchantDetailActivity.this.startActivity(intent);
             }
         });
     }
 
+    private void showFAB() {
+        if (!fabIsShown) {
+            ViewPropertyAnimator.animate(phone_button).cancel();
+            ViewPropertyAnimator.animate(phone_button).scaleX(1).scaleY(1).setDuration(200).start();
+            fabIsShown = true;
+        }
+    }
+
+    private void hideFAB() {
+        if (fabIsShown) {
+            ViewPropertyAnimator.animate(phone_button).cancel();
+            ViewPropertyAnimator.animate(phone_button).scaleX(0).scaleY(0).setDuration(200).start();
+            fabIsShown = false;
+        }
+    }
+
     /**
      * 填充数据
-     * @函数名称  :setData
-     * @brief
-     * @see
+     *
      * @param merchant
-     * @author  : chendeji
-     * @date  : Wed Apr 15 22:08:13 CST 2015
+     * @函数名称 :setData
+     * @brief
+     * @author : chendeji
+     * @date : Wed Apr 15 22:08:13 CST 2015
+     * @see
      */
     private void setData(Merchant merchant) {
         this.merchant = merchant;
 //        merchantTitleToolBar.setTitle(merchant.name);
 //        merchantTitleToolBar.setTitleTextColor(getResources().getColor(R.color.white));
-        imageView.setComponentValue(merchant);
+//        imageView.setComponentValue(merchant);
+        ImageLoader.getInstance().displayImage(merchant.photo_url, imageView,
+                ImageLoaderOptionsUtil.topImageOptions, MyApplication.imageLoadingListener);
+        titleView.setText(merchant.name);
         address.setText(merchant.address);
         groupPurchaseCount.setText(String.format("团购数量(%d)", merchant.deal_count));
 
         //填充团购数据
-        if (merchant.deal_count != 0){
+        if (merchant.deal_count != 0) {
             ExtendableHolder dealHolder;
             dealHolder = new DealExtendableHolder(this, merchant);
             dealHolder.setFooterButtonText(getString(R.string.showmore));
@@ -163,7 +308,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
         }
 
         //填充商户评论数，这里需要重新去访问评论接口
-        getCommentListTask = new GetCommentListTask(this,merchant.business_id,new UITaskCallBack<ReturnMes<List<Comment>>>() {
+        getCommentListTask = new GetCommentListTask(this, merchant.business_id, new UITaskCallBack<ReturnMes<List<Comment>>>() {
             @Override
             public void onPreExecute() {
 
@@ -174,7 +319,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
                 if (returnMes == null)
                     return;
                 List<Comment> comments = returnMes.object;
-                if (comments.size() > 0){
+                if (comments.size() > 0) {
                     ExtendableHolder commentHolder;
                     commentHolder = new CommentExtendableHolder(MerchantDetailActivity.this, returnMes);
                     commentHolder.setFooterButtonText(getString(R.string.showmore_comments));
@@ -192,43 +337,19 @@ public class MerchantDetailActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * 初始化控件值，控件需要用到的后台信息，放在控件加载完毕之后
-     * @函数名称  :initComponent
-     * @brief
-     * @see
-     * @author  : ChenDJ
-     * @date  : 2015-01-10 15:45:03
-     */
-    private void initComponent() {
-        merchantTitleToolBar = (Toolbar) findViewById(R.id.tb_merchant_detail);
-        setSupportActionBar(merchantTitleToolBar);
-        merchantTitleToolBar.setTitle(getString(R.string.merchant_info));
-
-        scrollView = (ScrollView) findViewById(R.id.sv_detail_container);
-
-        marchant_contact_info = (RelativeLayout)findViewById(R.id.rl_merchant_contact_info);
-        imageView = (MerchantTopImageView) findViewById(R.id.ctiv_commontopimageview);
-        address = (TextView) findViewById(R.id.tv_address);
-        call_merchant = (Button) findViewById(R.id.bt_call_merchant);
-        groupPurchaseCount = (TextView) findViewById(R.id.tv_group_purchase_count);
-        ll_deal_list = (LinearLayout) findViewById(R.id.ll_deal_list);
-        deal_list_hoder = findViewById(R.id.cv_deal_list_hoder);
-        ll_comment_list = (LinearLayout) findViewById(R.id.ll_comment_list);
-        comment_list_hoder = findViewById(R.id.cv_comment_list_hoder);
-    }
 
     /**
      * 解析intent传回来的数据
-     * @函数名称  :getIntentData
+     *
+     * @函数名称 :getIntentData
      * @brief
+     * @author : ChenDJ
+     * @date : 2015-01-02 21:19:06
      * @see
-     * @author  : ChenDJ
-     * @date  : 2015-01-02 21:19:06
      */
     private void getIntentData() {
         long merchant_id = getIntent().getLongExtra(MERCHANT_ID, -1);
-        getMerchantTask = new GetMerchantDetailInfoTask(this,new UITaskCallBack<ReturnMes<Merchant>>() {
+        getMerchantTask = new GetMerchantDetailInfoTask(this, new UITaskCallBack<ReturnMes<Merchant>>() {
             @Override
             public void onPreExecute() {
                 //TODO 显示正在加载信息
@@ -248,7 +369,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
             public void onNetWorkError() {
 
             }
-        }, merchant_id).excuteProxy((Void[])null);
+        }, merchant_id).excuteProxy((Void[]) null);
     }
 
 

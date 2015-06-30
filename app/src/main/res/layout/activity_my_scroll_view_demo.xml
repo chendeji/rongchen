@@ -6,7 +6,7 @@
     tools:context="com.chendeji.rongchen.ui.MyScrollViewDemoActivity">
 
 
-    <com.chendeji.rongchen.common.view.MyScrollView
+    <com.chendeji.rongchen.common.view.scrollview.MyScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -18,6 +18,6 @@
 
         </com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout>
 
-    </com.chendeji.rongchen.common.view.MyScrollView>
+    </com.chendeji.rongchen.common.view.scrollview.MyScrollView>
 
 </RelativeLayout>

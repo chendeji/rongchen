@@ -38,13 +38,13 @@ public class DealOperationTest extends AndroidTestCase {
         String details = deal.details;
         String image_url = deal.image_url;
         int list_price = deal.list_price;
-        List<String> more_image_urls = deal.more_image_urls;
-        List<SimpleMerchantInfo> merchantInfos = deal.businesses;
+        List<String> more_image_urls = deal.getMore_image_urls();
+        List<SimpleMerchantInfo> merchantInfos = deal.getBusinesses();
         String publish_date = deal.publish_date;
         int purchase_count = deal.purchase_count;
         String purchase_deadline = deal.purchase_deadline;
         String title = deal.title;
-        Restriction special_tips = deal.restrictions;
+        Restriction special_tips = deal.getRestrictions();
 
         Assert.assertNotNull(special_tips);
         int is_refundable = special_tips.is_refundable;
