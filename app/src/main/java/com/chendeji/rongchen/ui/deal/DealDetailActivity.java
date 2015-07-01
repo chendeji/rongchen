@@ -4,18 +4,24 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chendeji.rongchen.MyApplication;
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.common.util.ImageLoaderOptionsUtil;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
 import com.chendeji.rongchen.common.view.SpanableTextView;
+import com.chendeji.rongchen.common.view.scrollview.MyScrollView;
+import com.chendeji.rongchen.common.view.scrollview.ObservableScrollViewCallbacks;
+import com.chendeji.rongchen.common.view.scrollview.ScrollState;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.groupbuy.Deal;
 import com.chendeji.rongchen.model.merchant.SimpleGroupBuyInfo;
@@ -23,21 +29,24 @@ import com.chendeji.rongchen.ui.common.ExtendableHolder;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 import com.chendeji.rongchen.ui.deal.task.GetDealDetailInfoTask;
 import com.chendeji.rongchen.ui.deal.view.DealInfoLayout;
-import com.chendeji.rongchen.ui.deal.view.DealTopImageView;
 import com.chendeji.rongchen.ui.deal.view.SimpleMerchantExtendableHolder;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.rey.material.widget.FloatingActionButton;
 
 public class DealDetailActivity extends AppCompatActivity {
     public static final String DEAL_KEY = "deal";
     public static final String TAG = DealDetailActivity.class.getSimpleName();
     private SimpleGroupBuyInfo info;
 
-    private DealTopImageView topImageView;
+    //    private DealTopImageView topImageView;
     private DealInfoLayout infoLayout;
 
     private RelativeLayout bottom_buy_layout;
-    private SpanableTextView bottom_current_price;
-    private SpanableTextView bottom_list_price;
-    private Button bottom_buy;
+//    private SpanableTextView bottom_current_price;
+//    private SpanableTextView bottom_list_price;
+//    private Button bottom_buy;
 
     private SpanableTextView current_price;
     private SpanableTextView list_price;
@@ -51,12 +60,20 @@ public class DealDetailActivity extends AppCompatActivity {
 
     private TextView special_tips;
     private AsyncTask getDealDetailTask;
-    private Toolbar deal_toolbar;
+    private ImageView mTop_image;
+    private MyScrollView scrollView;
+    private View mOverlay;
+    private TextView mToolbar_title;
+    private FloatingActionButton mBuy_immediately;
+    private int mFlexibleSpaceImageHeight;
+    private int mFlexibleSpaceShowFabOffset;
+    private int mActionBarSize;
+    private boolean fabIsShown;
 
     @Override
     protected void onDestroy() {
-        if (getDealDetailTask != null){
-            if (!getDealDetailTask.isCancelled()){
+        if (getDealDetailTask != null) {
+            if (!getDealDetailTask.isCancelled()) {
                 getDealDetailTask.cancel(true);
             }
             getDealDetailTask = null;
@@ -68,14 +85,120 @@ public class DealDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        StatusBarUtil.translucentStatusBar(this);
-        setContentView(R.layout.activity_deal_detail);
+        setContentView(R.layout.activity_material_deal_detail);
         info = (SimpleGroupBuyInfo) getIntent().getExtras().getSerializable(DEAL_KEY);
+
+        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
+        mActionBarSize = StatusBarUtil.getActionBarSize(this);
 
         //初始化控件
         initComponent();
+        initEvent();
 
         //通过服务端拉取数据
         getDealData();
+    }
+
+    private void initComponent() {
+        //----------------------------version 1.0.3
+        mTop_image = (ImageView) findViewById(R.id.iv_top_image);
+        scrollView = (MyScrollView) findViewById(R.id.scroll);
+        mOverlay = findViewById(R.id.overlay);
+        mToolbar_title = (TextView) findViewById(R.id.tv_toolbar_title);
+        mBuy_immediately = (FloatingActionButton) findViewById(R.id.fab_buy_immediaterly);
+        mBuy_immediately.setIcon(getResources().getDrawable(R.drawable.ic_local_grocery_store_white_48dp), false);
+        TextView merchantListTitle = (TextView) findViewById(R.id.tv_merchant_list_title);
+        merchantListTitle.setText(getString(R.string.merchant_list_activity_title));
+
+        //----------------------------version 1.0.0
+        //顶部的购买视图
+        infoLayout = (DealInfoLayout) findViewById(R.id.dil_deal_info);
+        //商家信息列表
+        merchant_list = (LinearLayout) findViewById(R.id.ll_merchant_list);
+        //团购详情
+        deal_detail = (TextView) findViewById(R.id.tv_deal_detail);
+        //团购须知
+        special_tips = (TextView) findViewById(R.id.tv_special_tips);
+    }
+
+    private void initEvent() {
+        mBuy_immediately.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startBuyActivity();
+            }
+        });
+
+        scrollView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
+            @Override
+            public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+                int flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
+                int minOverlayTransitionY = mActionBarSize - mOverlay.getHeight();
+
+                ViewHelper.setTranslationY(mTop_image, Math.min(0, Math.max(-scrollY / 2, minOverlayTransitionY)));
+                ViewHelper.setTranslationY(mOverlay, Math.min(0, Math.max(-scrollY, minOverlayTransitionY)));
+                ViewHelper.setAlpha(mOverlay,1 - Math.max(0 ,(float)(flexibleRange - scrollY) / flexibleRange));
+
+                float titleAlpha = 1 - Math.min(1, Math.max(0, (float)(flexibleRange - scrollY) / flexibleRange));
+                ViewHelper.setAlpha(mToolbar_title, titleAlpha);
+
+                //计算出titleview最多能在Y轴上移动多少
+                int maxTitleTranY = (int) (mFlexibleSpaceImageHeight - mToolbar_title.getHeight());
+                int titleTranY = Math.max(0, maxTitleTranY - scrollY);
+                ViewHelper.setTranslationY(mToolbar_title, titleTranY);
+
+                int maxFABTranY = mFlexibleSpaceImageHeight - mBuy_immediately.getHeight() / 2;
+                int FABTranY = Math.min(maxFABTranY, Math.max(mActionBarSize - mBuy_immediately.getHeight() / 2, maxFABTranY - scrollY));
+                ViewHelper.setTranslationY(mBuy_immediately, FABTranY);
+
+                if (FABTranY < mFlexibleSpaceShowFabOffset) {
+                    //hideFAB
+                    hideFAB();
+                } else {
+                    //showFAB
+                    showFAB();
+                }
+            }
+
+            @Override
+            public void onDownMotionEvent() {
+
+            }
+
+            @Override
+            public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+
+            }
+        });
+
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                ViewHelper.setAlpha(mOverlay, 0);
+                ViewHelper.setTranslationY(mToolbar_title, mFlexibleSpaceImageHeight - mToolbar_title.getHeight());
+                ViewHelper.setTranslationY(mBuy_immediately, mFlexibleSpaceImageHeight - mBuy_immediately.getHeight() / 2);
+                showFAB();
+                //刚刚进入到页面的时候设置完了，要记得将这个监听注销掉
+                scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+    }
+
+    private void showFAB() {
+        if (!fabIsShown) {
+            ViewPropertyAnimator.animate(mBuy_immediately).cancel();
+            ViewPropertyAnimator.animate(mBuy_immediately).scaleX(1).scaleY(1).setDuration(200).start();
+            fabIsShown = true;
+        }
+    }
+
+    private void hideFAB() {
+        if (fabIsShown) {
+            ViewPropertyAnimator.animate(mBuy_immediately).cancel();
+            ViewPropertyAnimator.animate(mBuy_immediately).scaleX(0).scaleY(0).setDuration(200).start();
+            fabIsShown = false;
+        }
     }
 
     private void getDealData() {
@@ -109,30 +232,9 @@ public class DealDetailActivity extends AppCompatActivity {
 
     private void setComponentValue(Deal deal) {
 
-        topImageView.setComponentValue(deal);
+        ImageLoader.getInstance().displayImage(deal.image_url, mTop_image, ImageLoaderOptionsUtil.topImageOptions, MyApplication.imageLoadingListener);
         infoLayout.setComponentValue(deal);
-
-        //底部视图当前价格
-        bottom_current_price.addPiece(new SpanableTextView.Piece.Builder(String.valueOf(deal.current_price))
-                .textColor(this.getResources().getColor(R.color.dark_red))
-                .textSizeRelative(1.5f)
-                .style(Typeface.BOLD)
-                .build());
-        bottom_current_price.addPiece(new SpanableTextView.Piece.Builder("元")
-                .textColor(this.getResources().getColor(R.color.dark_red))
-                .textSizeRelative(0.5f)
-                .style(Typeface.BOLD)
-                .build());
-        bottom_current_price.display();
-
-        //底部之前的价格
-        bottom_list_price.addPiece(new SpanableTextView.Piece.Builder(String.format("%d元", deal.list_price))
-                .textColor(this.getResources().getColor(R.color.gray_text))
-                .textSizeRelative(0.9f)
-                .strike()
-                .build());
-        bottom_list_price.display();
-
+        mToolbar_title.setText(deal.title);
         //商家列表
         ExtendableHolder holder = null;
         holder = new SimpleMerchantExtendableHolder(this, deal);
@@ -149,38 +251,6 @@ public class DealDetailActivity extends AppCompatActivity {
     private void showErrorImage() {
         //TODO 显示整个页面的加载错误
 
-    }
-
-    private void initComponent() {
-        deal_toolbar = (Toolbar) findViewById(R.id.tb_deal_title);
-        deal_toolbar.setTitle(getString(R.string.deal_info));
-
-        //顶部的图片
-        topImageView = (DealTopImageView) findViewById(R.id.iv_deal_top_image);
-
-        //底部的团购购买按钮
-        bottom_buy_layout = (RelativeLayout) findViewById(R.id.rl_bottom_buy);
-        bottom_current_price = (SpanableTextView) findViewById(R.id.st_bottom_current_price);
-        bottom_list_price = (SpanableTextView) findViewById(R.id.st_bottom_list_price);
-        bottom_buy = (Button) findViewById(R.id.bt_bottom_buy);
-        bottom_buy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startBuyActivity();
-            }
-        });
-
-        //顶部的购买视图
-        infoLayout = (DealInfoLayout) findViewById(R.id.dil_deal_info);
-
-        //商家信息列表
-        merchant_list = (LinearLayout) findViewById(R.id.ll_merchant_list);
-
-        //团购详情
-        deal_detail = (TextView) findViewById(R.id.tv_deal_detail);
-
-        //团购须知
-        special_tips = (TextView) findViewById(R.id.tv_special_tips);
     }
 
     private void startBuyActivity() {

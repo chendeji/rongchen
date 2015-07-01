@@ -66,5 +66,6 @@
     </string-array>
     <string name="title_activity_my_scroll_view_demo">MyScrollViewDemoActivity</string>
     <string name="category_choose">分类选择</string>
+    <string name="refund_anytime">随时退</string>
 
 </resources>

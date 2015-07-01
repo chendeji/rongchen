@@ -245,6 +245,8 @@ public class MerchantDetailActivity extends AppCompatActivity {
                 ViewHelper.setTranslationY(titleView, mFlexibleSpaceImageHeight - titleView.getHeight());
                 ViewHelper.setTranslationY(phone_button, mFlexibleSpaceImageHeight - phone_button.getHeight() / 2);
                 showFAB();
+                //刚刚进入到页面的时候设置完了，要记得将这个监听注销掉
+                myScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 

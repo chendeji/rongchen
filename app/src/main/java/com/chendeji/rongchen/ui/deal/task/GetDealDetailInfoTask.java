@@ -35,19 +35,6 @@ public class GetDealDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<Deal
     }
 
     @Override
-    protected ReturnMes<Deal> doInBackground(Void... params) {
-        try {
-            ReturnMes<Deal> dealReturnMes = AppServerFactory.getFactory().getDealOperation().getDeal(mDeal_id);
-            return dealReturnMes;
-        } catch (IOException e) {
-            Logger.i(this.getClass().getSimpleName(), "解析错误");
-        } catch (HttpException e) {
-            Logger.i(this.getClass().getSimpleName(), "网络错误");
-        }
-        return null;
-    }
-
-    @Override
     protected void onPostExecute(ReturnMes<Deal> dealReturnMes) {
         super.onPostExecute(dealReturnMes);
         if (AppConst.OK.equals(dealReturnMes.status)) {
@@ -70,6 +57,14 @@ public class GetDealDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<Deal
 
     @Override
     protected ReturnMes<Deal> getDataFromNetwork() {
+        try {
+            ReturnMes<Deal> dealReturnMes = AppServerFactory.getFactory().getDealOperation().getDeal(mDeal_id);
+            return dealReturnMes;
+        } catch (IOException e) {
+            Logger.i(this.getClass().getSimpleName(), "解析错误");
+        } catch (HttpException e) {
+            Logger.i(this.getClass().getSimpleName(), "网络错误");
+        }
         return null;
     }
 

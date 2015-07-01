@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,95 +36,86 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/horizontal_10dp"
-                    android:elevation="2dp"
-                    >
-
-                    <RelativeLayout
-                        android:id="@+id/rl_merchant_contact_info"
+                    android:elevation="2dp">
+                    <!-- 1,价格视图 -->
+                    <com.chendeji.rongchen.ui.deal.view.DealInfoLayout
+                        android:id="@+id/dil_deal_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:padding="@dimen/horizontal_10dp">
-
-                        <!--<com.rey.material.widget.Button-->
-                        <!--android:id="@+id/bt_call_merchant"-->
-                        <!--style="@style/FlatColorButtonRippleStyle"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_alignParentRight="true"-->
-                        <!--android:layout_centerInParent="true"-->
-                        <!--android:text="@string/make_call"-->
-                        <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"-->
-                        <!--android:textColor="@color/common_button_textcolor"-->
-                        <!--app:rd_delayClick="afterRelease" />-->
-
-                        <TextView
-                            android:id="@+id/tv_address"
-                            style="@style/common_max_text_size"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerInParent="true"
-                            android:ellipsize="end"
-                            android:singleLine="true" />
-
-                    </RelativeLayout>
-
+                        android:padding="@dimen/horizontal_16dp_margin" />
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cv_deal_list_hoder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/horizontal_10dp"
-                    android:elevation="2dp"
-                    >
-
+                    android:elevation="2dp">
+                    <!-- 2,商家信息 -->
                     <LinearLayout
-                        android:id="@+id/ll_deal_list"
+                        android:id="@+id/ll_merchant_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_group_purchase_count"
+                            android:id="@+id/tv_merchant_list_title"
                             style="@style/common_max_text_size"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center|left"
                             android:padding="10dp"
                             android:textColor="@color/common_button_textcolor" />
 
                     </LinearLayout>
-
                 </android.support.v7.widget.CardView>
 
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cv_comment_list_hoder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/horizontal_10dp"
-                    android:elevation="2dp"
-                    >
-
+                    android:elevation="2dp">
+                    <!-- 3,团购详情 -->
                     <LinearLayout
-                        android:id="@+id/ll_comment_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_comment_title"
+                            android:id="@+id/tv_deal_detail"
                             style="@style/common_max_text_size"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:textColor="@color/common_button_textcolor" />
+                            android:layout_margin="10dp"
+                             />
 
                     </LinearLayout>
+                </android.support.v7.widget.CardView>
 
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/horizontal_10dp"
+                    android:elevation="2dp">
+                    <!-- 4,购买须知 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_special_tips"
+                            style="@style/common_max_text_size"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                             />
+
+                    </LinearLayout>
                 </android.support.v7.widget.CardView>
 
             </LinearLayout>
@@ -159,12 +149,13 @@
     </FrameLayout>
 
     <com.rey.material.widget.FloatingActionButton
-        android:id="@+id/fab_button_phone"
+        android:id="@+id/fab_buy_immediaterly"
         style="@style/Main_FAB_Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|top"
         android:layout_marginRight="@dimen/horizontal_16dp_margin"
         android:scaleType="center" />
+
 
 </FrameLayout>
