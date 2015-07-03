@@ -30,6 +30,14 @@ public final class AppConst {
         String APP_KEY = "appkey";
         /** 应用secret*/
         String APP_SECRET = "secret";
+        /** 应用登入的基本地址*/
+        String APP_LOGIN_URL = "http://m.dianping.com/my";
+        /** 大众点评的H5首页*/
+        String DIANPING_H5_FIRST_PAGE = "http://m.dianping.com/";
+        /** 大众点评退出账号H5地址*/
+        String DIANPING_LOGOUT = "http://m.dianping.com/logout";
+        /** 大众点评H5页面首页*/
+        String DIANPING_INDEX = "http://m.dianping.com/tuan";
     }
 
     public static interface ReturnMesConst{

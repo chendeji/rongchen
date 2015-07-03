@@ -8,9 +8,9 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="FloatingActionMenu">
-        <attr name="radius" format="dimension"/>
-        <attr name="animation">
+    <declare-styleable name="FAMLayout">
+        <attr name="fam_radius" format="dimension"/>
+        <attr name="fam_animation">
             <enum name="order" value="0"/>
         </attr>
     </declare-styleable>

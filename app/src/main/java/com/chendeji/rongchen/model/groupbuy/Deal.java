@@ -41,6 +41,8 @@ public class Deal extends SugarRecord {
 
     public String more_image_urls;
 
+    public String deal_h5_url;
+
     public String restrictions;
 
     public Restriction getRestrictions() {
@@ -74,9 +76,10 @@ public class Deal extends SugarRecord {
                 ", publish_date='" + publish_date + '\'' +
                 ", details='" + details + '\'' +
                 ", image_url='" + image_url + '\'' +
-                ", businesses=" + businesses +
-                ", more_image_urls=" + more_image_urls +
-                ", restrictions=" + restrictions +
+                ", businesses='" + businesses + '\'' +
+                ", more_image_urls='" + more_image_urls + '\'' +
+                ", deal_h5_url='" + deal_h5_url + '\'' +
+                ", restrictions='" + restrictions + '\'' +
                 '}';
     }
 }

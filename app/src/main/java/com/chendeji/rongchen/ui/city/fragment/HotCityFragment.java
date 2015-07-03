@@ -110,6 +110,7 @@ public class HotCityFragment extends Fragment {
                 Button cityView;
                 // 最近搜索城市数据填充
                 if (stringList != null && !stringList.isEmpty()){
+                    //TODO 这里有一个BUG 当再次回到这个页面进行选择城市的时候，不能重新刷新最近搜索城市
                     for (String city : stringList){
                         cityView = new Button(getActivity());
                         cityView.setTextColor(Color.WHITE);

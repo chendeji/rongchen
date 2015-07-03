@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.chendeji.rongchen.R;
 
-public class RecycleViewDemoActivity extends ActionBarActivity {
+public class RecycleViewActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

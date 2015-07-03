@@ -1,6 +1,7 @@
 package com.chendeji.rongchen.ui.merchant;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -190,7 +191,12 @@ public class MerchantDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO 跳转到拨号界面，拨打电话
-
+                if (merchant == null){
+                    return ;
+                }
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + merchant.telephone));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
         myScrollView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
@@ -242,6 +248,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
             public void onGlobalLayout() {
 //                myScrollView.scrollTo(0, mFlexibleSpaceImageHeight - mActionBarSize);
                 ViewHelper.setAlpha(mOverlayView, 0);
+                ViewHelper.setAlpha(titleView, 0);
                 ViewHelper.setTranslationY(titleView, mFlexibleSpaceImageHeight - titleView.getHeight());
                 ViewHelper.setTranslationY(phone_button, mFlexibleSpaceImageHeight - phone_button.getHeight() / 2);
                 showFAB();

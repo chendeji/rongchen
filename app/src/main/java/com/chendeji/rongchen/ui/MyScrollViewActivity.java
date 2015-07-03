@@ -14,7 +14,7 @@ import com.rey.material.widget.TextView;
 
 import java.util.Random;
 
-public class MyScrollViewDemoActivity extends AppCompatActivity {
+public class MyScrollViewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

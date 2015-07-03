@@ -20,6 +20,7 @@ public class SettingFactory {
     private static final String CATEGORY = "category";
     private static final String LATITUDE = "latitude";
     private static final String LONGITUDE = "longitude";
+    private static final String IS_FIRST_TIME_LOGIN = "is_first_time_login";
 
     private SharedPreferences sharedPreferences;
 
@@ -35,6 +36,21 @@ public class SettingFactory {
 
     public void init(Context context) {
         sharedPreferences = context.getSharedPreferences(SETTING, Context.MODE_APPEND);
+    }
+
+    public void setIsFirstTimeLogin(boolean isFirst) {
+        if (sharedPreferences != null) {
+            sharedPreferences.edit()
+                    .putBoolean(IS_FIRST_TIME_LOGIN, isFirst)
+                    .commit();
+        }
+    }
+
+    public boolean getIsFirstTimeLogin(){
+        if (sharedPreferences != null){
+            return sharedPreferences.getBoolean(IS_FIRST_TIME_LOGIN, true);
+        }
+        return false;
     }
 
     public void setCurrentChoosedCategory(String category) {
@@ -97,11 +113,11 @@ public class SettingFactory {
         }
     }
 
-    public double[] getCurrentLocation(){
-        if (sharedPreferences != null){
+    public double[] getCurrentLocation() {
+        if (sharedPreferences != null) {
             String str_latitude = sharedPreferences.getString(LATITUDE, "");
             String str_longitude = sharedPreferences.getString(LONGITUDE, "");
-            if (TextUtils.isEmpty(str_latitude) || TextUtils.isEmpty(str_longitude)){
+            if (TextUtils.isEmpty(str_latitude) || TextUtils.isEmpty(str_longitude)) {
                 return null;
             }
             double latitude = Double.parseDouble(str_latitude);

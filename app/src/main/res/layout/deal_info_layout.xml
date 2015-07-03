@@ -44,6 +44,7 @@
             android:id="@+id/tv_is_refundable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/common_button_textcolor"
             android:text="@string/refund_anytime"
             android:visibility="gone" />
 

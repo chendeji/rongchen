@@ -1,5 +1,6 @@
 package com.chendeji.rongchen.ui.deal;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.chendeji.rongchen.common.view.scrollview.ScrollState;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.groupbuy.Deal;
 import com.chendeji.rongchen.model.merchant.SimpleGroupBuyInfo;
+import com.chendeji.rongchen.ui.Html5WebActivity;
 import com.chendeji.rongchen.ui.common.ExtendableHolder;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 import com.chendeji.rongchen.ui.deal.task.GetDealDetailInfoTask;
@@ -69,6 +71,7 @@ public class DealDetailActivity extends AppCompatActivity {
     private int mFlexibleSpaceShowFabOffset;
     private int mActionBarSize;
     private boolean fabIsShown;
+    private Deal mDeal;
 
     @Override
     protected void onDestroy() {
@@ -176,6 +179,7 @@ public class DealDetailActivity extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 ViewHelper.setAlpha(mOverlay, 0);
+                ViewHelper.setAlpha(mToolbar_title, 0);
                 ViewHelper.setTranslationY(mToolbar_title, mFlexibleSpaceImageHeight - mToolbar_title.getHeight());
                 ViewHelper.setTranslationY(mBuy_immediately, mFlexibleSpaceImageHeight - mBuy_immediately.getHeight() / 2);
                 showFAB();
@@ -231,7 +235,7 @@ public class DealDetailActivity extends AppCompatActivity {
     }
 
     private void setComponentValue(Deal deal) {
-
+        this.mDeal = deal;
         ImageLoader.getInstance().displayImage(deal.image_url, mTop_image, ImageLoaderOptionsUtil.topImageOptions, MyApplication.imageLoadingListener);
         infoLayout.setComponentValue(deal);
         mToolbar_title.setText(deal.title);
@@ -255,8 +259,12 @@ public class DealDetailActivity extends AppCompatActivity {
 
     private void startBuyActivity() {
         //TODO 跳到支付页面
-
-
+        if (mDeal == null){
+            return ;
+        }
+        Intent intent = new Intent(this, Html5WebActivity.class);
+        intent.putExtra(Html5WebActivity.URL_KEY, mDeal.deal_h5_url);
+        startActivity(intent);
     }
 
 

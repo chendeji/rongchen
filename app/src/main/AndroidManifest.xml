@@ -19,6 +19,7 @@
     <!-- SD卡读取权限，用户写入离线定位数据 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.read_logs" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".MyApplication"
@@ -39,16 +40,15 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.chendeji.rongchen.model" />
 
+        <!-- 高德地图的debug-key -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="53eab95e819e8a76b1def54b6def6609" />
+
         <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:label="@string/app_name"
             android:uiOptions="splitActionBarWhenNarrow" >
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
             <meta-data
                 android:name="android.support.UI_OPTIONS"
@@ -63,12 +63,6 @@
         <activity
             android:name=".ui.deal.DealDetailActivity"
             android:label="团购详情" />
-
-        <!-- 高德地图的debug-key -->
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="53eab95e819e8a76b1def54b6def6609" />
-
         <activity
             android:name=".ui.ShowImageActivity"
             android:label="@string/title_activity_show_image" >
@@ -91,8 +85,21 @@
             android:label="@string/title_activity_deal_category" >
         </activity>
         <activity
-            android:name=".ui.MyScrollViewDemoActivity"
+            android:name=".ui.MyScrollViewActivity"
             android:label="@string/title_activity_my_scroll_view_demo" >
+        </activity>
+        <activity
+            android:name=".ui.Html5WebActivity"
+            android:label="@string/title_activity_html5_web" >
+        </activity>
+        <activity
+            android:name=".ui.FAMLayoutActivity"
+            android:label="@string/title_activity_famlayout" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

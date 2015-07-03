@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.chendeji.rongchen.ui.FAMLayoutActivity">
+
+    <android.support.v7.widget.Toolbar style="@style/ToolBar_Style">
+
+    </android.support.v7.widget.Toolbar>
+
+    <com.chendeji.rongchen.common.view.FAMLayout
+        android:id="@+id/fam_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:fam_radius="140dp">
+
+        <com.rey.material.widget.FloatingActionButton
+            style="@style/Main_FAB_Light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_iconSize="35dp"
+            app:fab_iconSrc="@drawable/ic_hourglass_empty_white_48dp"
+            />
+        <com.rey.material.widget.FloatingActionButton
+            style="@style/Main_FAB_Light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_radius="20dp"
+            app:fab_iconSrc="@drawable/ic_local_phone_white_48dp"
+            />
+        <com.rey.material.widget.FloatingActionButton
+            style="@style/Main_FAB_Light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_iconSrc="@drawable/ic_local_phone_white_48dp"
+            app:fab_radius="20dp"
+            />
+        <com.rey.material.widget.FloatingActionButton
+            style="@style/Main_FAB_Light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_iconSrc="@drawable/ic_local_phone_white_48dp"
+            app:fab_radius="20dp"
+            />
+        <com.rey.material.widget.FloatingActionButton
+            style="@style/Main_FAB_Light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_iconSrc="@drawable/ic_local_phone_white_48dp"
+            app:fab_radius="20dp"
+            />
+
+
+    </com.chendeji.rongchen.common.view.FAMLayout>
+
+</RelativeLayout>
