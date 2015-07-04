@@ -64,8 +64,12 @@
 
     <style name="Main_FAB_Light" parent="Material.Widget.FloatingActionButton.Light">
         <item name="fab_backgroundColor">?attr/colorPrimary</item>
-        <!--<item name="rd_backgroundColor">?attr/colorPrimary</item>-->
+        <!--<item name="fab_radius">20dp</item>-->
         <item name="rd_rippleColor">?attr/colorPrimaryDark</item>
+    </style>
+
+    <style name="Main_FAB_Light_SMALL" parent="Main_FAB_Light">
+        <item name="fab_radius">20dp</item>
     </style>
 
     <style name="TreeNodeStyleCustom">

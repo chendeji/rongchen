@@ -88,13 +88,17 @@ public class FAMLayout extends ViewGroup {
         @Override
         public void onClick(View v) {
             //
-            if (isChildMenuOpen) {
-                isChildMenuOpen = false;
-                hideChildView(200);
-            } else {
-                isChildMenuOpen = true;
-                showChildView(200);
-            }
+            togleMenu(200);
+        }
+    }
+
+    public void togleMenu(int duration){
+        if (isChildMenuOpen) {
+            isChildMenuOpen = false;
+            hideChildView(duration);
+        } else {
+            isChildMenuOpen = true;
+            showChildView(duration);
         }
     }
 
@@ -170,6 +174,7 @@ public class FAMLayout extends ViewGroup {
 
                 }
             });
+            tranAnima.setInterpolator(new OvershootInterpolator());
 
             Animation alphaAnima = AnimationUtil.getAlphaAnima(duration, 0, 1);
 
@@ -179,7 +184,7 @@ public class FAMLayout extends ViewGroup {
             animationSet.addAnimation(rotateAnima);
             animationSet.addAnimation(tranAnima);
             animationSet.addAnimation(alphaAnima);
-            animationSet.setStartOffset(i * 30);
+            animationSet.setStartOffset(i * 50);
             child.startAnimation(animationSet);
         }
     }

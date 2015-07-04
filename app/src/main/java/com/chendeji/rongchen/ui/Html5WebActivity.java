@@ -35,6 +35,15 @@ import com.rey.material.app.SimpleDialog;
 public class Html5WebActivity extends AppCompatActivity {
     public static final String URL_KEY = "deal_h5_url";
 
+    public static final String SHOW_MODE = "show_mode";
+
+    public static final int SHOW_USER = 0;
+    public static final int LONGIN = 1;
+    public static final int LONGOUT = 2;
+
+    private int showMode = LONGIN;
+
+
     private WebView mDianpingView;
     private String mDeal_H5_url;
 
@@ -43,6 +52,7 @@ public class Html5WebActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_html5_web);
         mDeal_H5_url = getIntent().getStringExtra(URL_KEY);
+        showMode = getIntent().getIntExtra(SHOW_MODE, showMode);
         mDianpingView = (WebView) findViewById(R.id.wv_dianping_source_view);
         WebSettings settings = mDianpingView.getSettings();
         settings.setUseWideViewPort(true);//设置此属性，可任意比例缩放
@@ -61,7 +71,7 @@ public class Html5WebActivity extends AppCompatActivity {
 
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             //TODO 加载网页
-            Logger.i("chendeji", "shouldOverrideUrlLoading" + "url:" + url);
+            Logger.i("chendeji", "url:"+url);
             if (AppConst.AppBaseConst.DIANPING_LOGOUT.equalsIgnoreCase(url)) {
                 //兼容低版本
                 CookieManager.getInstance().removeAllCookie();
@@ -70,22 +80,12 @@ public class Html5WebActivity extends AppCompatActivity {
             }
 
             //点击返回键能够跳到点评首页
-            if (AppConst.AppBaseConst.DIANPING_INDEX.equalsIgnoreCase(url)){
+            if (AppConst.AppBaseConst.DIANPING_INDEX.equalsIgnoreCase(url)
+                    || AppConst.AppBaseConst.DIANPING_TUAN.equalsIgnoreCase(url)){
                 finish();
             }
             view.loadUrl(url);
             return false;
-        }
-
-        @Override
-        public void onFormResubmission(WebView view, Message dontResend, Message resend) {
-            Logger.i("chendeji", "onFormResubmission");
-            super.onFormResubmission(view, dontResend, resend);
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            Logger.i("chendeji", "onPageStarted-----url:" + url);
         }
 
         @Override
@@ -97,33 +97,13 @@ public class Html5WebActivity extends AppCompatActivity {
                 SettingFactory.getInstance().setIsFirstTimeLogin(false);
                 Logger.i("chendeji", "登入成功！！！");
                 //登入成功
-                Intent intent = new Intent(Html5WebActivity.this, WelcomeActivity.class);
-                startActivity(intent);
-                finish();
+                if (showMode == LONGIN){
+                    Intent intent = new Intent(Html5WebActivity.this, WelcomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
-
-            Logger.i("chendeji", "cookieStr:" + cookieStr);
-        }
-
-        @Override
-        public void onLoadResource(WebView view, String url) {
-            Logger.i("chendeji", "onLoadResource----url:" + url);
-        }
-
-        @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-            Logger.i("chendeji", "shouldInterceptRequest----request:" + request.toString());
-            return super.shouldInterceptRequest(view, request);
-        }
-
-        @Override
-        public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-            Logger.i("chendeji", "onLoadResource----url:" + url + "isReload:" + isReload);
-        }
-
-        @Override
-        public void onReceivedLoginRequest(WebView view, String realm, String account, String args) {
-            Logger.i("chendeji", "onLoadResource----realm:" + realm + "account:" + account + "args:" + args);
         }
     }
 
@@ -151,8 +131,6 @@ public class Html5WebActivity extends AppCompatActivity {
 //                    .negativeAction(getString(R.string.negative));
 //            DialogFragment fragment = DialogFragment.newInstance(builder);
 //            fragment.show(getSupportFragmentManager(), null);
-
-
             return false;
         }
 
@@ -190,10 +168,9 @@ public class Html5WebActivity extends AppCompatActivity {
             } else {
                 //TODO 显示一个对话框，提示是否退出应用
                 //在前面还有界面的情况下，应该只能finish这个界面，要判断栈中是否还有界面
-//                showExistDialog();
                 boolean isLastActivity = SystemUtil.isLastActivityInTask(this);
                 if (isLastActivity){
-                    showExistDialog();
+                    SystemUtil.showExistDialog(this);
                     return true;
                 } else {
                     finish();
@@ -201,27 +178,5 @@ public class Html5WebActivity extends AppCompatActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    private void showExistDialog() {
-        Dialog.Builder builder = new SimpleDialog.Builder(R.style.SimpleDialogLight) {
-            @Override
-            public void onPositiveActionClicked(DialogFragment fragment) {
-                finish();
-                android.os.Process.killProcess(android.os.Process.myPid());
-                super.onPositiveActionClicked(fragment);
-            }
-
-            @Override
-            public void onNegativeActionClicked(DialogFragment fragment) {
-                super.onNegativeActionClicked(fragment);
-            }
-        };
-
-        builder.title(getString(R.string.exist))
-                .positiveAction(getString(R.string.positive))
-                .negativeAction(getString(R.string.negative));
-        DialogFragment fragment = DialogFragment.newInstance(builder);
-        fragment.show(getSupportFragmentManager(), null);
     }
 }

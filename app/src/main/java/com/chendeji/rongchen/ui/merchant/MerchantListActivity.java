@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -21,19 +22,24 @@ import android.widget.FrameLayout;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
+import com.chendeji.rongchen.common.util.SystemUtil;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.view.CommonFooterView;
+import com.chendeji.rongchen.common.view.FAMLayout;
 import com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayout;
 import com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayoutDirection;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.model.Offset_Type;
 import com.chendeji.rongchen.model.Platform;
 import com.chendeji.rongchen.server.AppConst;
+import com.chendeji.rongchen.ui.Html5WebActivity;
+import com.chendeji.rongchen.ui.city.ChooseCityActivity;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 import com.chendeji.rongchen.ui.merchant.adpter.MerchantRecycleAdapter;
 import com.chendeji.rongchen.ui.merchant.task.GetMerchantListTask;
 
 import com.chendeji.rongchen.model.Sort;
+import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.rey.material.widget.FloatingActionButton;
@@ -67,8 +73,6 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
 
     private CommonFooterView footerView;
 
-    FloatingActionButton actionButton;
-
     private int mCurrentPage = DEFUALT_PAGENUM;
     private static final int DEFAULT_LIMITE = 20;
     private AsyncTask getMerchantListTask;
@@ -77,6 +81,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     private String mCity;
 
     private Sort defualtSort = Sort.DEFAULT;
+    private FAMLayout menuLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +102,8 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
         mMerchantRecycleView.addItemDecoration(new MerchantItemDecoration(getResources()
                 .getDimensionPixelSize(R.dimen.horizontal_10dp)));
 
-        actionButton = (FloatingActionButton) findViewById(R.id.fab_image);
-        actionButton.setIcon(getResources().getDrawable(R.drawable.ic_hourglass_empty_white_48dp), false);
-
+//        actionButton = (FloatingActionButton) findViewById(R.id.main_menu_button);
+        menuLayout = (FAMLayout) findViewById(R.id.fam_menu_layout);
         initData();
         initEvent();
         getData();
@@ -218,25 +222,52 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     }
 
     private void hideViews() {
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) actionButton.getLayoutParams();
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) menuLayout.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
-        ViewPropertyAnimator.animate(actionButton)
-                .translationY(actionButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2))
+        ViewPropertyAnimator.animate(menuLayout)
+                .translationY(menuLayout.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2))
                 .start();
-//        actionButton.animate().translationY(actionButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 
     private void showViews() {
-        ViewPropertyAnimator.animate(actionButton)
+        ViewPropertyAnimator.animate(menuLayout)
                 .translationY(0).setInterpolator(new AccelerateInterpolator(2))
                 .start();
-//        actionButton.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 
     /**
      * 初始化控件的各种事件监听
      */
     private void initEvent() {
+        menuLayout.setChildViewOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menuLayout.togleMenu(200);
+                Intent intent = null;
+                int id = v.getId();
+                switch (id){
+                    case R.id.fab_app_setting:
+                        //进入到设置界面
+                        break;
+                    case R.id.fab_botton_sort:
+                        //显示一个排序的对话框
+                        break;
+                    case R.id.fab_location:
+                        //进入到城市选择界面
+                        intent = new Intent(MerchantListActivity.this, ChooseCityActivity.class);
+                        intent.putExtra(ChooseCityActivity.CHOOSE_MODE, ChooseCityActivity.CHOSE_CITY);
+                        startActivity(intent);
+                        break;
+                    case R.id.fab_user:
+                        //进入到用户首页
+                        intent = new Intent(MerchantListActivity.this, Html5WebActivity.class);
+                        intent.putExtra(Html5WebActivity.URL_KEY, AppConst.AppBaseConst.APP_LOGIN_URL);
+                        intent.putExtra(Html5WebActivity.SHOW_MODE, Html5WebActivity.SHOW_USER);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        });
         refreshLayout.setOnRefreshListener(this);
         mMerchantRecycleView.addOnScrollListener(new HidingScrollListener() {
             @Override
@@ -250,15 +281,6 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
             }
         });
 
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //floating action button click!
-                //show dialog
-                //TODO 弹出半弧形的选项提示动画。
-
-            }
-        });
     }
 
     @Override
@@ -387,6 +409,25 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            goback();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goback() {
+        boolean isLastActivity = SystemUtil.isLastActivityInTask(this);
+        if (isLastActivity){
+            SystemUtil.showExistDialog(this);
+        } else {
+            finish();
+        }
     }
 
     @Override

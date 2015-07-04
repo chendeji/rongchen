@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -29,26 +30,29 @@ public class WelcomeActivity extends AppCompatActivity implements IMap.IMapLocat
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-//        onLocationFail();
     }
 
     @Override
     protected void onResume() {
-        Logger.i(TAG, "onResume");
         boolean isFirstTime = SettingFactory.getInstance().getIsFirstTimeLogin();
+        String currentCity = SettingFactory.getInstance().getCurrentCity();
         if (isFirstTime) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                   goToLogin();
+                    goToLogin();
                 }
             }, 1500);
-
         } else {
-            //TODO 测试暂时注释
-//            MapManager.getManager().getMap().startLocation(this);
-            onLocationFail();
+            //如果当前选择的城市为空，也就是没有选过城市
+            if (TextUtils.isEmpty(currentCity)) {
+//                MapManager.getManager().getMap().startLocation(this);
+                onLocationFail();
+            } else {
+                //如果城市选择过了，直接进入到商户列表界面
+                goToMerchantList();
+            }
         }
         super.onResume();
     }
@@ -65,13 +69,17 @@ public class WelcomeActivity extends AppCompatActivity implements IMap.IMapLocat
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(WelcomeActivity.this, MerchantListActivity.class);
-                startActivity(intent);
                 //注销监听
                 MapManager.getManager().getMap().unregisteListener();
-                finish();
+                goToMerchantList();
             }
         }, 1000);
+    }
+
+    private void goToMerchantList() {
+        Intent intent = new Intent(WelcomeActivity.this, MerchantListActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chendeji.rongchen"
     android:versionCode="2"
-    android:versionName="1.0.3" >
+    android:versionName="1.0.3">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,7 +26,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/BaseTheme" >
+        android:theme="@style/BaseTheme">
         <meta-data
             android:name="DATABASE"
             android:value="rongchen.db" />
@@ -48,7 +48,13 @@
         <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:label="@string/app_name"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
             <meta-data
                 android:name="android.support.UI_OPTIONS"
@@ -65,42 +71,29 @@
             android:label="团购详情" />
         <activity
             android:name=".ui.ShowImageActivity"
-            android:label="@string/title_activity_show_image" >
-        </activity>
+            android:label="@string/title_activity_show_image"></activity>
         <activity
             android:name=".ui.map.MapActivity"
-            android:label="@string/title_activity_map" >
-        </activity>
+            android:label="@string/title_activity_map"></activity>
         <activity
             android:name=".ui.map.RouteActivity"
-            android:label="@string/title_activity_road_line_planning" >
-        </activity>
+            android:label="@string/title_activity_road_line_planning"></activity>
         <activity
             android:name=".ui.city.ChooseCityActivity"
             android:label="@string/title_activity_choose_city"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".ui.category.DealCategoryActivity"
-            android:label="@string/title_activity_deal_category" >
-        </activity>
+            android:label="@string/title_activity_deal_category"></activity>
         <activity
             android:name=".ui.MyScrollViewActivity"
-            android:label="@string/title_activity_my_scroll_view_demo" >
-        </activity>
+            android:label="@string/title_activity_my_scroll_view_demo"></activity>
         <activity
             android:name=".ui.Html5WebActivity"
-            android:label="@string/title_activity_html5_web" >
-        </activity>
+            android:label="@string/title_activity_html5_web"></activity>
         <activity
             android:name=".ui.FAMLayoutActivity"
-            android:label="@string/title_activity_famlayout" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="@string/title_activity_famlayout"></activity>
     </application>
 
 </manifest>

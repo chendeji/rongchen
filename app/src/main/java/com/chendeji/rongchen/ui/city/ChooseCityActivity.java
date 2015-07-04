@@ -31,6 +31,12 @@ import java.util.List;
 public class ChooseCityActivity extends AppCompatActivity implements CommonSearchLayout.OnSearchKeyWordChanged,
         HotCityFragment.OnHotCityClicked, CitiesFragment.OnCityListItemClickedListener {
 
+    public static final String CHOOSE_MODE = "choose_city_mode";
+
+    public static final int CHOSE_CITY_AND_CATEGORY = 0;
+    public static final int CHOSE_CITY = 1;
+
+    private int choose_mode = CHOSE_CITY_AND_CATEGORY;
     private CommonSearchLayout searchLayout;
     private HotCityFragment hotCityFragment;
     private CitiesFragment citiesFragment;
@@ -45,6 +51,7 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
         //2，第一次加载就显示加载进度条，后面默认使用数据库缓存了。
         //3，右侧有一条城市头字母导航栏用于快速定位城市 不过貌似不需要
         //4，
+        choose_mode = getIntent().getIntExtra(CHOOSE_MODE, CHOSE_CITY_AND_CATEGORY);
         setContentView(R.layout.activity_choose_city);
         Toolbar toolbar = (Toolbar) findViewById(R.id.tb_choose_city);
         toolbar.setTitle(getString(R.string.choose_city));
@@ -143,10 +150,12 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
         SettingFactory factory = SettingFactory.getInstance();
         factory.setCurrentCity(city);
         factory.addRecentSearchCity(city);
-
-        Intent intent = new Intent(this, DealCategoryActivity.class);
-        intent.putExtra(MerchantListActivity.CITY, city);
-        startActivity(intent);
+        //显示的模式如果是还要选择分类的界面
+        if (choose_mode == CHOSE_CITY_AND_CATEGORY) {
+            Intent intent = new Intent(this, DealCategoryActivity.class);
+            intent.putExtra(MerchantListActivity.CITY, city);
+            startActivity(intent);
+        }
         finish();
     }
 

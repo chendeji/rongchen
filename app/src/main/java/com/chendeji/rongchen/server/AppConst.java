@@ -37,7 +37,9 @@ public final class AppConst {
         /** 大众点评退出账号H5地址*/
         String DIANPING_LOGOUT = "http://m.dianping.com/logout";
         /** 大众点评H5页面首页*/
-        String DIANPING_INDEX = "http://m.dianping.com/tuan";
+        String DIANPING_INDEX = "http://m.dianping.com/a.pbf";
+        /** 大众点评团购界面*/
+        String DIANPING_TUAN = "http://m.dianping.com/tuan";
     }
 
     public static interface ReturnMesConst{
