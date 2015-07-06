@@ -2,11 +2,17 @@ package com.chendeji.rongchen.ui.map;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.amap.api.maps.AMapException;
@@ -15,17 +21,23 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.NaviPara;
 import com.amap.api.services.route.Path;
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.SettingFactory;
+import com.chendeji.rongchen.common.util.AnimationUtil;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.map.IMap;
 import com.chendeji.rongchen.common.map.MapManager;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.ui.map.view.CommonRouteListView;
+import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.rey.material.app.Dialog;
+import com.rey.material.app.DialogFragment;
 import com.rey.material.app.SimpleDialog;
+import com.rey.material.widget.FloatingActionButton;
 
 import java.io.Serializable;
 
-public class MapActivity extends AppCompatActivity implements View.OnClickListener {
+public class MapActivity extends AppCompatActivity implements View.OnClickListener, IMap.OnMarkClickListener {
 
     public static final String LOCATION_KEY = "location";
     private static final String TAG = MapActivity.class.getSimpleName();
@@ -33,9 +45,9 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     private LinearLayout map_container;
     private IMap map;
 
-    private Button take_bus;
-    private Button drive;
-    private Button walk;
+    private FloatingActionButton take_bus;
+    private FloatingActionButton drive;
+    private FloatingActionButton walk;
     private SimpleDialog.Builder builder;
     private Merchant merchant;
 
@@ -48,39 +60,10 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         map_container = (LinearLayout) findViewById(R.id.ll_map);
         map = MapManager.getManager().getMap();
         merchant = (Merchant) getIntent().getSerializableExtra(LOCATION_KEY);
-        map.show(this,map_container,savedInstanceState, new double[]{merchant.latitude, merchant.longitude});
+        map.show(this, map_container, savedInstanceState, new double[]{merchant.latitude, merchant.longitude});
+        map.setOnMarkClickListener(this);
+        showRouteButton();
     }
-
-
-//    @Override
-//    public void onMarkClick() {
-//        //TODO 显示一个Dialog提示是否设置为终点
-//        builder = new SimpleDialog.Builder(R.style.SimpleDialog){
-//
-//            @Override
-//            protected void onBuildDone(Dialog dialog) {
-//                dialog.layoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            }
-//
-//            @Override
-//            public void onPositiveActionClicked(DialogFragment fragment) {
-//                //TODO 点击确定之后生成路线规划列表，从底部弹出。或者跳到另外一个activity界面去选择
-//                startRoadPlan();
-//                super.onPositiveActionClicked(fragment);
-//            }
-//
-//            @Override
-//            public void onNegativeActionClicked(DialogFragment fragment) {
-//                super.onNegativeActionClicked(fragment);
-//            }
-//        };
-//
-//        builder.message(getString(R.string.begin_local_navigation))
-//                .title(getString(R.string.begin_navigation))
-//                .positiveAction(getString(R.string.positive))
-//                .negativeAction(getString(R.string.negative));
-//        DialogFragment.newInstance(builder).show(getSupportFragmentManager(), null);
-//    }
 
     private void startRoute(int route_type) {
         Intent intent = new Intent(this, RouteActivity.class);
@@ -89,17 +72,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         startActivity(intent);
     }
 
-//    @Override
-//    public void startActivityForResult(Intent intent, int requestCode) {
-//        Logger.i("chendeji", "返回回来的请求吗：routeResult:"+requestCode);
-//        if (requestCode == RESULT_OK){
-//            Path path = intent.getParcelableExtra(CommonRouteListView.PATH);
-//            int route_type = intent.getIntExtra(CommonRouteListView.TYPE, -1);
-//            map.showRoute(path, route_type);
-//        }
-//        super.startActivityForResult(intent, requestCode);
-//    }
-
     private void initEvent() {
         take_bus.setOnClickListener(this);
         drive.setOnClickListener(this);
@@ -107,9 +79,22 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     private void initComponent() {
-        take_bus = (Button) findViewById(R.id.bt_take_bus);
-        drive = (Button) findViewById(R.id.bt_drive);
-        walk = (Button) findViewById(R.id.bt_walk);
+        take_bus = (FloatingActionButton) findViewById(R.id.bt_take_bus);
+        drive = (FloatingActionButton) findViewById(R.id.bt_drive);
+        walk = (FloatingActionButton) findViewById(R.id.bt_walk);
+
+
+        take_bus.setClickable(false);
+        take_bus.setFocusable(false);
+        take_bus.setVisibility(View.INVISIBLE);
+
+        drive.setClickable(false);
+        drive.setFocusable(false);
+        drive.setVisibility(View.INVISIBLE);
+
+        walk.setClickable(false);
+        walk.setFocusable(false);
+        walk.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -130,11 +115,45 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         map.onResume();
     }
 
+    /**
+     * 显示底部的三个按钮动画
+     */
+    private void showRouteButton() {
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) take_bus.getLayoutParams();
+                int bottomPadding = lp.bottomMargin;
+                int height = take_bus.getHeight();
+                Animation bus_anim = generateAnima(take_bus, bottomPadding + height, 0, 50);
+                take_bus.startAnimation(bus_anim);
+
+                Animation drive_anim = generateAnima(drive, bottomPadding + height, 0, 2 * 50);
+                drive.startAnimation(drive_anim);
+
+                Animation walk_anim = generateAnima(walk, bottomPadding + height, 0, 3 * 50);
+                walk.startAnimation(walk_anim);
+            }
+        }, 1500);
+    }
+
+    private Animation generateAnima(View view, int from, int to, int starOffset) {
+        view.setVisibility(View.VISIBLE);
+        view.setClickable(true);
+        view.setFocusable(true);
+        Animation tranAnima = AnimationUtil.getTransAnima(0, 0, from, to, 200, null);
+        tranAnima.setInterpolator(new OvershootInterpolator());
+        tranAnima.setStartOffset(starOffset);
+        return tranAnima;
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         map.onDestroy();
-        if (builder != null){
+        if (builder != null) {
             builder = null;
         }
     }
@@ -163,37 +182,61 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        //1，点击进入到路径规划界面，驾车和步行也一样。
         int mRoute = 0;
-        double[] start = map.getLocation();
-        double[] end = new double[]{merchant.latitude, merchant.longitude};
-        if (start == null) {
-            ToastUtil.showLongToast(this, getString(R.string.location_faile));
-            return;
-        }
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bt_take_bus:
                 //乘坐公交
                 mRoute = IMap.BUS_ROUTE;
-                startRoute(mRoute);
                 break;
             case R.id.bt_drive:
+                mRoute = IMap.CAR_ROUTE;
                 //开车
                 //直接显示导航路径
 //                map.startRoute(this, start, end, IMap.CAR_ROUTE);
-                NaviPara para = new NaviPara();
-                para.setTargetPoint(new LatLng(merchant.latitude, merchant.longitude));
-                try {
-                    AMapUtils.openAMapNavi(para, this);
-                } catch (AMapException e) {
-                    ToastUtil.showLongToast(this, e.getErrorMessage());
-                }
+//                NaviPara para = new NaviPara();
+//                para.setTargetPoint(new LatLng(merchant.latitude, merchant.longitude));
+//                try {
+//                    AMapUtils.openAMapNavi(para, this);
+//                } catch (AMapException e) {
+//                    ToastUtil.showLongToast(this, e.getErrorMessage());
+//                }
                 break;
             case R.id.bt_walk:
+                mRoute = IMap.WALK_ROUTE;
                 //步行
                 //直接显示导航路径
-                map.startRoute(this, start, end, IMap.WALK_ROUTE);
+//                map.startRoute(this, start, end, IMap.WALK_ROUTE);
                 break;
         }
+        startRoute(mRoute);
     }
 
+    @Override
+    public void onMarkClick(String title, final double latitude, final double longitude) {
+        //显示一个对话框，是否要设置这个该点为起始位置
+        if (TextUtils.isEmpty(title))
+            return;
+        Dialog.Builder builder = new SimpleDialog.Builder(R.style.SimpleDialogLight){
+            @Override
+            public void onPositiveActionClicked(DialogFragment fragment) {
+                SettingFactory.getInstance().setCurrentLocation(latitude,longitude);
+                super.onPositiveActionClicked(fragment);
+                //进入路径规划界面，并显示相应的路径
+                Intent intent = new Intent(MapActivity.this, RouteActivity.class);
+                intent.putExtra(RouteActivity.END_POINT_LOCATION_KEY, merchant);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onNegativeActionClicked(DialogFragment fragment) {
+                super.onNegativeActionClicked(fragment);
+            }
+        };
+        builder.title(getString(R.string.set_location))
+                .positiveAction(getString(R.string.positive))
+                .negativeAction(getString(R.string.negative));
+        DialogFragment fragment = DialogFragment.newInstance(builder);
+        fragment.show(getSupportFragmentManager(), null);
+    }
 }

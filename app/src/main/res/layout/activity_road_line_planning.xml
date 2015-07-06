@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -19,26 +20,39 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_my_location"
-                android:layout_centerInParent="true"
-                android:layout_alignParentLeft="true"
                 android:layout_width="@dimen/horizontal_16dp_margin"
                 android:layout_height="@dimen/horizontal_16dp_margin"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
                 android:background="@drawable/ic_navigation_black_18dp" />
 
-            <TextView
-                android:layout_toRightOf="@id/iv_my_location"
-                style="@style/common_max_text_size"
-                android:layout_width="wrap_content"
+            <!--<TextView-->
+                <!--android:id="@+id/tv_my_location"-->
+                <!--style="@style/common_max_text_size"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/horizental_24dp_margin"-->
+                <!--android:layout_toRightOf="@id/iv_my_location"-->
+                <!--android:gravity="center"-->
+                <!--android:text="我的位置"-->
+                <!--android:visibility="gone"-->
+                <!--android:textColor="@color/common_button_textcolor" />-->
+
+            <AutoCompleteTextView
+                android:id="@+id/et_start_point_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/horizental_24dp_margin"
-                android:gravity="center"
-                android:text="我的位置"
-                android:textColor="@color/common_button_textcolor" />
+                android:layout_toRightOf="@id/iv_my_location"
+                android:background="@null"
+                android:hint="@string/please_input_location"
+                android:textColorHint="@color/common_button_textcolor"
+                android:textColor="@color/common_button_textcolor"
+                 />
 
         </RelativeLayout>
 
@@ -63,29 +77,31 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_end_point"
-                android:layout_centerInParent="true"
-                android:layout_alignParentLeft="true"
                 android:layout_width="@dimen/horizontal_16dp_margin"
                 android:layout_height="@dimen/horizontal_16dp_margin"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
                 android:background="@drawable/ic_place_black_18dp" />
 
             <TextView
                 android:id="@+id/tv_end_address"
-                android:layout_toRightOf="@id/iv_end_point"
                 style="@style/common_max_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:layout_marginLeft="@dimen/horizental_24dp_margin"
+                android:layout_toRightOf="@id/iv_end_point"
                 android:gravity="center"
                 android:text="终点" />
         </RelativeLayout>
 
     </LinearLayout>
+
     <RadioGroup
         android:id="@+id/rg_route_type_group"
         android:layout_width="match_parent"
@@ -94,49 +110,52 @@
 
         <RadioButton
             android:id="@+id/rt_bus_button"
-            android:padding="@dimen/horizontal_16dp_margin"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:gravity="center"
-            android:drawableLeft="@drawable/ic_directions_bus_black_48dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:button="@null"
-            android:text="公交"
-            />
+            android:gravity="center"
+            android:padding="@dimen/horizontal_16dp_margin"
+            android:text="公交" />
+
         <RadioButton
             android:id="@+id/rt_car_button"
-            android:padding="@dimen/horizontal_16dp_margin"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:button="@null"
-            android:drawableLeft="@drawable/ic_directions_car_black_48dp"
-            android:text="汽车"
-            />
+            android:gravity="center"
+            android:padding="@dimen/horizontal_16dp_margin"
+            android:text="汽车" />
+
         <RadioButton
             android:id="@+id/rt_walk_button"
-            android:padding="@dimen/horizontal_16dp_margin"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:button="@null"
-            android:drawableLeft="@drawable/ic_directions_walk_black_48dp"
-            android:text="步行"
-            />
+            android:gravity="center"
+            android:padding="@dimen/horizontal_16dp_margin"
+            android:text="步行" />
 
     </RadioGroup>
-    <View
-        android:id="@+id/route_type_direction"
-        android:layout_width="@dimen/horizontal_16dp_margin"
+
+
+    <com.chendeji.rongchen.common.view.CursorView
+        android:id="@+id/cv_pager_cursor"
+        android:layout_width="wrap_content"
         android:layout_height="3dp"
+        app:cursor_count="3"
         android:background="@color/blue"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/blue" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_route"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
 
 </LinearLayout>

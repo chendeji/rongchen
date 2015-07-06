@@ -2,6 +2,14 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ListView
+        android:id="@+id/lv_route_list"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
     <RelativeLayout
         android:id="@+id/rl_loading_layout"
         android:layout_width="match_parent"
@@ -19,12 +27,5 @@
             app:pv_progressStyle="@style/InOutColorsCircularProgressDrawableStyle" />
 
     </RelativeLayout>
-
-    <ListView
-        android:id="@+id/lv_route_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ListView>
 
 </merge>

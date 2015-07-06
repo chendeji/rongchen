@@ -15,12 +15,15 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
+import com.chendeji.rongchen.common.util.AnimationUtil;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.SystemUtil;
 import com.chendeji.rongchen.common.util.ToastUtil;
@@ -209,7 +212,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     private void initData() {
         //初始化筛选数据
         this.mCity = getIntent().getStringExtra(CITY);
-        if (TextUtils.isEmpty(mCity)){
+        if (TextUtils.isEmpty(mCity)) {
             this.mCity = AppConst.RequestParams.DEFUALT_CITY;
         }
 
@@ -226,12 +229,14 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
         int fabBottomMargin = lp.bottomMargin;
         ViewPropertyAnimator.animate(menuLayout)
                 .translationY(menuLayout.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2))
+                .setDuration(200)
                 .start();
     }
 
     private void showViews() {
         ViewPropertyAnimator.animate(menuLayout)
-                .translationY(0).setInterpolator(new AccelerateInterpolator(2))
+                .translationY(0).setInterpolator(new OvershootInterpolator())
+                .setDuration(200)
                 .start();
     }
 
@@ -245,7 +250,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
                 menuLayout.togleMenu(200);
                 Intent intent = null;
                 int id = v.getId();
-                switch (id){
+                switch (id) {
                     case R.id.fab_app_setting:
                         //进入到设置界面
                         break;
@@ -423,7 +428,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
 
     private void goback() {
         boolean isLastActivity = SystemUtil.isLastActivityInTask(this);
-        if (isLastActivity){
+        if (isLastActivity) {
             SystemUtil.showExistDialog(this);
         } else {
             finish();

@@ -15,6 +15,7 @@ public class BaiduMap implements IMap {
     private double[] location ;
 
     private IMapLocationListener listener;
+    private OnMarkClickListener mOnMarkClickListener;
 
     public BaiduMap(Context context){
         this.mContext = context;
@@ -28,6 +29,11 @@ public class BaiduMap implements IMap {
     @Override
     public void setContext(Context context) {
         this.mContext = context;
+    }
+
+    @Override
+    public void startPoiSearch(String tip) {
+
     }
 
     @Override
@@ -80,6 +86,11 @@ public class BaiduMap implements IMap {
     @Override
     public void setOnSearchRouteListener(OnSearchRouteListener listener) {
 
+    }
+
+    @Override
+    public void setOnMarkClickListener(OnMarkClickListener listener) {
+        this.mOnMarkClickListener = listener;
     }
 
 //    @Override

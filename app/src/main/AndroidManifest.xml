@@ -77,7 +77,8 @@
             android:label="@string/title_activity_map"></activity>
         <activity
             android:name=".ui.map.RouteActivity"
-            android:label="@string/title_activity_road_line_planning"></activity>
+            android:label="@string/title_activity_road_line_planning"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".ui.city.ChooseCityActivity"
             android:label="@string/title_activity_choose_city"

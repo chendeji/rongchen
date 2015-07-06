@@ -97,11 +97,11 @@ public class CommonRouteListView extends RelativeLayout implements AdapterView.O
                 break;
             case IMap.CAR_ROUTE:
                 DriveRouteResult driveRouteResult = (DriveRouteResult) result;
-                map.showRoute(driveRouteResult.getPaths().get(position), IMap.BUS_ROUTE);
+                map.showRoute(driveRouteResult.getPaths().get(position), IMap.CAR_ROUTE);
                 break;
             case IMap.WALK_ROUTE:
                 WalkRouteResult walkRouteResult = (WalkRouteResult) result;
-                map.showRoute(walkRouteResult.getPaths().get(position), IMap.BUS_ROUTE);
+                map.showRoute(walkRouteResult.getPaths().get(position), IMap.WALK_ROUTE);
                 break;
         }
         ((Activity) getContext()).finish();
@@ -168,7 +168,7 @@ public class CommonRouteListView extends RelativeLayout implements AdapterView.O
                 case IMap.CAR_ROUTE:
                     DriveRouteResult driveRouteResult = (DriveRouteResult) mRouteResult;
                     DrivePath drivePath = driveRouteResult.getPaths().get(position);
-                    String roadName = drivePath.getSteps().get(0).getRoad();
+                    String roadName = drivePath.getSteps().get(0).getInstruction();
                     String drive_distance = DistanceUtil.getDistance(drivePath.getDistance() / 1000);
                     int drive_duration = (int) (drivePath.getDuration() / 60);
                     int toll = (int) drivePath.getTolls();
@@ -178,7 +178,7 @@ public class CommonRouteListView extends RelativeLayout implements AdapterView.O
                 case IMap.WALK_ROUTE:
                     WalkRouteResult walkRouteResult = (WalkRouteResult) mRouteResult;
                     WalkPath walkPath = walkRouteResult.getPaths().get(position);
-                    String walk_road_name = walkPath.getSteps().get(0).getRoad();
+                    String walk_road_name = walkRouteResult.getPaths().get(0).getSteps().get(0).getInstruction();
                     int walk_duration = (int) (walkPath.getDuration() / 60);
                     holder.lineName.setText(walk_road_name);
                     holder.lineDetail.setText(walk_duration + "分钟");

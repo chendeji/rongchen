@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,37 +19,39 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center|bottom"
-            android:gravity="center"
+            android:gravity="center|bottom"
             android:orientation="horizontal">
 
-            <Button
+            <com.rey.material.widget.FloatingActionButton
                 android:id="@+id/bt_take_bus"
+                style="@style/Main_FAB_Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_directions_bus_black_48dp"
-                android:gravity="center"
-                android:text="公交"
-                android:textColor="@color/blue" />
+                android:layout_marginBottom="@dimen/horizental_24dp_margin"
+                app:fab_iconSrc="@drawable/ic_directions_bus_white_48dp"
+                app:fab_radius="20dp" />
 
-            <Button
+            <com.rey.material.widget.FloatingActionButton
                 android:id="@+id/bt_drive"
+                style="@style/Main_FAB_Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_directions_car_black_48dp"
-                android:gravity="center"
-                android:text="自驾"
-                android:textColor="@color/blue" />
+                android:layout_marginBottom="@dimen/horizental_24dp_margin"
+                android:layout_marginLeft="@dimen/horizental_24dp_margin"
+                app:fab_iconSrc="@drawable/ic_directions_car_white_48dp"
+                app:fab_radius="20dp" />
 
-            <Button
+            <com.rey.material.widget.FloatingActionButton
                 android:id="@+id/bt_walk"
+                style="@style/Main_FAB_Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_directions_walk_black_48dp"
-                android:gravity="center"
-                android:text="步行"
-                android:textColor="@color/blue" />
+                android:layout_marginBottom="@dimen/horizental_24dp_margin"
+                android:layout_marginLeft="@dimen/horizental_24dp_margin"
+                app:fab_iconSrc="@drawable/ic_directions_run_white_48dp"
+                app:fab_radius="20dp" />
 
         </LinearLayout>
 

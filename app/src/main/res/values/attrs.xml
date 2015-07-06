@@ -24,4 +24,8 @@
     <declare-styleable name="AutoHorizontalLinearLayout">
         <attr name="space" format="dimension|integer"/>
     </declare-styleable>
+
+    <declare-styleable name="CursorView">
+        <attr name="cursor_count" format="reference|integer"/>
+    </declare-styleable>
 </resources>

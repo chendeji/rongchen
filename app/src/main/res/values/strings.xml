@@ -70,5 +70,9 @@
     <string name="title_activity_html5_web">Html5WebActivity</string>
     <string name="exist">是否退出应用？</string>
     <string name="title_activity_famlayout">FAMLayoutActivity</string>
+    <string name="please_input_location">请输入附近地点名称</string>
+    <string name="set_location">是否设置这个坐标为起始位置？</string>
+    <string name="no_result">没有搜索结果</string>
+    <string name="my_location">我的位置</string>
 
 </resources>
