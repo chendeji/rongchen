@@ -47,8 +47,8 @@ public class WelcomeActivity extends AppCompatActivity implements IMap.IMapLocat
         } else {
             //如果当前选择的城市为空，也就是没有选过城市
             if (TextUtils.isEmpty(currentCity)) {
-//                MapManager.getManager().getMap().startLocation(this);
-                onLocationFail();
+                MapManager.getManager().getMap().startLocation(this);
+//                onLocationFail();
             } else {
                 //如果城市选择过了，直接进入到商户列表界面
                 goToMerchantList();

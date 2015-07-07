@@ -100,7 +100,7 @@ public class SettingFactory {
 
     public String getCurrentCity() {
         if (sharedPreferences != null) {
-            return sharedPreferences.getString(CITY_SETTING, AppConst.RequestParams.DEFUALT_CITY);
+            return sharedPreferences.getString(CITY_SETTING, "");
         }
         return null;
     }

@@ -268,10 +268,20 @@ public class MerchantDetailActivity extends AppCompatActivity {
 //                } catch (AMapException e) {
 //                    ToastUtil.showLongToast(MerchantDetailActivity.this, e.getErrorMessage());
 //                }
-                Intent intent = new Intent(MerchantDetailActivity.this, MapActivity.class);
-                Logger.i("chendeji", "latitude:" + merchant.latitude + "longitude:" + merchant.longitude);
-                intent.putExtra(MapActivity.LOCATION_KEY, merchant);
-                MerchantDetailActivity.this.startActivity(intent);
+                try {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    intent.setPackage("com.autonavi.minimap");
+                    intent.setData(Uri.parse("androidamap://viewMap?sourceApplication=" + MerchantDetailActivity.this.getPackageName()
+                            + "&poiname=" + merchant.name + "&lat=" + merchant.latitude + "&lon=" + merchant.longitude + "&dev=0"));
+                    startActivity(intent);
+                }catch (Exception e){
+                    Intent intent = new Intent(MerchantDetailActivity.this, MapActivity.class);
+                    Logger.i("chendeji", "latitude:" + merchant.latitude + "longitude:" + merchant.longitude);
+                    intent.putExtra(MapActivity.LOCATION_KEY, merchant);
+                    MerchantDetailActivity.this.startActivity(intent);
+                }
             }
         });
     }

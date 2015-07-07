@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.Logger;
@@ -40,6 +41,7 @@ public class HotCityFragment extends Fragment {
     private AutoHorizontalLinearLayout recent_city;
     private AutoHorizontalLinearLayout hot_city;
     private CommonLoadingProgressView progressView;
+    private TextView recentlySearchCity;
 
     /**
      * Use this factory method to create a new instance of
@@ -79,22 +81,24 @@ public class HotCityFragment extends Fragment {
         recent_city = (AutoHorizontalLinearLayout) view.findViewById(R.id.hll_recent_search_city);
         hot_city = (AutoHorizontalLinearLayout) view.findViewById(R.id.hll_hot_city);
         progressView = (CommonLoadingProgressView) view.findViewById(R.id.common_loading_layout);
+        recentlySearchCity = (TextView) view.findViewById(R.id.tv_recently_search_city);
         initData();
         return view;
     }
 
-    private void showProgress(){
-        if (progressView != null){
+    private void showProgress() {
+        if (progressView != null) {
             progressView.show();
         }
     }
-    private void hideProgress(){
-        if (progressView != null){
+
+    private void hideProgress() {
+        if (progressView != null) {
             progressView.hide();
         }
     }
 
-    public void initData(){
+    public void initData() {
         final OnCityButtonClickedListener listener = new OnCityButtonClickedListener();
         //开启子线程去完成数据库提取最近搜索城市的任务
         new GetRecentSearchCityTask(getActivity(), new UITaskCallBack<ReturnMes<List<String>>>() {
@@ -109,18 +113,19 @@ public class HotCityFragment extends Fragment {
                 List<String> stringList = returnMes.object;
                 Button cityView;
                 // 最近搜索城市数据填充
-                if (stringList != null && !stringList.isEmpty()){
+                if (stringList != null && !stringList.isEmpty()) {
                     //TODO 这里有一个BUG 当再次回到这个页面进行选择城市的时候，不能重新刷新最近搜索城市
-                    for (String city : stringList){
+                    for (String city : stringList) {
                         cityView = new Button(getActivity());
-                        cityView.setTextColor(Color.WHITE);
+                        cityView.setTextColor(getResources().getColor(R.color.common_button_textcolor));
                         cityView.setText(city);
                         cityView.setBackgroundResource(R.drawable.city_button_bg);
                         cityView.setOnClickListener(listener);
                         recent_city.addView(cityView);
                     }
-                }else {
+                } else {
                     recent_city.setVisibility(View.GONE);
+                    recentlySearchCity.setVisibility(View.GONE);
                 }
             }
 
@@ -128,7 +133,7 @@ public class HotCityFragment extends Fragment {
             public void onNetWorkError() {
 
             }
-        }).excuteProxy((Void[])null);
+        }).excuteProxy((Void[]) null);
 
 
         //热门城市数据填充
@@ -137,7 +142,7 @@ public class HotCityFragment extends Fragment {
         int hot_cities_count = hot_cities.length;
         for (int i = 0; i < hot_cities_count; i++) {
             city = new Button(getActivity());
-            city.setTextColor(Color.WHITE);
+            city.setTextColor(getResources().getColor(R.color.common_button_textcolor));
             city.setBackgroundResource(R.drawable.city_button_bg);
             city.setText(hot_cities[i]);
             city.setOnClickListener(listener);

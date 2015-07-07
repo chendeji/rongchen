@@ -1,11 +1,9 @@
 package com.chendeji.rongchen.ui.merchant;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,16 +13,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.chendeji.rongchen.R;
-import com.chendeji.rongchen.SettingFactory;
-import com.chendeji.rongchen.common.util.AnimationUtil;
-import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.SystemUtil;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.view.CommonFooterView;
@@ -42,10 +35,7 @@ import com.chendeji.rongchen.ui.merchant.adpter.MerchantRecycleAdapter;
 import com.chendeji.rongchen.ui.merchant.task.GetMerchantListTask;
 
 import com.chendeji.rongchen.model.Sort;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
-import com.rey.material.widget.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;

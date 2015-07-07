@@ -12,11 +12,12 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_recently_search_city"
             style="@style/common_max_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="最近搜索城市" />
+            android:textColor="@color/common_button_textcolor"
+            android:text="@string/recently_search_city" />
 
         <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout
             android:id="@+id/hll_recent_search_city"
@@ -31,7 +32,7 @@
             style="@style/common_max_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:textColor="@color/common_button_textcolor"
             android:text="@string/hot_city" />
 
         <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout

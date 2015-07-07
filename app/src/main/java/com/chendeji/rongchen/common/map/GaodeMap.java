@@ -385,7 +385,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
                 routeSearch.calculateBusRouteAsyn(busRouteQuery);
                 break;
             case CAR_ROUTE:
-                RouteSearch.DriveRouteQuery driveRouteQuery = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingAvoidCongestion, null, null, getLocalCity());
+                RouteSearch.DriveRouteQuery driveRouteQuery = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingDefault, null, null, getLocalCity());
                 routeSearch.calculateDriveRouteAsyn(driveRouteQuery);
                 break;
             case WALK_ROUTE:

@@ -1,6 +1,7 @@
 package com.chendeji.rongchen.ui.map;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -217,10 +218,10 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         //显示一个对话框，是否要设置这个该点为起始位置
         if (TextUtils.isEmpty(title))
             return;
-        Dialog.Builder builder = new SimpleDialog.Builder(R.style.SimpleDialogLight){
+        Dialog.Builder builder = new SimpleDialog.Builder(R.style.SimpleDialogLight) {
             @Override
             public void onPositiveActionClicked(DialogFragment fragment) {
-                SettingFactory.getInstance().setCurrentLocation(latitude,longitude);
+                SettingFactory.getInstance().setCurrentLocation(latitude, longitude);
                 super.onPositiveActionClicked(fragment);
                 //进入路径规划界面，并显示相应的路径
                 Intent intent = new Intent(MapActivity.this, RouteActivity.class);
