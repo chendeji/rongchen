@@ -15,12 +15,13 @@ import java.util.List;
  */
 public class SettingFactory {
 
-    private static final String SETTING = "setting";
-    private static final String CITY_SETTING = "city";
-    private static final String CATEGORY = "category";
-    private static final String LATITUDE = "latitude";
-    private static final String LONGITUDE = "longitude";
-    private static final String IS_FIRST_TIME_LOGIN = "is_first_time_login";
+    public static final String SETTING = "setting";
+    public static final String CITY_SETTING = "city";
+    public static final String CATEGORY = "category";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
+    public static final String IS_FIRST_TIME_LOGIN = "is_first_time_login";
+    public static final String IS_LOGIN_SUCCESS = "is_login_success";
 
     private SharedPreferences sharedPreferences;
 
@@ -34,8 +35,33 @@ public class SettingFactory {
     private SettingFactory() {
     }
 
+    public void registSharePreferencesListener(SharedPreferences.OnSharedPreferenceChangeListener listener){
+        if (sharedPreferences != null){
+            sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+        }
+    }
+
+    public void unregistSharePreferencesListener(SharedPreferences.OnSharedPreferenceChangeListener listener){
+        if (sharedPreferences != null){
+            sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
+        }
+    }
+
     public void init(Context context) {
         sharedPreferences = context.getSharedPreferences(SETTING, Context.MODE_APPEND);
+    }
+
+    public void setIsLoginSuccess(boolean isLoginSuccess) {
+        if (sharedPreferences != null) {
+            sharedPreferences.edit().putBoolean(IS_LOGIN_SUCCESS, isLoginSuccess).commit();
+        }
+    }
+
+    public boolean getIsLoginSuccess(){
+        if (sharedPreferences != null){
+            return sharedPreferences.getBoolean(IS_LOGIN_SUCCESS, false);
+        }
+        return false;
     }
 
     public void setIsFirstTimeLogin(boolean isFirst) {
@@ -46,8 +72,8 @@ public class SettingFactory {
         }
     }
 
-    public boolean getIsFirstTimeLogin(){
-        if (sharedPreferences != null){
+    public boolean getIsFirstTimeLogin() {
+        if (sharedPreferences != null) {
             return sharedPreferences.getBoolean(IS_FIRST_TIME_LOGIN, true);
         }
         return false;

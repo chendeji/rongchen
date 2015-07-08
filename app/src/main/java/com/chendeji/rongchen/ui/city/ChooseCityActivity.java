@@ -64,22 +64,22 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
 
     private void initData() {
         //更新应用的城市数据库信息
-        citySearchTask = new CitySearchTask(this, new UITaskCallBack<ReturnMes<List<String>>>() {
-            @Override
-            public void onPreExecute() {
-
-            }
-
-            @Override
-            public void onPostExecute(ReturnMes<List<String>> returnMes) {
-
-            }
-
-            @Override
-            public void onNetWorkError() {
-
-            }
-        }).excuteProxy((Void[]) null);
+//        citySearchTask = new CitySearchTask(this, new UITaskCallBack<ReturnMes<List<String>>>() {
+//            @Override
+//            public void onPreExecute() {
+//
+//            }
+//
+//            @Override
+//            public void onPostExecute(ReturnMes<List<String>> returnMes) {
+//
+//            }
+//
+//            @Override
+//            public void onNetWorkError() {
+//
+//            }
+//        }).excuteProxy((Void[]) null);
     }
 
     private void initFragment() {

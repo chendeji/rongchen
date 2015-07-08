@@ -75,5 +75,12 @@
     <string name="no_result">没有搜索结果</string>
     <string name="my_location">我的位置</string>
     <string name="recently_search_city">最近搜索城市</string>
+    <string name="screening">分类筛选</string>
+    <string name="login_success">登入成功！</string>
+    <string name="user_local_map">使用本地地图</string>
+    <string name="use_gaode_map">使用高德地图</string>
+    <string name="choose_map">选择地图</string>
+    <string name="map_notify">特别提醒：如果需要使用高德地图来定位商户，请事先安装最新版高德地图！</string>
+    <string name="data_no_prepare_please_wait">数据正在整理，请稍后......</string>
 
 </resources>

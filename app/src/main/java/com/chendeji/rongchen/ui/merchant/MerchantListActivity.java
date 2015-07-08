@@ -1,6 +1,8 @@
 package com.chendeji.rongchen.ui.merchant;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,15 +14,20 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 
 import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.SystemUtil;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.view.CommonFooterView;
+import com.chendeji.rongchen.common.view.CommonProgressDialog;
 import com.chendeji.rongchen.common.view.FAMLayout;
 import com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayout;
 import com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayoutDirection;
@@ -29,6 +36,7 @@ import com.chendeji.rongchen.model.Offset_Type;
 import com.chendeji.rongchen.model.Platform;
 import com.chendeji.rongchen.server.AppConst;
 import com.chendeji.rongchen.ui.Html5WebActivity;
+import com.chendeji.rongchen.ui.category.DealCategoryActivity;
 import com.chendeji.rongchen.ui.city.ChooseCityActivity;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 import com.chendeji.rongchen.ui.merchant.adpter.MerchantRecycleAdapter;
@@ -36,6 +44,10 @@ import com.chendeji.rongchen.ui.merchant.task.GetMerchantListTask;
 
 import com.chendeji.rongchen.model.Sort;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.rey.material.app.Dialog;
+import com.rey.material.app.DialogFragment;
+import com.rey.material.app.SimpleDialog;
+import com.rey.material.widget.RadioButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +62,7 @@ import java.util.List;
  * @date 2015 -01-02 16:10:58
  * @see
  */
-public class MerchantListActivity extends AppCompatActivity implements UITaskCallBack<List<Merchant>>, SwipyRefreshLayout.OnRefreshListener {
+public class MerchantListActivity extends AppCompatActivity implements UITaskCallBack<List<Merchant>>, SwipyRefreshLayout.OnRefreshListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int DEFUALT_PAGENUM = 1;
     public static final String CITY = "city";
@@ -75,6 +87,9 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
 
     private Sort defualtSort = Sort.DEFAULT;
     private FAMLayout menuLayout;
+    private String mCurrentCategory;
+    private CategoryDialogBuilder builder;
+    private CommonProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +115,14 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
         initData();
         initEvent();
         getData();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equalsIgnoreCase(SettingFactory.CITY_SETTING)){
+            defualtSort = Sort.DEFAULT;
+            refreshData();
+        }
     }
 
     public abstract class HidingScrollListener extends RecyclerView.OnScrollListener {
@@ -159,6 +182,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
 
     @Override
     public void onRefresh(SwipyRefreshLayoutDirection direction) {
+
         //刷新数据
         if (direction == SwipyRefreshLayoutDirection.TOP) {
             refreshData();
@@ -245,7 +269,8 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
                         //进入到设置界面
                         break;
                     case R.id.fab_botton_sort:
-                        //显示一个排序的对话框
+                        //显示一个选择分类和排序的对话框
+                        showSortDialog();
                         break;
                     case R.id.fab_location:
                         //进入到城市选择界面
@@ -276,17 +301,172 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
             }
         });
 
+        SettingFactory.getInstance().registSharePreferencesListener(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        mCurrentCategory = SettingFactory.getInstance().getCurrentChoosedCategory();
+        if (builder != null) {
+            builder.refreshCurrentButton();
+        }
+        super.onResume();
+    }
+
+    private class CategoryDialogBuilder extends SimpleDialog.Builder {
+        public CategoryDialogBuilder(int styleId) {
+            super(styleId);
+        }
+
+        public Button currentCategory;
+        public RadioButton button_sortPriceHighFirst;
+        public RadioButton button_sortPriceLowFirst;
+        public RadioButton button_sortDistanceFirst;
+        public RadioButton button_sortStarFirst;
+        public RadioButton button_sortDefault;
+
+        @Override
+        protected void onBuildDone(Dialog dialog) {
+            //初始化控件
+            dialog.layoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            currentCategory = (Button) dialog.findViewById(R.id.bt_current_category);
+            refreshCurrentButton();
+
+            button_sortDefault = (RadioButton) dialog.findViewById(R.id.sort_default);
+            button_sortStarFirst = (RadioButton) dialog.findViewById(R.id.sort_star_first);
+            button_sortDistanceFirst = (RadioButton) dialog.findViewById(R.id.sort_distance_first);
+            button_sortPriceLowFirst = (RadioButton) dialog.findViewById(R.id.sort_avg_price_low_to_high);
+            button_sortPriceHighFirst = (RadioButton) dialog.findViewById(R.id.sort_avg_price_high_to_low);
+
+            initCheck();
+
+            CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        switch (buttonView.getId()) {
+                            case R.id.sort_default:
+                                defualtSort = Sort.DEFAULT;
+                                break;
+                            case R.id.sort_star_first:
+                                defualtSort = Sort.STARTS_FIRST;
+                                break;
+                            case R.id.sort_distance_first:
+                                defualtSort = Sort.DISTANCE_FIRST;
+                                break;
+                            case R.id.sort_avg_price_low_to_high:
+                                defualtSort = Sort.AVG_PRICE_LOWER_FIRST;
+                                break;
+                            case R.id.sort_avg_price_high_to_low:
+                                defualtSort = Sort.AVG_PRICE_HIGHER_FIRST;
+                                break;
+                        }
+                        button_sortDefault.setChecked(button_sortDefault == buttonView);
+                        button_sortStarFirst.setChecked(button_sortStarFirst == buttonView);
+                        button_sortDistanceFirst.setChecked(button_sortDistanceFirst == buttonView);
+                        button_sortPriceLowFirst.setChecked(button_sortPriceLowFirst == buttonView);
+                        button_sortPriceHighFirst.setChecked(button_sortPriceHighFirst == buttonView);
+                    }
+                }
+            };
+            button_sortDefault.setOnCheckedChangeListener(listener);
+            button_sortStarFirst.setOnCheckedChangeListener(listener);
+            button_sortDistanceFirst.setOnCheckedChangeListener(listener);
+            button_sortPriceLowFirst.setOnCheckedChangeListener(listener);
+            button_sortPriceHighFirst.setOnCheckedChangeListener(listener);
+
+            currentCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MerchantListActivity.this, DealCategoryActivity.class);
+                    intent.putExtra(DealCategoryActivity.LAUCHMODE, DealCategoryActivity.JUST_CHOOSE_CATEGORY);
+                    startActivity(intent);
+                }
+            });
+
+        }
+
+        public void refreshCurrentButton() {
+            if (currentCategory == null)
+                return;
+            if (mCurrentCategory == null) {
+                currentCategory.setText(SettingFactory.getInstance().getCurrentChoosedCategory());
+            } else {
+                currentCategory.setText(mCurrentCategory);
+            }
+        }
+
+        private void initCheck() {
+            RadioButton checkedButton = null;
+            if (defualtSort == Sort.DEFAULT) {
+                checkedButton = button_sortDefault;
+            } else if (defualtSort == Sort.STARTS_FIRST) {
+                checkedButton = button_sortStarFirst;
+            } else if (defualtSort == Sort.DISTANCE_FIRST) {
+                checkedButton = button_sortDistanceFirst;
+            } else if (defualtSort == Sort.AVG_PRICE_LOWER_FIRST) {
+                checkedButton = button_sortPriceLowFirst;
+            } else if (defualtSort == Sort.AVG_PRICE_HIGHER_FIRST) {
+                checkedButton = button_sortPriceHighFirst;
+            }
+            if (checkedButton != null) {
+                checkedButton.setChecked(true);
+            }
+        }
+
+        @Override
+        public void onNegativeActionClicked(DialogFragment fragment) {
+            super.onNegativeActionClicked(fragment);
+        }
+
+        @Override
+        public void onPositiveActionClicked(DialogFragment fragment) {
+            refreshData();
+            super.onPositiveActionClicked(fragment);
+        }
+    }
+
+    private void showSortDialog() {
+        if (builder == null) {
+            builder = new CategoryDialogBuilder(R.style.SimpleDialogLight);
+            builder.title(getString(R.string.screening))
+                    .positiveAction(getString(R.string.positive))
+                    .negativeAction(getString(R.string.negative))
+                    .contentView(R.layout.dialog_merchant_screening_layout);
+        }
+        DialogFragment fragment = DialogFragment.newInstance(builder);
+        fragment.show(getSupportFragmentManager(), null);
+
+    }
+
+    private void showLoadingProgress(){
+        if (progressDialog == null) {
+            progressDialog = new CommonProgressDialog(this);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+    private void hideLoadingProgress(){
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 
     @Override
     public void onPreExecute() {
-        showFooterViewLoading();
+//        showFooterViewLoading();
+        //显示一个加载进度Dialog
+        showLoadingProgress();
     }
 
     @Override
     public void onPostExecute(List<Merchant> returnMes) {
         stopRefresh();
-        showFooterViewLoaded();
+        //隐藏加载进度Dialog
+//        showFooterViewLoaded();
+        hideLoadingProgress();
         if (returnMes == null) {
             return;
         }
@@ -438,6 +618,10 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
         if (merchantAdapter != null) {
             merchantAdapter = null;
         }
+        if (progressDialog != null){
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
 
         if (getMerchantListTask != null) {
             if (!getMerchantListTask.isCancelled()) {
@@ -445,6 +629,7 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
             }
             getMerchantListTask = null;
         }
+        SettingFactory.getInstance().unregistSharePreferencesListener(this);
 
         super.onDestroy();
     }

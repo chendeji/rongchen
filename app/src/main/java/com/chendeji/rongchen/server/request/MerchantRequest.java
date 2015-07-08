@@ -62,9 +62,6 @@ public final class MerchantRequest {
         //拼接参数
         HashMap<String, String> parame = new HashMap<String, String>();
         //如果有传入城市也将城市作为参数发送出去
-        if (!TextUtils.isEmpty(currentCity)) {
-            parame.put("city", currentCity);
-        }
         if (!TextUtils.isEmpty(currentChoosedCategory)) {
             parame.put("category", currentChoosedCategory);
         }
@@ -74,15 +71,21 @@ public final class MerchantRequest {
         parame.put("page", String.valueOf(page));
         parame.put("limit", String.valueOf(limit));
 
-        if (currentLocation != null) {
-            parame.put("offset_type", String.valueOf(offset_type.getValue()));
-            if (offset_type == Offset_Type.GAODE) {
-                double latitude = currentLocation[0];
-                double longitude = currentLocation[1];
-                parame.put("latitude", String.valueOf(latitude));
-                parame.put("longitude", String.valueOf(longitude));
+        if (!TextUtils.isEmpty(currentCity)
+                 && sort != Sort.DISTANCE_FIRST) {
+            parame.put("city", currentCity);
+        } else {
+            if (currentLocation != null) {
+                parame.put("offset_type", String.valueOf(offset_type.getValue()));
+                if (offset_type == Offset_Type.GAODE) {
+                    double latitude = currentLocation[0];
+                    double longitude = currentLocation[1];
+                    parame.put("latitude", String.valueOf(latitude));
+                    parame.put("longitude", String.valueOf(longitude));
+                }
             }
         }
+
         if (out_offset_type != Offset_Type.DEFUALT) {
             parame.put("out_offset_type", String.valueOf(out_offset_type.getValue()));
         }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/common_huge_text_size"
+        android:textColor="@color/common_button_textcolor"
+        android:layout_margin="@dimen/horizental_24dp_margin"
+        android:text="@string/choose_map"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/horizontal_16dp_margin"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_local_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radius_white_bg"
+            android:padding="10dp"
+            android:text="@string/user_local_map"
+            android:textColor="@color/common_button_textcolor" />
+
+
+        <Button
+            android:id="@+id/bt_gaode_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/horizontal_16dp_margin"
+            android:background="@drawable/radius_white_bg"
+            android:padding="10dp"
+            android:text="@string/use_gaode_map"
+            android:textColor="@color/common_button_textcolor" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_margin="@dimen/horizontal_16dp_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/gray_text"
+        android:text="@string/map_notify"
+        />
+
+</LinearLayout>

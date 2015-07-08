@@ -1,11 +1,10 @@
 package com.chendeji.rongchen.ui.merchant;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -13,24 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.amap.api.maps.AMapException;
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.NaviPara;
 import com.chendeji.rongchen.MyApplication;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.ImageLoaderOptionsUtil;
-import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
 import com.chendeji.rongchen.common.util.ToastUtil;
-import com.chendeji.rongchen.common.view.MaterialTopImageView;
 import com.chendeji.rongchen.common.view.scrollview.MyScrollView;
 import com.chendeji.rongchen.common.view.scrollview.ObservableScrollViewCallbacks;
 import com.chendeji.rongchen.common.view.scrollview.ScrollState;
@@ -38,16 +29,16 @@ import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.comment.Comment;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
-import com.chendeji.rongchen.ui.map.MapActivity;
+import com.chendeji.rongchen.ui.merchant.fragment.ChooseMapDialogFragment;
 import com.chendeji.rongchen.ui.merchant.task.GetCommentListTask;
 import com.chendeji.rongchen.ui.merchant.task.GetMerchantDetailInfoTask;
 import com.chendeji.rongchen.ui.merchant.view.CommentExtendableHolder;
-import com.chendeji.rongchen.ui.merchant.view.MerchantTopImageView;
 import com.chendeji.rongchen.ui.common.ExtendableHolder;
 import com.chendeji.rongchen.ui.merchant.view.DealExtendableHolder;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.rey.material.app.SimpleDialog;
 import com.rey.material.widget.FloatingActionButton;
 
 import java.util.List;
@@ -94,13 +85,25 @@ public class MerchantDetailActivity extends AppCompatActivity {
     private FloatingActionButton phone_button;
     private View mOverlayView;
     private boolean fabIsShown;
+    private SimpleDialog.Builder builder;
+    private ChooseMapDialogFragment fragment;
+    private long merchant_id;
 
     @Override
     protected void onPause() {
-        if (!getCommentListTask.isCancelled())
-            getCommentListTask.cancel(true);
-        if (!getMerchantTask.isCancelled())
-            getMerchantTask.cancel(true);
+        if (getCommentListTask != null) {
+            if (!getCommentListTask.isCancelled()) {
+                getCommentListTask.cancel(true);
+            }
+            getCommentListTask = null;
+        }
+
+        if (getMerchantTask != null) {
+            if (!getMerchantTask.isCancelled()) {
+                getMerchantTask.cancel(true);
+            }
+            getMerchantTask = null;
+        }
         super.onPause();
     }
 
@@ -191,8 +194,8 @@ public class MerchantDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO 跳转到拨号界面，拨打电话
-                if (merchant == null){
-                    return ;
+                if (merchant == null) {
+                    return;
                 }
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + merchant.telephone));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -208,9 +211,9 @@ public class MerchantDetailActivity extends AppCompatActivity {
                 ViewHelper.setTranslationY(imageView, Math.min(0, Math.max(-scrollY / 2, minOverlayTransitionY)));
 
                 ViewHelper.setTranslationY(mOverlayView, Math.min(0, Math.max(-scrollY, minOverlayTransitionY)));
-                ViewHelper.setAlpha(mOverlayView,1 - Math.max(0 ,(float)(flexibleRange - scrollY) / flexibleRange));
+                ViewHelper.setAlpha(mOverlayView, 1 - Math.max(0, (float) (flexibleRange - scrollY) / flexibleRange));
 
-                float titleAlpha = 1 - Math.min(1, Math.max(0, (float)(flexibleRange - scrollY) / flexibleRange));
+                float titleAlpha = 1 - Math.min(1, Math.max(0, (float) (flexibleRange - scrollY) / flexibleRange));
                 ViewHelper.setAlpha(titleView, titleAlpha);
 
                 //计算出titleview最多能在Y轴上移动多少
@@ -260,30 +263,78 @@ public class MerchantDetailActivity extends AppCompatActivity {
         marchant_contact_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 开启地图导航
-//                try {
-//                    NaviPara para = new NaviPara();
-//                    para.setTargetPoint(new LatLng(merchant.latitude, merchant.longitude));
-//                    AMapUtils.openAMapNavi(para, MerchantDetailActivity.this);
-//                } catch (AMapException e) {
-//                    ToastUtil.showLongToast(MerchantDetailActivity.this, e.getErrorMessage());
-//                }
-                try {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-                    intent.setPackage("com.autonavi.minimap");
-                    intent.setData(Uri.parse("androidamap://viewMap?sourceApplication=" + MerchantDetailActivity.this.getPackageName()
-                            + "&poiname=" + merchant.name + "&lat=" + merchant.latitude + "&lon=" + merchant.longitude + "&dev=0"));
-                    startActivity(intent);
-                }catch (Exception e){
-                    Intent intent = new Intent(MerchantDetailActivity.this, MapActivity.class);
-                    Logger.i("chendeji", "latitude:" + merchant.latitude + "longitude:" + merchant.longitude);
-                    intent.putExtra(MapActivity.LOCATION_KEY, merchant);
-                    MerchantDetailActivity.this.startActivity(intent);
-                }
+                //显示一个DIALOG去选择
+                showChoseLocalOrGAODEMap();
             }
         });
+    }
+
+    private void showChoseLocalOrGAODEMap() {
+        if (fragment == null) {
+            fragment = new ChooseMapDialogFragment(merchant);
+        }
+        fragment.show(getSupportFragmentManager(), null);
+
+//        if (builder == null) {
+//            builder = new SimpleDialog.Builder(R.style.SimpleDialogLight) {
+//                @Override
+//                protected void onBuildDone(final Dialog dialog) {
+//                    boolean isGaodeExist = checkGaodeMapAPPExist("com.autonavi.minimap");
+//
+//                    Button local = (Button) dialog.findViewById(R.id.bt_local_map);
+//                    Button gaode = (Button) dialog.findViewById(R.id.bt_gaode_map);
+//                    gaode.setEnabled(isGaodeExist);
+//                    gaode.setClickable(isGaodeExist);
+//                    gaode.setFocusable(isGaodeExist);
+//                    local.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent(MerchantDetailActivity.this, MapActivity.class);
+//                            Logger.i("chendeji", "latitude:" + merchant.latitude + "longitude:" + merchant.longitude);
+//                            intent.putExtra(MapActivity.LOCATION_KEY, merchant);
+//                            MerchantDetailActivity.this.startActivity(intent);
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    gaode.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent();
+//                            intent.setAction(Intent.ACTION_VIEW);
+//                            intent.addCategory(Intent.CATEGORY_DEFAULT);
+//                            intent.setPackage("com.autonavi.minimap");
+//                            intent.setData(Uri.parse("androidamap://viewMap?sourceApplication=" + MerchantDetailActivity.this.getPackageName()
+//                                    + "&poiname=" + merchant.name + "&lat=" + merchant.latitude + "&lon=" + merchant.longitude + "&dev=0"));
+//                            startActivity(intent);
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                }
+//
+//                private boolean checkGaodeMapAPPExist(String packageName) {
+//                    boolean isInstall = SystemUtil.isAppInstalled(MerchantDetailActivity.this, packageName);
+//                    return isInstall;
+//                }
+//
+//                @Override
+//                public void onPositiveActionClicked(DialogFragment fragment) {
+//                    super.onPositiveActionClicked(fragment);
+//                }
+//
+//                @Override
+//                public void onNegativeActionClicked(DialogFragment fragment) {
+//                    super.onNegativeActionClicked(fragment);
+//                }
+//            };
+//
+//            builder.title(getString(R.string.choose_map))
+//                    .contentView(R.layout.dialog_choose_map_layout)
+//                    .positiveAction(getString(R.string.positive))
+//                    .negativeAction(getString(R.string.negative));
+//        }
+//        DialogFragment fragment = DialogFragment.newInstance(builder);
+//        fragment.show(getSupportFragmentManager(), null);
+
     }
 
     private void showFAB() {
@@ -374,7 +425,11 @@ public class MerchantDetailActivity extends AppCompatActivity {
      * @see
      */
     private void getIntentData() {
-        long merchant_id = getIntent().getLongExtra(MERCHANT_ID, -1);
+        merchant_id = getIntent().getLongExtra(MERCHANT_ID, -1);
+    }
+
+    @Override
+    protected void onResume() {
         getMerchantTask = new GetMerchantDetailInfoTask(this, new UITaskCallBack<ReturnMes<Merchant>>() {
             @Override
             public void onPreExecute() {
@@ -396,8 +451,8 @@ public class MerchantDetailActivity extends AppCompatActivity {
 
             }
         }, merchant_id).excuteProxy((Void[]) null);
+        super.onResume();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

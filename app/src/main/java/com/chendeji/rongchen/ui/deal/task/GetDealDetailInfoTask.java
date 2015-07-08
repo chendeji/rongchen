@@ -30,13 +30,22 @@ public class GetDealDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<Deal
      * @param taskCallBack UI界面回调
      */
     public GetDealDetailInfoTask(Context context, UITaskCallBack taskCallBack, String deal_id) {
-        super(context, taskCallBack);
+        super(context, taskCallBack, false);
         this.mDeal_id = deal_id;
     }
 
+//    @Override
+//    protected void onPostExecute(ReturnMes<Deal> dealReturnMes) {
+//        super.onPostExecute(dealReturnMes);
+//    }
+
     @Override
-    protected void onPostExecute(ReturnMes<Deal> dealReturnMes) {
-        super.onPostExecute(dealReturnMes);
+    protected void fromDBDataSuccess(ReturnMes<Deal> dealReturnMes) {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataSuccess(ReturnMes<Deal> dealReturnMes) {
         if (AppConst.OK.equals(dealReturnMes.status)) {
             mTaskCallBack.onPostExecute(dealReturnMes);
         } else {
@@ -46,26 +55,19 @@ public class GetDealDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<Deal
     }
 
     @Override
-    protected void fromDBDataError() {
+    protected void fromDBDataError(String errorMsg) {
 
     }
 
     @Override
-    protected void fromNetWorkDataError() {
+    protected void fromNetWorkDataError(String errorMsg) {
 
     }
 
     @Override
-    protected ReturnMes<Deal> getDataFromNetwork() {
-        try {
-            ReturnMes<Deal> dealReturnMes = AppServerFactory.getFactory().getDealOperation().getDeal(mDeal_id);
-            return dealReturnMes;
-        } catch (IOException e) {
-            Logger.i(this.getClass().getSimpleName(), "解析错误");
-        } catch (HttpException e) {
-            Logger.i(this.getClass().getSimpleName(), "网络错误");
-        }
-        return null;
+    protected ReturnMes<Deal> getDataFromNetwork() throws IOException, HttpException {
+        ReturnMes<Deal> dealReturnMes = AppServerFactory.getFactory().getDealOperation().getDeal(mDeal_id);
+        return dealReturnMes;
     }
 
     @Override

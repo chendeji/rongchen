@@ -35,13 +35,17 @@ public class GetCategoryTreeNodeTask extends BaseUITask<Void, Void, ReturnMes<Li
      * @param taskCallBack UI界面回调
      */
     public GetCategoryTreeNodeTask(Context context, String city, UITaskCallBack<ReturnMes<List<TreeNode>>> taskCallBack) {
-        super(context, taskCallBack);
+        super(context, taskCallBack, false);
         this.mCity = city;
     }
 
+//    @Override
+//    protected void onPostExecute(ReturnMes<List<TreeNode>> listReturnMes) {
+//        super.onPostExecute(listReturnMes);
+//    }
+
     @Override
-    protected void onPostExecute(ReturnMes<List<TreeNode>> listReturnMes) {
-        super.onPostExecute(listReturnMes);
+    protected void fromDBDataSuccess(ReturnMes<List<TreeNode>> listReturnMes) {
         if (AppConst.OK.equals(listReturnMes.status)) {
             mTaskCallBack.onPostExecute(listReturnMes);
         } else {
@@ -51,60 +55,64 @@ public class GetCategoryTreeNodeTask extends BaseUITask<Void, Void, ReturnMes<Li
     }
 
     @Override
-    protected void fromDBDataError() {
+    protected void fromNetWorkDataSuccess(ReturnMes<List<TreeNode>> listReturnMes) {
+        if (AppConst.OK.equals(listReturnMes.status)) {
+            mTaskCallBack.onPostExecute(listReturnMes);
+        } else {
+//            ErrorInfo errorInfo = listReturnMes.errorInfo;
+//            ToastUtil.showLongToast(mContext, errorInfo.toString());
+        }
+    }
+
+    @Override
+    protected void fromDBDataError(String errorMsg) {
 
     }
 
     @Override
-    protected void fromNetWorkDataError() {
+    protected void fromNetWorkDataError(String errorMsg) {
 
     }
 
     @Override
-    protected ReturnMes<List<TreeNode>> getDataFromNetwork() {
+    protected ReturnMes<List<TreeNode>> getDataFromNetwork() throws IOException, HttpException {
         List<TreeNode> treeNodes = new ArrayList<>();
         ReturnMes<List<TreeNode>> treeReturnMes = new ReturnMes<>();
         final String currentCity = SettingFactory.getInstance().getCurrentCity();
         ReturnMes<List<Category>> returnMes;
         List<Category> categories = null;
-        try {
-            returnMes = AppServerFactory.getFactory().getCategoryOperation().getCategory(currentCity);
-            //获取数据之后将数据填充到数据库
-            if (returnMes != null) {
-                categories = returnMes.object;
-                if (categories != null && !categories.isEmpty()){
-                    final List<Category> finalCategories = categories;
-                    SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
-                        @Override
-                        public void manipulateInTransaction() {
-                            for (Category category : finalCategories) {
-                                List<SubCategory> subCategories = category.getSubcategories();
-                                for (SubCategory subCategory : subCategories) {
-                                    subCategory.addBelongCity(currentCity);
-                                    subCategory.save();
-                                }
-                                category.save();
+        returnMes = AppServerFactory.getFactory().getCategoryOperation().getCategory(currentCity);
+        //获取数据之后将数据填充到数据库
+        if (returnMes != null) {
+            categories = returnMes.object;
+            if (categories != null && !categories.isEmpty()) {
+                final List<Category> finalCategories = categories;
+                SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
+                    @Override
+                    public void manipulateInTransaction() {
+                        for (Category category : finalCategories) {
+                            List<SubCategory> subCategories = category.getSubcategories();
+                            for (SubCategory subCategory : subCategories) {
+                                subCategory.addBelongCity(currentCity);
+                                subCategory.save();
                             }
+                            category.save();
                         }
-                    });
-                } else {
-                    treeReturnMes.status = returnMes.status;
-                    treeReturnMes.errorInfo = returnMes.errorInfo;
-                    return treeReturnMes;
-                }
-
+                    }
+                });
             } else {
-                return null;
+                treeReturnMes.status = returnMes.status;
+                treeReturnMes.errorInfo = returnMes.errorInfo;
+                return treeReturnMes;
             }
-            //数据获取之后进行填充
-            getCategoryTreeNodes(treeNodes, categories, currentCity);
-            treeReturnMes.status = returnMes.status;
-            treeReturnMes.object = treeNodes;
-        } catch (IOException e) {
-            Logger.i(this.getClass().getSimpleName(), "解析错误");
-        } catch (HttpException e) {
-            Logger.i(this.getClass().getSimpleName(), "网络错误");
+
+        } else {
+            return null;
         }
+        //数据获取之后进行填充
+        getCategoryTreeNodes(treeNodes, categories, currentCity);
+        treeReturnMes.status = returnMes.status;
+        treeReturnMes.object = treeNodes;
         return treeReturnMes;
     }
 
@@ -115,15 +123,15 @@ public class GetCategoryTreeNodeTask extends BaseUITask<Void, Void, ReturnMes<Li
         String city = SettingFactory.getInstance().getCurrentCity();
         //1，需要先判断一下数据库中是否有该城市相关的分类数据
         List<SubCategory> subCategories = SubCategory.find(SubCategory.class, SubCategoryTable.STR_CITIES + "LIKE '%" + city + "%'", new String[]{});
-        if (subCategories == null || subCategories.isEmpty()){
+        if (subCategories == null || subCategories.isEmpty()) {
             return null;
         }
 
         List<Category> categories = Category.find(Category.class, null, new String[]{});
 
-        if (categories != null && !categories.isEmpty()){
+        if (categories != null && !categories.isEmpty()) {
             getCategoryTreeNodes(treeNodes, categories, city);
-            if (!treeNodes.isEmpty()){
+            if (!treeNodes.isEmpty()) {
                 treeReturnMes.status = AppConst.OK;
                 treeReturnMes.object = treeNodes;
                 return treeReturnMes;

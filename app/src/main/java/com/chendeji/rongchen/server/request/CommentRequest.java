@@ -52,7 +52,7 @@ public final class CommentRequest {
                 returnMes.status = object.getString(AppConst.ReturnMesConst.STATUS);
                 returnMes.object = commentList;
                 if (!TextUtils.isEmpty(more_comments)){
-                    returnMes.moreInfo = all_comments_url;
+                    returnMes.moreInfo = more_comments;
                 }
                 return returnMes;
             }else{

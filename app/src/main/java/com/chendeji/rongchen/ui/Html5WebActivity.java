@@ -23,11 +23,14 @@ import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.SystemUtil;
+import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.server.AppConst;
 import com.chendeji.rongchen.ui.welcome.WelcomeActivity;
 import com.rey.material.app.Dialog;
 import com.rey.material.app.DialogFragment;
 import com.rey.material.app.SimpleDialog;
+
+import java.util.Set;
 
 /**
  * 用于显示登入，或者团购订单生成的界面
@@ -40,6 +43,7 @@ public class Html5WebActivity extends AppCompatActivity {
     public static final int SHOW_USER = 0;
     public static final int LONGIN = 1;
     public static final int LONGOUT = 2;
+    public static final int SHOW_COMMENT = 3;
 
     private int showMode = LONGIN;
 
@@ -71,7 +75,7 @@ public class Html5WebActivity extends AppCompatActivity {
 
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             //TODO 加载网页
-            Logger.i("chendeji", "url:"+url);
+            Logger.i("chendeji", "url:" + url);
             if (AppConst.AppBaseConst.DIANPING_LOGOUT.equalsIgnoreCase(url)) {
                 //兼容低版本
                 CookieManager.getInstance().removeAllCookie();
@@ -81,7 +85,7 @@ public class Html5WebActivity extends AppCompatActivity {
 
             //点击返回键能够跳到点评首页
             if (AppConst.AppBaseConst.DIANPING_INDEX.equalsIgnoreCase(url)
-                    || AppConst.AppBaseConst.DIANPING_TUAN.equalsIgnoreCase(url)){
+                    || AppConst.AppBaseConst.DIANPING_TUAN.equalsIgnoreCase(url)) {
                 finish();
             }
             view.loadUrl(url);
@@ -94,13 +98,17 @@ public class Html5WebActivity extends AppCompatActivity {
             String cookieStr = CookieManager.getInstance().getCookie(url);
             if (AppConst.AppBaseConst.APP_LOGIN_URL.equalsIgnoreCase(url)
                     && !TextUtils.isEmpty(cookieStr)) {
-                SettingFactory.getInstance().setIsFirstTimeLogin(false);
-                Logger.i("chendeji", "登入成功！！！");
-                //登入成功
-                if (showMode == LONGIN){
-                    Intent intent = new Intent(Html5WebActivity.this, WelcomeActivity.class);
-                    startActivity(intent);
-                    finish();
+                if (!SettingFactory.getInstance().getIsLoginSuccess()) {
+                    SettingFactory.getInstance().setIsFirstTimeLogin(false);
+                    Logger.i("chendeji", "登入成功！！！");
+                    ToastUtil.showLongToast(Html5WebActivity.this, getString(R.string.login_success));
+                    //登入成功
+                    if (showMode == LONGIN) {
+                        SettingFactory.getInstance().setIsLoginSuccess(true);
+                        Intent intent = new Intent(Html5WebActivity.this, WelcomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
 
             }
@@ -162,14 +170,14 @@ public class Html5WebActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (mDianpingView.canGoBack()){
+            if (mDianpingView.canGoBack()) {
                 mDianpingView.goBack();
                 return true;
             } else {
                 //TODO 显示一个对话框，提示是否退出应用
                 //在前面还有界面的情况下，应该只能finish这个界面，要判断栈中是否还有界面
                 boolean isLastActivity = SystemUtil.isLastActivityInTask(this);
-                if (isLastActivity){
+                if (isLastActivity) {
                     SystemUtil.showExistDialog(this);
                     return true;
                 } else {

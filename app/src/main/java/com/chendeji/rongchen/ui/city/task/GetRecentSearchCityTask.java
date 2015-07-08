@@ -2,10 +2,8 @@ package com.chendeji.rongchen.ui.city.task;
 
 import android.content.Context;
 
+import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
-import com.chendeji.rongchen.common.util.ToastUtil;
-import com.chendeji.rongchen.dao.tables.city.RecentSearchCityTable;
-import com.chendeji.rongchen.model.ErrorInfo;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.city.RecentSearchCity;
 import com.chendeji.rongchen.server.AppConst;
@@ -26,12 +24,17 @@ public class GetRecentSearchCityTask extends BaseUITask<Void, Void, ReturnMes<Li
      * @param taskCallBack UI界面回调
      */
     public GetRecentSearchCityTask(Context context, UITaskCallBack<ReturnMes<List<String>>> taskCallBack) {
-        super(context, taskCallBack);
+        super(context, taskCallBack, true);
     }
 
+//    @Override
+//    protected void onPostExecute(ReturnMes<List<String>> listReturnMes) {
+//        super.onPostExecute(listReturnMes);
+//
+//    }
+
     @Override
-    protected void onPostExecute(ReturnMes<List<String>> listReturnMes) {
-        super.onPostExecute(listReturnMes);
+    protected void fromDBDataSuccess(ReturnMes<List<String>> listReturnMes) {
         if (AppConst.OK.equals(listReturnMes.status)) {
             mTaskCallBack.onPostExecute(listReturnMes);
         } else {
@@ -41,12 +44,22 @@ public class GetRecentSearchCityTask extends BaseUITask<Void, Void, ReturnMes<Li
     }
 
     @Override
-    protected void fromDBDataError() {
+    protected void fromNetWorkDataSuccess(ReturnMes<List<String>> listReturnMes) {
+        if (AppConst.OK.equals(listReturnMes.status)) {
+            mTaskCallBack.onPostExecute(listReturnMes);
+        } else {
+//            ErrorInfo errorInfo = listReturnMes.errorInfo;
+//            ToastUtil.showLongToast(mContext, errorInfo.toString());
+        }
+    }
+
+    @Override
+    protected void fromDBDataError(String errorMsg) {
 
     }
 
     @Override
-    protected void fromNetWorkDataError() {
+    protected void fromNetWorkDataError(String errorMsg) {
 
     }
 
@@ -57,26 +70,39 @@ public class GetRecentSearchCityTask extends BaseUITask<Void, Void, ReturnMes<Li
 
     @Override
     protected ReturnMes<List<String>> getDataFromDB() {
-        return null;
-    }
-
-    @Override
-    protected ReturnMes<List<String>> doInBackground(Void... params) {
-
         List<RecentSearchCity> recentSearchCities = SettingFactory.getInstance().getRecentSearchCity();
         List<String> stringList = new ArrayList<>();
-        ReturnMes<List<String>> returnMes = new ReturnMes<>();
+        ReturnMes<List<String>> returnMes = null;
         if (recentSearchCities != null && !recentSearchCities.isEmpty()){
             for (RecentSearchCity city : recentSearchCities){
                 stringList.add(city.city_name);
             }
-
+            returnMes = new ReturnMes<>();
             returnMes.status = AppConst.OK;
             returnMes.object = stringList;
         } else {
-            returnMes.status = AppConst.OK;
+            errorMsg = mContext.getString(R.string.data_no_prepare_please_wait);
         }
-
         return returnMes;
     }
+
+//    @Override
+//    protected ReturnMes<List<String>> doInBackground(Void... params) {
+//
+//        List<RecentSearchCity> recentSearchCities = SettingFactory.getInstance().getRecentSearchCity();
+//        List<String> stringList = new ArrayList<>();
+//        ReturnMes<List<String>> returnMes = new ReturnMes<>();
+//        if (recentSearchCities != null && !recentSearchCities.isEmpty()){
+//            for (RecentSearchCity city : recentSearchCities){
+//                stringList.add(city.city_name);
+//            }
+//
+//            returnMes.status = AppConst.OK;
+//            returnMes.object = stringList;
+//        } else {
+//            returnMes.status = AppConst.OK;
+//        }
+//
+//        return returnMes;
+//    }
 }

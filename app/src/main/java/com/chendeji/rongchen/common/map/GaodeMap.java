@@ -41,6 +41,7 @@ import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.ToastUtil;
+import com.chendeji.rongchen.model.city.City;
 
 import java.io.Serializable;
 import java.util.List;
@@ -125,14 +126,9 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
         this.mAMapLocation = aMapLocation;
 
         String city = aMapLocation.getCity();
-//        String cityCode = aMapLocation.getCityCode();
-        SettingFactory factory = SettingFactory.getInstance();
-        factory.setCurrentCity(city);
-
         double latitude = aMapLocation.getLatitude();
         double longitude = aMapLocation.getLongitude();
 
-        factory.setCurrentLocation(latitude, longitude);
         Logger.i(TAG, "latitude:" + latitude + "longitude:" + longitude);
 
         //TODO 设置标识，是否在路线规划
@@ -153,7 +149,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
                 //locationMarker.setRotateAngle();
             }
 
-            mListener.onLocationSuccece();
+            mListener.onLocationSuccece(city, aMapLocation.getLatitude(), aMapLocation.getLongitude());
         }
         if (location == null) {
             mListener.onLocationFail();

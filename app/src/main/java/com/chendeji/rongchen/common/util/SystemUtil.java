@@ -3,6 +3,8 @@ package com.chendeji.rongchen.common.util;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.chendeji.rongchen.R;
@@ -54,6 +56,19 @@ public class SystemUtil {
                 .negativeAction(context.getString(R.string.negative));
         DialogFragment fragment = DialogFragment.newInstance(builder);
         fragment.show(((AppCompatActivity)context).getSupportFragmentManager(), null);
+    }
+
+    public static boolean isAppInstalled(Context context, String packageName){
+        if (packageName == null || "".equals(packageName))
+            return false;
+        try {
+            ApplicationInfo info = context.getPackageManager()
+                    .getApplicationInfo(packageName,
+                            PackageManager.GET_UNINSTALLED_PACKAGES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
 }

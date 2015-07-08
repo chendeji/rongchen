@@ -2,6 +2,7 @@ package com.chendeji.rongchen.ui.city.task;
 
 import android.content.Context;
 
+import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.ChineseSpelling;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.ToastUtil;
@@ -30,12 +31,16 @@ public class CitySearchTask extends BaseUITask<Void, Void, ReturnMes<List<String
      * @param taskCallBack UI界面回调
      */
     public CitySearchTask(Context context, UITaskCallBack<ReturnMes<List<String>>> taskCallBack) {
-        super(context, taskCallBack);
+        super(context, taskCallBack, false);
     }
 
+//    @Override
+//    protected void onPostExecute(ReturnMes<List<String>> listReturnMes) {
+//        super.onPostExecute(listReturnMes);
+//    }
+
     @Override
-    protected void onPostExecute(ReturnMes<List<String>> listReturnMes) {
-        super.onPostExecute(listReturnMes);
+    protected void fromDBDataSuccess(ReturnMes<List<String>> listReturnMes) {
         if (AppConst.OK.equals(listReturnMes.status)) {
             mTaskCallBack.onPostExecute(listReturnMes);
         } else {
@@ -45,69 +50,123 @@ public class CitySearchTask extends BaseUITask<Void, Void, ReturnMes<List<String
     }
 
     @Override
-    protected void fromDBDataError() {
+    protected void fromNetWorkDataSuccess(ReturnMes<List<String>> listReturnMes) {
+        if (AppConst.OK.equals(listReturnMes.status)) {
+            mTaskCallBack.onPostExecute(listReturnMes);
+        } else {
+            ErrorInfo errorInfo = listReturnMes.errorInfo;
+            ToastUtil.showLongToast(mContext, errorInfo.toString());
+        }
+    }
+
+    @Override
+    protected void fromDBDataError(String errorMsg) {
 
     }
 
     @Override
-    protected void fromNetWorkDataError() {
+    protected void fromNetWorkDataError(String errorMsg) {
 
     }
 
     @Override
-    protected ReturnMes<List<String>> getDataFromNetwork() {
-        return null;
+    protected ReturnMes<List<String>> getDataFromNetwork() throws IOException, HttpException {
+        //先查找数据库，如果数据库有东西就直接用数据库的。
+        List<City> cityList = City.find(City.class, null, new String[]{});
+        ReturnMes<List<String>> cities = null;
+        if (cityList.size() == 0) {
+            cities = AppServerFactory.getFactory().getCityOperation().searchCity();
+            // 将数据填充到数据库中
+            final List<String> list_cities = cities.object;
+            long beginTime = System.currentTimeMillis();
+            final ChineseSpelling spelling = ChineseSpelling.getInstance();
+            SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
+                @Override
+                public void manipulateInTransaction() {
+                    City city;
+                    for (String str_city : list_cities) {
+                        city = new City();
+                        city.city = str_city;
+                        city.firstSpell = spelling.getFirstSpelling(str_city);
+                        city.fullSpell = spelling.getSelling(str_city);
+                        city.save();
+                    }
+                }
+            });
+            long endTime = System.currentTimeMillis();
+            Logger.i("chendeji", "插入数据库消耗的时间：" + (endTime - beginTime) / 1000);   //查看耗时多少秒
+        } else {
+            List<String> stringList = new ArrayList<>();
+            for (City city : cityList) {
+                stringList.add(city.city);
+            }
+            cities = new ReturnMes<>();
+            cities.status = AppConst.OK;
+            cities.object = stringList;
+        }
+        return cities;
     }
 
     @Override
     protected ReturnMes<List<String>> getDataFromDB() {
-        return null;
+        List<City> cityList = City.find(City.class, null, new String[]{});
+        ReturnMes<List<String>> cities = null;
+        if (cityList != null && !cityList.isEmpty()){
+            List<String> stringList = new ArrayList<>();
+            for (City city : cityList) {
+                stringList.add(city.city);
+            }
+            cities = new ReturnMes<>();
+            cities.status = AppConst.OK;
+            cities.object = stringList;
+        } else {
+            errorMsg = mContext.getString(R.string.data_no_prepare_please_wait);
+        }
+        return cities;
     }
 
-    @Override
-    protected ReturnMes<List<String>> doInBackground(Void... params) {
-        try {
-            //先查找数据库，如果数据库有东西就直接用数据库的。
-            List<City> cityList = City.find(City.class, null, new String[]{});
-            ReturnMes<List<String>> cities = null;
-            if (cityList.size() == 0){
-                cities = AppServerFactory.getFactory().getCityOperation().searchCity();
-                // 将数据填充到数据库中
-                final List<String> list_cities = cities.object;
-                long beginTime = System.currentTimeMillis();
-                final ChineseSpelling spelling = ChineseSpelling.getInstance();
-                SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
-                    @Override
-                    public void manipulateInTransaction() {
-                        City city;
-                        for (String str_city : list_cities) {
-                            city = new City();
-                            city.city = str_city;
-//                            city.firstSpell = PinYin.getFirstSpell(str_city);
-//                            city.fullSpell = PinYin.getPinYin(str_city);
-                            city.firstSpell = spelling.getFirstSpelling(str_city);
-                            city.fullSpell = spelling.getSelling(str_city);
-                            city.save();
-                        }
-                    }
-                });
-                long endTime = System.currentTimeMillis();
-                Logger.i("chendeji","插入数据库消耗的时间："+(endTime - beginTime) / 1000);   //查看耗时多少秒
-            }else {
-                List<String> stringList = new ArrayList<>();
-                for (City city : cityList){
-                    stringList.add(city.city);
-                }
-                cities = new ReturnMes<>();
-                cities.status = AppConst.OK;
-                cities.object = stringList;
-            }
-            return cities;
-        } catch (IOException e) {
-            Logger.i(this.getClass().getSimpleName(), "解析错误");
-        } catch (HttpException e) {
-            Logger.i(this.getClass().getSimpleName(), "网络错误");
-        }
-        return null;
-    }
+//    @Override
+//    protected ReturnMes<List<String>> doInBackground(Void... params) {
+//        try {
+//            //先查找数据库，如果数据库有东西就直接用数据库的。
+//            List<City> cityList = City.find(City.class, null, new String[]{});
+//            ReturnMes<List<String>> cities = null;
+//            if (cityList.size() == 0) {
+//                cities = AppServerFactory.getFactory().getCityOperation().searchCity();
+//                // 将数据填充到数据库中
+//                final List<String> list_cities = cities.object;
+//                long beginTime = System.currentTimeMillis();
+//                final ChineseSpelling spelling = ChineseSpelling.getInstance();
+//                SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
+//                    @Override
+//                    public void manipulateInTransaction() {
+//                        City city;
+//                        for (String str_city : list_cities) {
+//                            city = new City();
+//                            city.city = str_city;
+//                            city.firstSpell = spelling.getFirstSpelling(str_city);
+//                            city.fullSpell = spelling.getSelling(str_city);
+//                            city.save();
+//                        }
+//                    }
+//                });
+//                long endTime = System.currentTimeMillis();
+//                Logger.i("chendeji", "插入数据库消耗的时间：" + (endTime - beginTime) / 1000);   //查看耗时多少秒
+//            } else {
+//                List<String> stringList = new ArrayList<>();
+//                for (City city : cityList) {
+//                    stringList.add(city.city);
+//                }
+//                cities = new ReturnMes<>();
+//                cities.status = AppConst.OK;
+//                cities.object = stringList;
+//            }
+//            return cities;
+//        } catch (IOException e) {
+//            Logger.i(this.getClass().getSimpleName(), "解析错误");
+//        } catch (HttpException e) {
+//            Logger.i(this.getClass().getSimpleName(), "网络错误");
+//        }
+//        return null;
+//    }
 }

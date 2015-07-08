@@ -1,10 +1,9 @@
 package com.chendeji.rongchen.ui.city.fragment;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.chendeji.rongchen.R;
-import com.chendeji.rongchen.common.util.Logger;
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout;
 import com.chendeji.rongchen.common.view.CommonLoadingProgressView;
 import com.chendeji.rongchen.model.ReturnMes;
@@ -29,7 +28,7 @@ import java.util.List;
  * Use the {@link HotCityFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HotCityFragment extends Fragment {
+public class HotCityFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -42,6 +41,7 @@ public class HotCityFragment extends Fragment {
     private AutoHorizontalLinearLayout hot_city;
     private CommonLoadingProgressView progressView;
     private TextView recentlySearchCity;
+    private Button currentCity;
 
     /**
      * Use this factory method to create a new instance of
@@ -82,7 +82,10 @@ public class HotCityFragment extends Fragment {
         hot_city = (AutoHorizontalLinearLayout) view.findViewById(R.id.hll_hot_city);
         progressView = (CommonLoadingProgressView) view.findViewById(R.id.common_loading_layout);
         recentlySearchCity = (TextView) view.findViewById(R.id.tv_recently_search_city);
+        currentCity = (Button) view.findViewById(R.id.bt_current_city);
         initData();
+
+        SettingFactory.getInstance().registSharePreferencesListener(this);
         return view;
     }
 
@@ -99,6 +102,8 @@ public class HotCityFragment extends Fragment {
     }
 
     public void initData() {
+        currentCity.setText(SettingFactory.getInstance().getCurrentCity());
+
         final OnCityButtonClickedListener listener = new OnCityButtonClickedListener();
         //开启子线程去完成数据库提取最近搜索城市的任务
         new GetRecentSearchCityTask(getActivity(), new UITaskCallBack<ReturnMes<List<String>>>() {
@@ -119,7 +124,7 @@ public class HotCityFragment extends Fragment {
                         cityView = new Button(getActivity());
                         cityView.setTextColor(getResources().getColor(R.color.common_button_textcolor));
                         cityView.setText(city);
-                        cityView.setBackgroundResource(R.drawable.city_button_bg);
+                        cityView.setBackgroundResource(R.drawable.radius_white_bg);
                         cityView.setOnClickListener(listener);
                         recent_city.addView(cityView);
                     }
@@ -143,10 +148,18 @@ public class HotCityFragment extends Fragment {
         for (int i = 0; i < hot_cities_count; i++) {
             city = new Button(getActivity());
             city.setTextColor(getResources().getColor(R.color.common_button_textcolor));
-            city.setBackgroundResource(R.drawable.city_button_bg);
+            city.setBackgroundResource(R.drawable.radius_white_bg);
             city.setText(hot_cities[i]);
             city.setOnClickListener(listener);
             hot_city.addView(city);
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equalsIgnoreCase(SettingFactory.CITY_SETTING)){
+            String city = SettingFactory.getInstance().getCurrentCity();
+            currentCity.setText(city);
         }
     }
 

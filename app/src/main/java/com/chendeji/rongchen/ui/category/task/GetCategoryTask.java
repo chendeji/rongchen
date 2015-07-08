@@ -2,7 +2,8 @@ package com.chendeji.rongchen.ui.category.task;
 
 import android.content.Context;
 
-import com.chendeji.rongchen.common.util.Logger;
+import com.chendeji.rongchen.R;
+import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.model.ErrorInfo;
 import com.chendeji.rongchen.model.ReturnMes;
@@ -32,13 +33,23 @@ public class GetCategoryTask extends BaseUITask<Void, Void, ReturnMes<List<Categ
      * @param taskCallBack UI界面回调
      */
     public GetCategoryTask(Context context, String city, UITaskCallBack<ReturnMes<List<Category>>> taskCallBack) {
-        super(context, taskCallBack);
+        super(context, taskCallBack, false);
         this.mCity = city;
     }
 
+//    @Override
+//    protected void onPostExecute(ReturnMes<List<Category>> listReturnMes) {
+//        super.onPostExecute(listReturnMes);
+//        if (AppConst.OK.equals(listReturnMes.status)) {
+//            mTaskCallBack.onPostExecute(listReturnMes);
+//        } else {
+//            ErrorInfo errorInfo = listReturnMes.errorInfo;
+//            ToastUtil.showLongToast(mContext, errorInfo.toString());
+//        }
+//    }
+
     @Override
-    protected void onPostExecute(ReturnMes<List<Category>> listReturnMes) {
-        super.onPostExecute(listReturnMes);
+    protected void fromDBDataSuccess(ReturnMes<List<Category>> listReturnMes) {
         if (AppConst.OK.equals(listReturnMes.status)) {
             mTaskCallBack.onPostExecute(listReturnMes);
         } else {
@@ -48,58 +59,101 @@ public class GetCategoryTask extends BaseUITask<Void, Void, ReturnMes<List<Categ
     }
 
     @Override
-    protected void fromDBDataError() {
+    protected void fromNetWorkDataSuccess(ReturnMes<List<Category>> listReturnMes) {
+        if (AppConst.OK.equals(listReturnMes.status)) {
+            mTaskCallBack.onPostExecute(listReturnMes);
+        } else {
+            ErrorInfo errorInfo = listReturnMes.errorInfo;
+            ToastUtil.showLongToast(mContext, errorInfo.toString());
+        }
+    }
+
+    @Override
+    protected void fromDBDataError(String errorMsg) {
 
     }
 
     @Override
-    protected void fromNetWorkDataError() {
+    protected void fromNetWorkDataError(String errorMsg) {
 
     }
 
     @Override
-    protected ReturnMes<List<Category>> getDataFromNetwork() {
-        return null;
+    protected ReturnMes<List<Category>> getDataFromNetwork() throws IOException, HttpException {
+        String city = SettingFactory.getInstance().getCurrentCity();
+        ReturnMes<List<Category>> returnMes;
+        List<Category> categories = Category.find(Category.class, null, new String[]{});
+        if (categories == null || categories.size() == 0) {
+            returnMes = AppServerFactory.getFactory().getCategoryOperation().getCategory(city);
+            //获取数据之后将数据填充到数据库
+            if (returnMes != null) {
+                categories = returnMes.object;
+                final List<Category> finalCategories = categories;
+                SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
+                    @Override
+                    public void manipulateInTransaction() {
+                        for (Category category : finalCategories) {
+                            category.save();
+                        }
+                    }
+                });
+            }
+        } else {
+            returnMes = new ReturnMes<>();
+            returnMes.status = AppConst.OK;
+            returnMes.object = categories;
+        }
+        return returnMes;
     }
 
     @Override
     protected ReturnMes<List<Category>> getDataFromDB() {
-        return null;
-    }
-
-    @Override
-    protected ReturnMes<List<Category>> doInBackground(Void... params) {
-        //编写后台访问接口
-        try {
-            ReturnMes<List<Category>> returnMes;
-            List<Category> categories = Category.find(Category.class, null, new String[]{});
-            if (categories == null || categories.size() == 0){
-                returnMes = AppServerFactory.getFactory().getCategoryOperation().getCategory("");
-                //获取数据之后将数据填充到数据库
-                if (returnMes != null) {
-                    categories = returnMes.object;
-                    final List<Category> finalCategories = categories;
-                    SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
-                        @Override
-                        public void manipulateInTransaction() {
-                            for (Category category : finalCategories){
-                                category.save();
-                            }
-                        }
-                    });
-                }
-            } else {
-                returnMes = new ReturnMes<>();
-                returnMes.status = AppConst.OK;
-                returnMes.object = categories;
-            }
-            return returnMes;
-        } catch (IOException e) {
-            Logger.i(this.getClass().getSimpleName(), "解析错误");
-        } catch (HttpException e) {
-            Logger.i(this.getClass().getSimpleName(), "网络错误");
+        ReturnMes<List<Category>> returnMes = null;
+        List<Category> categories = Category.find(Category.class, null, new String[]{});
+        if (categories != null && !categories.isEmpty()) {
+            returnMes = new ReturnMes<>();
+            returnMes.status = AppConst.OK;
+            returnMes.object = categories;
+        } else {
+            errorMsg = mContext.getString(R.string.data_no_prepare_please_wait);
         }
-
-        return null;
+        return returnMes;
     }
+
+//    @Override
+//    protected ReturnMes<List<Category>> doInBackground(Void... params) {
+//        //编写后台访问接口
+//        try {
+//            String city = SettingFactory.getInstance().getCurrentCity();
+//            ReturnMes<List<Category>> returnMes;
+//            List<Category> categories = Category.find(Category.class, null, new String[]{});
+//            if (categories == null || categories.size() == 0){
+//                returnMes = AppServerFactory.getFactory().getCategoryOperation().getCategory(city);
+//                //获取数据之后将数据填充到数据库
+//                if (returnMes != null) {
+//                    categories = returnMes.object;
+//                    final List<Category> finalCategories = categories;
+//                    SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
+//                        @Override
+//                        public void manipulateInTransaction() {
+//                            for (Category category : finalCategories){
+//                                category.save();
+//                            }
+//                        }
+//                    });
+//                }
+//            } else {
+//                returnMes = new ReturnMes<>();
+//                returnMes.status = AppConst.OK;
+//                returnMes.object = categories;
+//            }
+//            return returnMes;
+//        } catch (IOException e) {
+//            Logger.i(this.getClass().getSimpleName(), "解析错误");
+//        } catch (HttpException e) {
+//            Logger.i(this.getClass().getSimpleName(), "网络错误");
+//        }
+//
+//        return null;
+//    }
 }

@@ -31,14 +31,18 @@ public class GetCategoryFromDBTask extends BaseUITask<Void, Void, ReturnMes<List
      * @param taskCallBack UI界面回调
      */
     public GetCategoryFromDBTask(Context context, String category, int category_level, UITaskCallBack<ReturnMes<List<String>>> taskCallBack) {
-        super(context, taskCallBack);
+        super(context, taskCallBack, true);
         this.mCategory = category;
         this.mCategoryLevel = category_level;
     }
 
+//    @Override
+//    protected void onPostExecute(ReturnMes<List<String>> listReturnMes) {
+//        super.onPostExecute(listReturnMes);
+//    }
+
     @Override
-    protected void onPostExecute(ReturnMes<List<String>> listReturnMes) {
-        super.onPostExecute(listReturnMes);
+    protected void fromDBDataSuccess(ReturnMes<List<String>> listReturnMes) {
         if (AppConst.OK.equals(listReturnMes.status)) {
             mTaskCallBack.onPostExecute(listReturnMes);
         } else {
@@ -48,12 +52,17 @@ public class GetCategoryFromDBTask extends BaseUITask<Void, Void, ReturnMes<List
     }
 
     @Override
-    protected void fromDBDataError() {
+    protected void fromNetWorkDataSuccess(ReturnMes<List<String>> listReturnMes) {
+
+    }
+
+    @Override
+    protected void fromDBDataError(String errorMsg) {
         
     }
 
     @Override
-    protected void fromNetWorkDataError() {
+    protected void fromNetWorkDataError(String errorMsg) {
 
     }
 
@@ -64,11 +73,6 @@ public class GetCategoryFromDBTask extends BaseUITask<Void, Void, ReturnMes<List
 
     @Override
     protected ReturnMes<List<String>> getDataFromDB() {
-        return null;
-    }
-
-    @Override
-    protected ReturnMes<List<String>> doInBackground(Void... params) {
         ReturnMes<List<String>> returnMes = new ReturnMes<>();
         returnMes.status = AppConst.ERROR;
         List<SubCategory> subCategories;
@@ -108,4 +112,9 @@ public class GetCategoryFromDBTask extends BaseUITask<Void, Void, ReturnMes<List
         }
         return null;
     }
+
+//    @Override
+//    protected ReturnMes<List<String>> doInBackground(Void... params) {
+//        return null;
+//    }
 }

@@ -29,34 +29,51 @@ public class GetMerchantDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<
      * @param taskCallBack UI界面回调
      */
     public GetMerchantDetailInfoTask(Context context, UITaskCallBack<ReturnMes<Merchant>> taskCallBack, long merchant_id) {
-        super(context, taskCallBack);
+        super(context, taskCallBack, false);
         this.mMerchantID = merchant_id;
     }
 
+//    @Override
+//    protected void onPostExecute(ReturnMes<Merchant> merchantReturnMes) {
+//        super.onPostExecute(merchantReturnMes);
+//        if (AppConst.OK.equals(merchantReturnMes.status)) {
+//            mTaskCallBack.onPostExecute(merchantReturnMes);
+//        } else {
+//            ErrorInfo errorInfo = merchantReturnMes.errorInfo;
+//            ToastUtil.showLongToast(mContext, errorInfo.toString());
+//        }
+//    }
+
     @Override
-    protected void onPostExecute(ReturnMes<Merchant> merchantReturnMes) {
-        super.onPostExecute(merchantReturnMes);
-        if (AppConst.OK.equals(merchantReturnMes.status)){
+    protected void fromDBDataSuccess(ReturnMes<Merchant> merchantReturnMes) {
+
+    }
+
+    @Override
+    protected void fromNetWorkDataSuccess(ReturnMes<Merchant> merchantReturnMes) {
+        if (AppConst.OK.equals(merchantReturnMes.status)) {
             mTaskCallBack.onPostExecute(merchantReturnMes);
-        }else{
+        } else {
             ErrorInfo errorInfo = merchantReturnMes.errorInfo;
             ToastUtil.showLongToast(mContext, errorInfo.toString());
         }
     }
 
     @Override
-    protected void fromDBDataError() {
+    protected void fromDBDataError(String errorMsg) {
 
     }
 
     @Override
-    protected void fromNetWorkDataError() {
+    protected void fromNetWorkDataError(String errorMsg) {
 
     }
 
     @Override
-    protected ReturnMes<Merchant> getDataFromNetwork() {
-        return null;
+    protected ReturnMes<Merchant> getDataFromNetwork() throws IOException, HttpException {
+        ReturnMes<Merchant> merchantReturnMes = null;
+        merchantReturnMes = AppServerFactory.getFactory().getMerchantOperation().findSingleMerchant(mMerchantID);
+        return merchantReturnMes;
     }
 
     @Override
@@ -64,17 +81,17 @@ public class GetMerchantDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<
         return null;
     }
 
-    @Override
-    protected ReturnMes<Merchant> doInBackground(Void... params) {
-
-        ReturnMes<Merchant> merchantReturnMes = null;
-        try {
-            merchantReturnMes = AppServerFactory.getFactory().getMerchantOperation().findSingleMerchant(mMerchantID);
-        } catch (IOException e) {
-            Logger.i(this.getClass().getSimpleName(), "解析错误");
-        } catch (HttpException e) {
-            Logger.i(this.getClass().getSimpleName(), "网络错误");
-        }
-        return merchantReturnMes;
-    }
+//    @Override
+//    protected ReturnMes<Merchant> doInBackground(Void... params) {
+//
+//        ReturnMes<Merchant> merchantReturnMes = null;
+//        try {
+//            merchantReturnMes = AppServerFactory.getFactory().getMerchantOperation().findSingleMerchant(mMerchantID);
+//        } catch (IOException e) {
+//            Logger.i(this.getClass().getSimpleName(), "解析错误");
+//        } catch (HttpException e) {
+//            Logger.i(this.getClass().getSimpleName(), "网络错误");
+//        }
+//        return merchantReturnMes;
+//    }
 }

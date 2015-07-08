@@ -72,7 +72,7 @@ public interface IMap extends StaticClassReleace{
 //    void setOnMarkeClickListener(OnMapMarkeClickListener listener);
 
     interface IMapLocationListener{
-        void onLocationSuccece();
+        void onLocationSuccece(String city, double latitude, double longitude);
         void onLocationFail();
     }
     //能够进行定位

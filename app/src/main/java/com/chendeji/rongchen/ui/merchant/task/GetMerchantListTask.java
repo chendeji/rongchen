@@ -2,7 +2,7 @@ package com.chendeji.rongchen.ui.merchant.task;
 
 import android.content.Context;
 
-import com.chendeji.rongchen.SettingFactory;
+import com.chendeji.rongchen.common.util.NetUtil;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.model.Platform;
 import com.chendeji.rongchen.model.ReturnMes;
@@ -21,7 +21,6 @@ import com.chendeji.rongchen.model.Sort;
 import com.chendeji.rongchen.server.AppConst;
 import com.chendeji.rongchen.server.AppServerFactory;
 import com.chendeji.rongchen.server.HttpException;
-import com.orm.SugarTransactionHelper;
 
 /**
  * @author chendeji
@@ -48,7 +47,7 @@ public class GetMerchantListTask extends BaseUITask<Void, Void, ReturnMes<List<M
     public GetMerchantListTask(Context context, UITaskCallBack taskCallBack
             , Sort sort, int page, int limit, Offset_Type offsetType
             , Offset_Type out_offset_type, Platform platform) {
-        super(context, taskCallBack);
+        super(context, taskCallBack, false);
         this.mSort = sort;
         this.mPage = page;
         this.mLimit = limit;
@@ -57,84 +56,94 @@ public class GetMerchantListTask extends BaseUITask<Void, Void, ReturnMes<List<M
         this.mPlatform = platform;
     }
 
-    @Override
-    protected void onPostExecute(ReturnMes<List<Merchant>> merchantListReturnMes) {
-        super.onPostExecute(merchantListReturnMes);
-        if (AppConst.OK.equals(merchantListReturnMes.status)) {
-            List<Merchant> list = merchantListReturnMes.object;
+//    @Override
+//    protected void onPostExecute(ReturnMes<List<Merchant>> merchantListReturnMes) {
+//        super.onPostExecute(merchantListReturnMes);
+//        if (merchantListReturnMes == null){
+//            if (NetUtil.hasNetwork(mContext)) {
+//                fromNetWorkDataError(errorMsg);
+//            } else {
+//                fromDBDataError(errorMsg);
+//            }
+//        }
+//    }
+
+    private void getSourceData(ReturnMes<List<Merchant>> listReturnMes) {
+        if (AppConst.OK.equals(listReturnMes.status)) {
+            List<Merchant> list = listReturnMes.object;
             mTaskCallBack.onPostExecute(list);
         } else {
-            ErrorInfo errorInfo = merchantListReturnMes.errorInfo;
+            ErrorInfo errorInfo = listReturnMes.errorInfo;
             ToastUtil.showLongToast(mContext, errorInfo.toString());
         }
     }
 
     @Override
-    protected void fromDBDataError() {
-
+    protected void fromDBDataSuccess(ReturnMes<List<Merchant>> listReturnMes) {
+        getSourceData(listReturnMes);
     }
 
     @Override
-    protected void fromNetWorkDataError() {
-
+    protected void fromNetWorkDataSuccess(ReturnMes<List<Merchant>> listReturnMes) {
+        getSourceData(listReturnMes);
     }
 
     @Override
-    protected ReturnMes<List<Merchant>> getDataFromNetwork() {
-        try {
+    protected void fromDBDataError(String errorMsg) {
+        ToastUtil.showLongToast(mContext, errorMsg);
+    }
+
+    @Override
+    protected void fromNetWorkDataError(String errorMsg) {
+        ToastUtil.showLongToast(mContext, errorMsg);
+    }
+
+    @Override
+    protected ReturnMes<List<Merchant>> getDataFromNetwork() throws IOException, HttpException {
             AppServerFactory factory = AppServerFactory.getFactory();
             IMerchantOperation operation = factory.getMerchantOperation();
             final ReturnMes<List<Merchant>> merchants = operation.findMerchants(null, null, mSort
                     , mPage, mLimit, mOffset_type, mOut_offset_type, mPlatform);
-
             //缓存数据
-            SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
-                @Override
-                public void manipulateInTransaction() {
-                    if (merchants != null){
-                        List<Merchant> merchantList = merchants.object;
-                        for (Merchant merchant : merchantList){
-                            merchant.save();
-                        }
-                    }
-                }
-            });
+//            SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
+//                @Override
+//                public void manipulateInTransaction() {
+//                    if (merchants != null){
+//                        List<Merchant> merchantList = merchants.object;
+//                        for (Merchant merchant : merchantList){
+//                            merchant.save();
+//                        }
+//                    }
+//                }
+//            });
             return merchants;
-        } catch (IOException e) {
-            Logger.i(this.getClass().getSimpleName(), "解析错误");
-        } catch (HttpException e) {
-            Logger.i(this.getClass().getSimpleName(), "网络错误");
-        }
-        return null;
     }
 
     @Override
     protected ReturnMes<List<Merchant>> getDataFromDB() {
         //TODO 从数据库中拿到数据
-        SettingFactory factory = SettingFactory.getInstance();
-        String category = factory.getCurrentChoosedCategory();
-        String city = factory.getCurrentCity();
-        List<Merchant> merchants = Merchant.find(Merchant.class, "", new String[]{}, null,
-                "order by distance ASC",
-                "limit mlimit offset mpage");
-
-
+//        SettingFactory factory = SettingFactory.getInstance();
+//        String category = factory.getCurrentChoosedCategory();
+//        String city = factory.getCurrentCity();
+//        List<Merchant> merchants = Merchant.find(Merchant.class, "", new String[]{}, null,
+//                "order by distance ASC",
+//                "limit mlimit offset mpage");
         return null;
     }
 
-    @Override
-    protected ReturnMes<List<Merchant>> doInBackground(Void... params) {
-        try {
-            AppServerFactory factory = AppServerFactory.getFactory();
-            IMerchantOperation operation = factory.getMerchantOperation();
-            ReturnMes<List<Merchant>> merchants = operation.findMerchants(null, null, mSort
-                    , mPage, mLimit, mOffset_type, mOut_offset_type, mPlatform);
-            return merchants;
-        } catch (IOException e) {
-            Logger.i(this.getClass().getSimpleName(), "解析错误");
-        } catch (HttpException e) {
-            Logger.i(this.getClass().getSimpleName(), "网络错误");
-        }
-        return null;
-    }
+//    @Override
+//    protected ReturnMes<List<Merchant>> doInBackground(Void... params) {
+//        try {
+//            AppServerFactory factory = AppServerFactory.getFactory();
+//            IMerchantOperation operation = factory.getMerchantOperation();
+//            ReturnMes<List<Merchant>> merchants = operation.findMerchants(null, null, mSort
+//                    , mPage, mLimit, mOffset_type, mOut_offset_type, mPlatform);
+//            return merchants;
+//        } catch (IOException e) {
+//            Logger.i(this.getClass().getSimpleName(), "解析错误");
+//        } catch (HttpException e) {
+//            Logger.i(this.getClass().getSimpleName(), "网络错误");
+//        }
+//        return null;
+//    }
 }

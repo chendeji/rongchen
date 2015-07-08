@@ -36,6 +36,10 @@ public class DealCategoryActivity extends AppCompatActivity implements TreeNode.
     private AndroidTreeView tView;
     private TreeNode root;
 
+    public static final String LAUCHMODE = "luanchmode";
+    public static final int JUST_CHOOSE_CATEGORY = 1;
+    private int mActivityMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,7 @@ public class DealCategoryActivity extends AppCompatActivity implements TreeNode.
         toolbar.setTitle(getString(R.string.category_choose));
         setSupportActionBar(toolbar);
 
+        mActivityMode = getIntent().getIntExtra(LAUCHMODE, -1);
         progressView = (CommonLoadingProgressView) findViewById(R.id.common_loading_layout);
 //        addFragment(null, CategoryListFragment.CATEGORY);
 
@@ -85,8 +90,11 @@ public class DealCategoryActivity extends AppCompatActivity implements TreeNode.
             } else {
                 factory.setCurrentChoosedCategory(((CategoryTreeItemHolder.CategoryTreeItem) value).title);
             }
-            Intent intent = new Intent(this, MerchantListActivity.class);
-            startActivity(intent);
+            if (mActivityMode != JUST_CHOOSE_CATEGORY) {
+                Intent intent = new Intent(this, MerchantListActivity.class);
+                startActivity(intent);
+            }
+            finish();
         }
         //不是叶子节点，就记录
     }

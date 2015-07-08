@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <TextView
+            style="@style/common_max_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/horizontal_16dp_margin"
+            android:text="当前选择分类" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/common_button_textcolor" />
+
+        <Button
+            android:id="@+id/bt_current_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/horizontal_16dp_margin"
+            android:background="@drawable/radius_white_bg"
+            android:textColor="@color/common_button_textcolor" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/common_max_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/horizontal_16dp_margin"
+            android:text="排序规则" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/horizontal_16dp_margin"
+            android:orientation="vertical">
+
+            <com.rey.material.widget.RadioButton
+                android:id="@+id/sort_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="默认"
+                android:textColor="@color/black" />
+
+            <com.rey.material.widget.RadioButton
+                android:id="@+id/sort_star_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="综合评定高优先"
+                android:textColor="@color/black" />
+
+            <com.rey.material.widget.RadioButton
+                android:id="@+id/sort_distance_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="距离最近优先"
+                android:textColor="@color/black" />
+
+            <com.rey.material.widget.RadioButton
+                android:id="@+id/sort_avg_price_low_to_high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="平均消费低到高"
+                android:textColor="@color/black" />
+
+            <com.rey.material.widget.RadioButton
+                android:id="@+id/sort_avg_price_high_to_low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="平均消费高到低"
+                android:textColor="@color/black" />
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

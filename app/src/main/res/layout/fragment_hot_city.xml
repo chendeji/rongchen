@@ -5,9 +5,37 @@
     android:layout_height="match_parent"
     tools:context="com.chendeji.rongchen.ui.city.fragment.HotCityFragment">
 
+    <Button
+        android:id="@+id/bt_current_city"
+        style="@style/common_max_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/horizontal_10dp"
+        android:background="@drawable/radius_white_bg"
+        android:text="当前城市"
+        android:textColor="@color/common_button_textcolor" />
+
+    <TextView
+        style="@style/common_max_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/bt_current_city"
+        android:layout_margin="@dimen/horizontal_10dp"
+        android:text="当前选择城市" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/bt_current_city"
+        android:background="@color/blue" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/line"
         android:layout_margin="@dimen/horizontal_10dp"
         android:orientation="vertical">
 
@@ -16,8 +44,8 @@
             style="@style/common_max_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/common_button_textcolor"
-            android:text="@string/recently_search_city" />
+            android:text="@string/recently_search_city"
+            android:textColor="@color/common_button_textcolor" />
 
         <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout
             android:id="@+id/hll_recent_search_city"
@@ -32,8 +60,8 @@
             style="@style/common_max_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/common_button_textcolor"
-            android:text="@string/hot_city" />
+            android:text="@string/hot_city"
+            android:textColor="@color/common_button_textcolor" />
 
         <com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout
             android:id="@+id/hll_hot_city"
@@ -48,10 +76,10 @@
 
 
     <com.chendeji.rongchen.common.view.CommonLoadingProgressView
-        android:layout_below="@id/sl_search_city"
         android:id="@+id/common_loading_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/sl_search_city">
 
     </com.chendeji.rongchen.common.view.CommonLoadingProgressView>
 
