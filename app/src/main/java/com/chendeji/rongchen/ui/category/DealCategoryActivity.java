@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.chendeji.rongchen.R;
@@ -18,7 +17,6 @@ import com.chendeji.rongchen.common.view.treeview.view.AndroidTreeView;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.server.AppConst;
 import com.chendeji.rongchen.ui.category.common.CategoryTreeItemHolder;
-import com.chendeji.rongchen.ui.category.fragment.CategoryListFragment;
 import com.chendeji.rongchen.ui.category.task.GetCategoryTreeNodeTask;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 import com.chendeji.rongchen.ui.merchant.MerchantListActivity;
@@ -122,7 +120,7 @@ public class DealCategoryActivity extends AppCompatActivity implements TreeNode.
             }
 
             @Override
-            public void onNetWorkError() {
+            public void onExecuteError(String errorMsg) {
 
             }
         }).excuteProxy((Void[])null);

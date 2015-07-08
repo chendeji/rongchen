@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import com.amap.api.location.core.AMapLocException;
 import com.amap.api.services.route.RouteResult;
 import com.chendeji.rongchen.common.interfase.StaticClassReleace;
 import com.chendeji.rongchen.ui.map.RouteActivity;
@@ -25,6 +26,8 @@ public interface IMap extends StaticClassReleace{
 
 
     void setContext(Context context);
+
+    void setCity(String city);
 
     /**
      * 用于在地图生成POI搜索的Marker的方法
@@ -61,7 +64,7 @@ public interface IMap extends StaticClassReleace{
 
     void onSaveInstanceState(Bundle outState);
 
-    void showRoute(Object path, int routeType);
+    void showRoute(Object path, int routeType) throws AMapLocException;
 
     void startRoute(Context context, double[] start_point_location, double[] end_point_location, int route_type);
 

@@ -185,8 +185,8 @@ public class CitiesFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     @Override
-    public void onNetWorkError() {
-        ToastUtil.showLongToast(getActivity(), getString(R.string.no_net_work_toast));
+    public void onExecuteError(String errorMsg) {
+        ToastUtil.showLongToast(getActivity(), errorMsg);
     }
 
     /**

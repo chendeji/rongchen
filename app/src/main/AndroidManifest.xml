@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chendeji.rongchen"
-    android:versionCode="2"
-    android:versionName="1.0.3">
+    android:versionCode="29"
+    android:versionName="1.2.9">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -40,10 +40,15 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.chendeji.rongchen.model" />
 
-        <!-- 高德地图的debug-key -->
+        <!-- 高德地图的debug_version key -->
+        <!--<meta-data-->
+            <!--android:name="com.amap.api.v2.apikey"-->
+            <!--android:value="53eab95e819e8a76b1def54b6def6609" />-->
+
+        <!-- 高德地图的release_version key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="53eab95e819e8a76b1def54b6def6609" />
+            android:value="18cff9bcbb3808a46f56a40965998cde" />
 
         <activity
             android:name=".ui.welcome.WelcomeActivity"

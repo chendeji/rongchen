@@ -123,7 +123,7 @@ public class CategoryListFragment extends Fragment implements MyAdapter.OnItemVi
             }
 
             @Override
-            public void onNetWorkError() {
+            public void onExecuteError(String errorMsg) {
 
             }
         }).excuteProxy((Void[])null);
@@ -155,7 +155,7 @@ public class CategoryListFragment extends Fragment implements MyAdapter.OnItemVi
             }
 
             @Override
-            public void onNetWorkError() {
+            public void onExecuteError(String errorMsg) {
 
             }
         }).excuteProxy((Void[])null);
@@ -186,7 +186,7 @@ public class CategoryListFragment extends Fragment implements MyAdapter.OnItemVi
             }
 
             @Override
-            public void onNetWorkError() {
+            public void onExecuteError(String errorMsg) {
 
             }
         }).excuteProxy((Void[])null);

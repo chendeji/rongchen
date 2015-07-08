@@ -2,6 +2,7 @@ package com.chendeji.rongchen.ui.category.task;
 
 import android.content.Context;
 
+import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.view.treeview.model.TreeNode;
@@ -101,19 +102,24 @@ public class GetCategoryTreeNodeTask extends BaseUITask<Void, Void, ReturnMes<Li
                     }
                 });
             } else {
-                treeReturnMes.status = returnMes.status;
-                treeReturnMes.errorInfo = returnMes.errorInfo;
-                return treeReturnMes;
+                errorMsg = mContext.getString(R.string.data_no_prepare_please_wait);
+                return null;
             }
 
         } else {
+            errorMsg = mContext.getString(R.string.data_no_prepare_please_wait);
             return null;
         }
         //数据获取之后进行填充
         getCategoryTreeNodes(treeNodes, categories, currentCity);
-        treeReturnMes.status = returnMes.status;
-        treeReturnMes.object = treeNodes;
-        return treeReturnMes;
+        if (treeNodes != null && !treeNodes.isEmpty()) {
+            treeReturnMes.status = returnMes.status;
+            treeReturnMes.object = treeNodes;
+            return treeReturnMes;
+        } else {
+            errorMsg = mContext.getString(R.string.data_no_prepare_please_wait);
+            return null;
+        }
     }
 
     @Override

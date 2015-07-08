@@ -90,16 +90,13 @@ public class CitySearchOnDateBaseTask extends BaseUITask<Void, Void, ReturnMes<L
                 cities.add(city.city);
             }
         }
-        ReturnMes<List<String>> returnMes;
+        ReturnMes<List<String>> returnMes = null;
         if (cities.size() > 0) {
             returnMes = new ReturnMes<>();
             returnMes.object = cities;
             returnMes.status = AppConst.OK;
         } else {
-            returnMes = new ReturnMes<>();
-            returnMes.status = AppConst.ERROR;
-            ErrorInfo info = new ErrorInfo(-1, mContext.getResources().getString(R.string.database_nothing));
-            returnMes.errorInfo = info;
+            errorMsg = mContext.getResources().getString(R.string.database_nothing);
         }
         return returnMes;
     }

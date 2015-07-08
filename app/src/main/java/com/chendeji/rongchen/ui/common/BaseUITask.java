@@ -1,9 +1,11 @@
 package com.chendeji.rongchen.ui.common;
 
+import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.NetUtil;
 
 import android.content.Context;
 import android.os.*;
+import android.text.TextUtils;
 
 /**
  * @author chendeji
@@ -47,13 +49,25 @@ public abstract class BaseUITask<V, P, R> extends AsyncTask<V, P, R> {
         if (NetUtil.hasNetwork(mContext)
                 && !mIsDBOperation) {
             if (r == null) {
+                if (TextUtils.isEmpty(errorMsg)){
+                    errorMsg = mContext.getString(com.chendeji.rongchen.R.string.time_out);
+                }
                 fromNetWorkDataError(errorMsg);
+                if (mTaskCallBack != null){
+                    mTaskCallBack.onExecuteError(errorMsg);
+                }
             } else {
                 fromNetWorkDataSuccess(r);
             }
         } else {
             if (r == null) {
+                if (TextUtils.isEmpty(errorMsg)){
+                    errorMsg = mContext.getString(com.chendeji.rongchen.R.string.data_search_result_nothing);
+                }
                 fromDBDataError(errorMsg);
+                if (mTaskCallBack != null){
+                    mTaskCallBack.onExecuteError(errorMsg);
+                }
             } else {
                 fromDBDataSuccess(r);
             }
@@ -114,7 +128,6 @@ public abstract class BaseUITask<V, P, R> extends AsyncTask<V, P, R> {
             } else {
                 // 从数据库获取数据
                 r = getDataFromDB();
-                mTaskCallBack.onNetWorkError();
             }
         } catch (Exception e) {
             errorMsg = e.getMessage();

@@ -52,7 +52,7 @@ public class WelcomeActivity extends AppCompatActivity implements IMap.IMapLocat
             }
 
             @Override
-            public void onNetWorkError() {
+            public void onExecuteError(String errorMsg) {
 
             }
         }).excuteProxy((Void[]) null);

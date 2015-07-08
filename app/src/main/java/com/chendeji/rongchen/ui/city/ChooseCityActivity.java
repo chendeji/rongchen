@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
+import com.chendeji.rongchen.common.map.MapManager;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
 import com.chendeji.rongchen.common.view.CommonLoadingProgressView;
@@ -59,27 +60,6 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
 
         initComponent();
         initFragment();
-        initData();
-    }
-
-    private void initData() {
-        //更新应用的城市数据库信息
-//        citySearchTask = new CitySearchTask(this, new UITaskCallBack<ReturnMes<List<String>>>() {
-//            @Override
-//            public void onPreExecute() {
-//
-//            }
-//
-//            @Override
-//            public void onPostExecute(ReturnMes<List<String>> returnMes) {
-//
-//            }
-//
-//            @Override
-//            public void onNetWorkError() {
-//
-//            }
-//        }).excuteProxy((Void[]) null);
     }
 
     private void initFragment() {
@@ -150,6 +130,7 @@ public class ChooseCityActivity extends AppCompatActivity implements CommonSearc
         SettingFactory factory = SettingFactory.getInstance();
         factory.setCurrentCity(city);
         factory.addRecentSearchCity(city);
+        MapManager.getManager().getMap().setCity(city);
         //显示的模式如果是还要选择分类的界面
         if (choose_mode == CHOSE_CITY_AND_CATEGORY) {
             Intent intent = new Intent(this, DealCategoryActivity.class);

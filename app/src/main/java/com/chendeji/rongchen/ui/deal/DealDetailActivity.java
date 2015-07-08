@@ -1,7 +1,6 @@
 package com.chendeji.rongchen.ui.deal;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +18,7 @@ import com.chendeji.rongchen.MyApplication;
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.ImageLoaderOptionsUtil;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
+import com.chendeji.rongchen.common.view.CommonProgressDialog;
 import com.chendeji.rongchen.common.view.SpanableTextView;
 import com.chendeji.rongchen.common.view.scrollview.MyScrollView;
 import com.chendeji.rongchen.common.view.scrollview.ObservableScrollViewCallbacks;
@@ -72,9 +72,14 @@ public class DealDetailActivity extends AppCompatActivity {
     private int mActionBarSize;
     private boolean fabIsShown;
     private Deal mDeal;
+    private CommonProgressDialog progressDialog;
 
     @Override
     protected void onDestroy() {
+        if(progressDialog != null){
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
         if (getDealDetailTask != null) {
             if (!getDealDetailTask.isCancelled()) {
                 getDealDetailTask.cancel(true);
@@ -101,6 +106,19 @@ public class DealDetailActivity extends AppCompatActivity {
 
         //通过服务端拉取数据
         getDealData();
+    }
+
+    private void showLoadingProgress(){
+        if (progressDialog == null) {
+            progressDialog = new CommonProgressDialog(this);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+    private void hideLoadingProgress(){
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 
     private void initComponent() {
@@ -211,12 +229,12 @@ public class DealDetailActivity extends AppCompatActivity {
 
             @Override
             public void onPreExecute() {
-                //TODO 事先加载数据库的缓存数据
-
+                showLoadingProgress();
             }
 
             @Override
             public void onPostExecute(ReturnMes<Deal> returnMes) {
+                hideLoadingProgress();
                 if (returnMes == null) {
                     showErrorImage();
                     return;
@@ -228,7 +246,7 @@ public class DealDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNetWorkError() {
+            public void onExecuteError(String errorMsg) {
 
             }
         }, info.id).excuteProxy((Void[]) null);

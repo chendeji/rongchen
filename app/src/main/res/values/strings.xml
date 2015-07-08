@@ -82,5 +82,8 @@
     <string name="choose_map">选择地图</string>
     <string name="map_notify">特别提醒：如果需要使用高德地图来定位商户，请事先安装最新版高德地图！</string>
     <string name="data_no_prepare_please_wait">数据正在整理，请稍后......</string>
+    <string name="time_out">网络信号太弱，访问服务器超时</string>
+    <string name="data_search_result_nothing">找不到该数据库数据</string>
+    <string name="dianping_source">大众点评提供数据</string>
 
 </resources>

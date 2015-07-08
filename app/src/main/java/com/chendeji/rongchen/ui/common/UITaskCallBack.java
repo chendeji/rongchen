@@ -22,7 +22,8 @@ public interface UITaskCallBack<T> {
 
     /**
      * 没有网络情况的操作
+     * @param errorMsg
      */
-    void onNetWorkError();
+    void onExecuteError(String errorMsg);
 
 }

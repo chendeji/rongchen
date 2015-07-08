@@ -1,6 +1,5 @@
 package com.chendeji.rongchen.ui.merchant;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,6 +21,7 @@ import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.util.ImageLoaderOptionsUtil;
 import com.chendeji.rongchen.common.util.StatusBarUtil;
 import com.chendeji.rongchen.common.util.ToastUtil;
+import com.chendeji.rongchen.common.view.CommonProgressDialog;
 import com.chendeji.rongchen.common.view.scrollview.MyScrollView;
 import com.chendeji.rongchen.common.view.scrollview.ObservableScrollViewCallbacks;
 import com.chendeji.rongchen.common.view.scrollview.ScrollState;
@@ -88,6 +88,8 @@ public class MerchantDetailActivity extends AppCompatActivity {
     private SimpleDialog.Builder builder;
     private ChooseMapDialogFragment fragment;
     private long merchant_id;
+    private CommonProgressDialog progressDialog;
+    private TextView comment_title;
 
     @Override
     protected void onPause() {
@@ -126,6 +128,11 @@ public class MerchantDetailActivity extends AppCompatActivity {
                 getMerchantTask.cancel(true);
             }
             getMerchantTask = null;
+        }
+
+        if (progressDialog != null){
+            progressDialog.dismiss();
+            progressDialog = null;
         }
 
         super.onDestroy();
@@ -185,8 +192,7 @@ public class MerchantDetailActivity extends AppCompatActivity {
         deal_list_hoder = findViewById(R.id.cv_deal_list_hoder);
         ll_comment_list = (LinearLayout) findViewById(R.id.ll_comment_list);
         comment_list_hoder = findViewById(R.id.cv_comment_list_hoder);
-        TextView comment_title = (TextView) findViewById(R.id.tv_comment_title);
-        comment_title.setText(getString(R.string.comment_title));
+        comment_title = (TextView) findViewById(R.id.tv_comment_title);
     }
 
     private void initEvent() {
@@ -274,67 +280,6 @@ public class MerchantDetailActivity extends AppCompatActivity {
             fragment = new ChooseMapDialogFragment(merchant);
         }
         fragment.show(getSupportFragmentManager(), null);
-
-//        if (builder == null) {
-//            builder = new SimpleDialog.Builder(R.style.SimpleDialogLight) {
-//                @Override
-//                protected void onBuildDone(final Dialog dialog) {
-//                    boolean isGaodeExist = checkGaodeMapAPPExist("com.autonavi.minimap");
-//
-//                    Button local = (Button) dialog.findViewById(R.id.bt_local_map);
-//                    Button gaode = (Button) dialog.findViewById(R.id.bt_gaode_map);
-//                    gaode.setEnabled(isGaodeExist);
-//                    gaode.setClickable(isGaodeExist);
-//                    gaode.setFocusable(isGaodeExist);
-//                    local.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(MerchantDetailActivity.this, MapActivity.class);
-//                            Logger.i("chendeji", "latitude:" + merchant.latitude + "longitude:" + merchant.longitude);
-//                            intent.putExtra(MapActivity.LOCATION_KEY, merchant);
-//                            MerchantDetailActivity.this.startActivity(intent);
-//                            dialog.dismiss();
-//                        }
-//                    });
-//                    gaode.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent();
-//                            intent.setAction(Intent.ACTION_VIEW);
-//                            intent.addCategory(Intent.CATEGORY_DEFAULT);
-//                            intent.setPackage("com.autonavi.minimap");
-//                            intent.setData(Uri.parse("androidamap://viewMap?sourceApplication=" + MerchantDetailActivity.this.getPackageName()
-//                                    + "&poiname=" + merchant.name + "&lat=" + merchant.latitude + "&lon=" + merchant.longitude + "&dev=0"));
-//                            startActivity(intent);
-//                            dialog.dismiss();
-//                        }
-//                    });
-//                }
-//
-//                private boolean checkGaodeMapAPPExist(String packageName) {
-//                    boolean isInstall = SystemUtil.isAppInstalled(MerchantDetailActivity.this, packageName);
-//                    return isInstall;
-//                }
-//
-//                @Override
-//                public void onPositiveActionClicked(DialogFragment fragment) {
-//                    super.onPositiveActionClicked(fragment);
-//                }
-//
-//                @Override
-//                public void onNegativeActionClicked(DialogFragment fragment) {
-//                    super.onNegativeActionClicked(fragment);
-//                }
-//            };
-//
-//            builder.title(getString(R.string.choose_map))
-//                    .contentView(R.layout.dialog_choose_map_layout)
-//                    .positiveAction(getString(R.string.positive))
-//                    .negativeAction(getString(R.string.negative));
-//        }
-//        DialogFragment fragment = DialogFragment.newInstance(builder);
-//        fragment.show(getSupportFragmentManager(), null);
-
     }
 
     private void showFAB() {
@@ -388,11 +333,12 @@ public class MerchantDetailActivity extends AppCompatActivity {
         getCommentListTask = new GetCommentListTask(this, merchant.business_id, new UITaskCallBack<ReturnMes<List<Comment>>>() {
             @Override
             public void onPreExecute() {
-
             }
 
             @Override
             public void onPostExecute(ReturnMes<List<Comment>> returnMes) {
+                hideLoadingProgress();
+                comment_title.setText(getString(R.string.comment_title));
                 if (returnMes == null)
                     return;
                 List<Comment> comments = returnMes.object;
@@ -407,11 +353,25 @@ public class MerchantDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNetWorkError() {
-                ToastUtil.showLongToast(MerchantDetailActivity.this, getString(R.string.no_net_work_toast));
+            public void onExecuteError(String errorMsg) {
+                hideLoadingProgress();
+                ToastUtil.showLongToast(MerchantDetailActivity.this, errorMsg);
             }
         }).excuteProxy((Void[]) null);
 
+    }
+
+    private void showLoadingProgress(){
+        if (progressDialog == null) {
+            progressDialog = new CommonProgressDialog(this);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+    private void hideLoadingProgress(){
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 
 
@@ -426,14 +386,11 @@ public class MerchantDetailActivity extends AppCompatActivity {
      */
     private void getIntentData() {
         merchant_id = getIntent().getLongExtra(MERCHANT_ID, -1);
-    }
-
-    @Override
-    protected void onResume() {
         getMerchantTask = new GetMerchantDetailInfoTask(this, new UITaskCallBack<ReturnMes<Merchant>>() {
             @Override
             public void onPreExecute() {
                 //TODO 显示正在加载信息
+                showLoadingProgress();
             }
 
             @Override
@@ -447,11 +404,11 @@ public class MerchantDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNetWorkError() {
-
+            public void onExecuteError(String errorMsg) {
+                hideLoadingProgress();
+                ToastUtil.showLongToast(MerchantDetailActivity.this, errorMsg);
             }
         }, merchant_id).excuteProxy((Void[]) null);
-        super.onResume();
     }
 
     @Override

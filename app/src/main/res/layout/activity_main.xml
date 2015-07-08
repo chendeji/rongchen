@@ -17,7 +17,8 @@
         <com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayout
             android:id="@+id/sr_reflesh_holder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/horizontal_10dp">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
@@ -37,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="26dp"
             android:layout_marginRight="16dp"
             app:fam_radius="150dp">
 
@@ -49,12 +50,12 @@
                 app:fab_iconSize="35dp"
                 app:fab_iconSrc="@drawable/ic_menu_white_48dp" />
 
-            <com.rey.material.widget.FloatingActionButton
-                android:id="@+id/fab_app_setting"
-                style="@style/Main_FAB_Light_SMALL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_iconSrc="@drawable/ic_build_white_48dp" />
+            <!--<com.rey.material.widget.FloatingActionButton-->
+                <!--android:id="@+id/fab_app_setting"-->
+                <!--style="@style/Main_FAB_Light_SMALL"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:fab_iconSrc="@drawable/ic_build_white_48dp" />-->
 
             <com.rey.material.widget.FloatingActionButton
                 android:id="@+id/fab_user"
@@ -78,6 +79,14 @@
                 app:fab_iconSrc="@drawable/ic_hourglass_empty_white_48dp" />
 
         </com.chendeji.rongchen.common.view.FAMLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom">
+
+            <include layout="@layout/dianping_source_notice_layout" />
+        </LinearLayout>
 
 
     </FrameLayout>

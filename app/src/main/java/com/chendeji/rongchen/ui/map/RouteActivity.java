@@ -31,6 +31,7 @@ import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.map.IMap;
 import com.chendeji.rongchen.common.map.MapManager;
 import com.chendeji.rongchen.common.util.Logger;
+import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.view.CursorView;
 import com.chendeji.rongchen.model.merchant.Merchant;
 import com.chendeji.rongchen.ui.map.adapter.RoutePagerAdapter;
@@ -76,7 +77,7 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
         setContentView(R.layout.activity_road_line_planning);
 
         iMap = MapManager.getManager().getMap();
-        start_point_location = SettingFactory.getInstance().getCurrentLocation();
+        start_point_location = iMap.getLocation();
         route_type = getIntent().getIntExtra(RouteActivity.ROUTE_TYPE, IMap.BUS_ROUTE);
         merchant = (Merchant) getIntent().getSerializableExtra(RouteActivity.END_POINT_LOCATION_KEY);
         end_point_location = new double[]{merchant.latitude, merchant.longitude};
@@ -101,8 +102,9 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
             busRoutes.showLoading();
             carRoutes.showLoading();
             walkRoutes.showLoading();
+        } else {
+            ToastUtil.showLongToast(this, "定位环境差，请用户手动输入位置信息");
         }
-
     }
 
     private void setData() {

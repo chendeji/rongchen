@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.core.AMapLocException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.BusPath;
 import com.amap.api.services.route.BusRouteResult;
@@ -24,6 +25,7 @@ import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.common.map.IMap;
 import com.chendeji.rongchen.common.map.MapManager;
 import com.chendeji.rongchen.common.util.DistanceUtil;
+import com.chendeji.rongchen.common.util.ToastUtil;
 
 /**
  * Created by chendeji on 18/6/15.
@@ -51,7 +53,7 @@ public class CommonRouteListView extends RelativeLayout implements AdapterView.O
         routeList.setOnItemClickListener(this);
     }
 
-    public int getRouteCount(){
+    public int getRouteCount() {
         return adapter.getCount();
     }
 
@@ -90,19 +92,24 @@ public class CommonRouteListView extends RelativeLayout implements AdapterView.O
         double[] end = new double[]{targetPos.getLatitude(), targetPos.getLongitude()};
 
         IMap map = MapManager.getManager().getMap();
-        switch (mRouteType) {
-            case IMap.BUS_ROUTE:
-                BusRouteResult busRouteResult = (BusRouteResult) result;
-                map.showRoute(busRouteResult.getPaths().get(position), IMap.BUS_ROUTE);
-                break;
-            case IMap.CAR_ROUTE:
-                DriveRouteResult driveRouteResult = (DriveRouteResult) result;
-                map.showRoute(driveRouteResult.getPaths().get(position), IMap.CAR_ROUTE);
-                break;
-            case IMap.WALK_ROUTE:
-                WalkRouteResult walkRouteResult = (WalkRouteResult) result;
-                map.showRoute(walkRouteResult.getPaths().get(position), IMap.WALK_ROUTE);
-                break;
+        try {
+            switch (mRouteType) {
+                case IMap.BUS_ROUTE:
+                    BusRouteResult busRouteResult = (BusRouteResult) result;
+                    map.showRoute(busRouteResult.getPaths().get(position), IMap.BUS_ROUTE);
+                    break;
+                case IMap.CAR_ROUTE:
+                    DriveRouteResult driveRouteResult = (DriveRouteResult) result;
+                    map.showRoute(driveRouteResult.getPaths().get(position), IMap.CAR_ROUTE);
+                    break;
+                case IMap.WALK_ROUTE:
+                    WalkRouteResult walkRouteResult = (WalkRouteResult) result;
+                    map.showRoute(walkRouteResult.getPaths().get(position), IMap.WALK_ROUTE);
+                    break;
+            }
+        } catch (AMapLocException e) {
+            String errorMsg = e.getErrorMessage();
+            ToastUtil.showLongToast(getContext(), errorMsg);
         }
         ((Activity) getContext()).finish();
     }
@@ -171,7 +178,7 @@ public class CommonRouteListView extends RelativeLayout implements AdapterView.O
                     String roadName = drivePath.getSteps().get(0).getInstruction();
                     String drive_distance = DistanceUtil.getDistance(drivePath.getDistance() / 1000);
                     int drive_duration = (int) (drivePath.getDuration() / 60);
-                    int toll = (int) drivePath.getTolls();
+                    float toll = drivePath.getSteps().get(0).getTolls();
                     holder.lineName.setText(roadName);
                     holder.lineDetail.setText(drive_duration + "分钟 | " + drive_distance + "公里 | " + toll + "元");
                     break;

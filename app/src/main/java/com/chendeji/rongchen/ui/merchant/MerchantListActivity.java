@@ -1,6 +1,5 @@
 package com.chendeji.rongchen.ui.merchant;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
@@ -265,9 +264,9 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
                 Intent intent = null;
                 int id = v.getId();
                 switch (id) {
-                    case R.id.fab_app_setting:
-                        //进入到设置界面
-                        break;
+//                    case R.id.fab_app_setting:
+//                        //进入到设置界面
+//                        break;
                     case R.id.fab_botton_sort:
                         //显示一个选择分类和排序的对话框
                         showSortDialog();
@@ -485,8 +484,9 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
     }
 
     @Override
-    public void onNetWorkError() {
-        ToastUtil.showLongToast(this, getString(R.string.no_net_work_toast));
+    public void onExecuteError(String errorMsg) {
+        hideLoadingProgress();
+        ToastUtil.showLongToast(this, errorMsg);
     }
 
     private void hideFooterView() {

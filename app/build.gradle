@@ -20,8 +20,9 @@ android {
         applicationId "com.chendeji.rongchen"
         minSdkVersion 8
         targetSdkVersion 20
-        versionCode 1
-        versionName "1.0"
+        versionCode 30
+        versionName '1.0.30'
+        signingConfig signingConfigs.releaseConfig
     }
     buildTypes {
         release {
@@ -35,6 +36,9 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
     productFlavors {
+    }
+    dexOptions {
+        incremental true
     }
 }
 

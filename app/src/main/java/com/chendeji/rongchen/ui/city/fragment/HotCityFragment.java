@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
+import com.chendeji.rongchen.common.util.ToastUtil;
 import com.chendeji.rongchen.common.view.AutoHorizontalLinearLayout;
 import com.chendeji.rongchen.common.view.CommonLoadingProgressView;
 import com.chendeji.rongchen.model.ReturnMes;
@@ -102,7 +104,12 @@ public class HotCityFragment extends Fragment implements SharedPreferences.OnSha
     }
 
     public void initData() {
-        currentCity.setText(SettingFactory.getInstance().getCurrentCity());
+        String currentCityStr = SettingFactory.getInstance().getCurrentCity();
+        if (TextUtils.isEmpty(currentCityStr)){
+            currentCity.setVisibility(View.INVISIBLE);
+        } else {
+            currentCity.setText(currentCityStr);
+        }
 
         final OnCityButtonClickedListener listener = new OnCityButtonClickedListener();
         //开启子线程去完成数据库提取最近搜索城市的任务
@@ -129,14 +136,15 @@ public class HotCityFragment extends Fragment implements SharedPreferences.OnSha
                         recent_city.addView(cityView);
                     }
                 } else {
-                    recent_city.setVisibility(View.GONE);
-                    recentlySearchCity.setVisibility(View.GONE);
+                    hideRecentSearchCityLayout();
                 }
             }
 
             @Override
-            public void onNetWorkError() {
-
+            public void onExecuteError(String errorMsg) {
+                hideRecentSearchCityLayout();
+                hideProgress();
+                ToastUtil.showLongToast(getActivity(),errorMsg);
             }
         }).excuteProxy((Void[]) null);
 
@@ -152,6 +160,15 @@ public class HotCityFragment extends Fragment implements SharedPreferences.OnSha
             city.setText(hot_cities[i]);
             city.setOnClickListener(listener);
             hot_city.addView(city);
+        }
+    }
+
+    private void hideRecentSearchCityLayout(){
+        if (recent_city != null) {
+            recent_city.setVisibility(View.GONE);
+        }
+        if (recentlySearchCity != null) {
+            recentlySearchCity.setVisibility(View.GONE);
         }
     }
 

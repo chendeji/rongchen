@@ -2,12 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.chendeji.rongchen.ui.welcome.WelcomeActivity"
-    >
+    tools:context="com.chendeji.rongchen.ui.welcome.WelcomeActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/welcome"/>
+        android:background="@drawable/welcome" />
 
 </RelativeLayout>

@@ -32,6 +32,11 @@ public class BaiduMap implements IMap {
     }
 
     @Override
+    public void setCity(String city) {
+
+    }
+
+    @Override
     public void startPoiSearch(String tip) {
 
     }

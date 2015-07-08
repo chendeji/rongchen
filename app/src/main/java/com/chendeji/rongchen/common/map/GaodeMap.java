@@ -3,20 +3,18 @@ package com.chendeji.rongchen.common.map;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.ViewGroup;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
+import com.amap.api.location.core.AMapLocException;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -41,9 +39,7 @@ import com.chendeji.rongchen.R;
 import com.chendeji.rongchen.SettingFactory;
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.ToastUtil;
-import com.chendeji.rongchen.model.city.City;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +52,6 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     private Context mContext;
     private LocationManagerProxy proxy;
 
-    private double[] location;
     private IMapLocationListener mListener;
 
     private MapView mapView;
@@ -79,13 +74,19 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     private PoiSearch poiSearch;
     private AMapLocation mAMapLocation;
     private PoiOverlay poiOverlay;
+    private double[] mChosenMarkerPostion;
+    private String mCurrentCity;
 
     public GaodeMap(Context context) {
         this.mContext = context;
     }
 
     public String getLocalCity() {
-        return SettingFactory.getInstance().getCurrentCity();
+        if (mAMapLocation != null) {
+            return mAMapLocation.getCity();
+        } else {
+            return SettingFactory.getInstance().getCurrentCity();
+        }
     }
 
     @Override
@@ -102,10 +103,8 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     @Override
     public void activate(OnLocationChangedListener onLocationChangedListener) {
         this.onLocationChangeListener = onLocationChangedListener;
-        if (proxy == null) {
-            proxy = LocationManagerProxy.getInstance(mContext);
-            proxy.requestLocationData(LocationProviderProxy.AMapNetwork, 2000, 10, this);
-        }
+        proxy = LocationManagerProxy.getInstance(mContext);
+        proxy.requestLocationData(LocationProviderProxy.AMapNetwork, 2000, 10, this);
     }
 
     @Override
@@ -140,7 +139,6 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 //        locationMarker.setPosition(new LatLng(latitude,longitude));
 
         if (latitude != 0 && longitude != 0) {
-            location = new double[]{latitude, longitude};
 
             if (locationMarker != null) {
                 Logger.i("chendeji", "更新定位marker位置");
@@ -150,11 +148,9 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
             }
 
             mListener.onLocationSuccece(city, aMapLocation.getLatitude(), aMapLocation.getLongitude());
-        }
-        if (location == null) {
+        } else {
             mListener.onLocationFail();
         }
-
     }
 
     @Override
@@ -183,10 +179,21 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     }
 
     @Override
+    public void setCity(String city) {
+        this.mCurrentCity = city;
+    }
+
+    @Override
     public void startPoiSearch(String tip) {
         mMap_State = IMap.MAP_STATE_POISEARCH;
         //开启POI搜索
-        query = new PoiSearch.Query(tip, "", SettingFactory.getInstance().getCurrentCity());// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        String city = null;
+        if (mAMapLocation != null) {
+            city = mAMapLocation.getCity();
+        } else {
+            city = SettingFactory.getInstance().getCurrentCity();
+        }
+        query = new PoiSearch.Query(tip, "", city);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query.setPageSize(20);// 设置每页最多返回多少条poiitem
         query.setPageNum(1);// 设置查第一页
 
@@ -315,14 +322,23 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     }
 
     @Override
-    public void showRoute(Object path, int routeType) {
+    public void showRoute(Object path, int routeType) throws AMapLocException {
         if (path == null)
             return;
         isStartNavigation = true;
         removeRouteOverlay();
         removePOIOverlay();
+        double[] location = null;
+        if (mAMapLocation != null) {
+            location = new double[]{mAMapLocation.getLatitude(), mAMapLocation.getLongitude()};
+        } else {
+            if (mChosenMarkerPostion != null) {
+                location = mChosenMarkerPostion;
+            }
+        }
         if (location == null) {
-            location = SettingFactory.getInstance().getCurrentLocation();
+            //如果到这里还是没有定位坐标，所需要用户自己去定位自己位置。
+            throw new AMapLocException("获取不到定位信息，请到空旷地带进行定位");
         }
         switch (routeType) {
             case BUS_ROUTE:
@@ -355,7 +371,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
     }
 
     private void removePOIOverlay() {
-        if (poiOverlay != null){
+        if (poiOverlay != null) {
             poiOverlay.removeFromMap();
         }
     }
@@ -377,11 +393,11 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 
         switch (route_type) {
             case BUS_ROUTE:
-                RouteSearch.BusRouteQuery busRouteQuery = new RouteSearch.BusRouteQuery(fromAndTo, RouteSearch.BusLeaseWalk, getLocalCity(), 0);
+                RouteSearch.BusRouteQuery busRouteQuery = new RouteSearch.BusRouteQuery(fromAndTo, RouteSearch.BusDefault, getLocalCity(), 0);
                 routeSearch.calculateBusRouteAsyn(busRouteQuery);
                 break;
             case CAR_ROUTE:
-                RouteSearch.DriveRouteQuery driveRouteQuery = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingDefault, null, null, getLocalCity());
+                RouteSearch.DriveRouteQuery driveRouteQuery = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingDefault, null, null, null);
                 routeSearch.calculateDriveRouteAsyn(driveRouteQuery);
                 break;
             case WALK_ROUTE:
@@ -423,8 +439,12 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
 
     @Override
     public double[] getLocation() {
-        if (mAMapLocation != null){
-            return new double[]{mAMapLocation.getLatitude(),mAMapLocation.getLongitude()};
+        if (mAMapLocation != null) {
+            return new double[]{mAMapLocation.getLatitude(), mAMapLocation.getLongitude()};
+        } else {
+            if (mChosenMarkerPostion != null){
+                return mChosenMarkerPostion;
+            }
         }
         return null;
     }
@@ -493,6 +513,7 @@ public class GaodeMap implements IMap, LocationSource, AMapLocationListener, Rou
                 mOnMarkClickListener.onMarkClick(title, latitude, longitude);
             }
         }
+        mChosenMarkerPostion = new double[]{latitude, longitude};
         return false;
     }
 
