@@ -22,7 +22,6 @@ android {
         targetSdkVersion 20
         versionCode 30
         versionName '1.0.30'
-        signingConfig signingConfigs.releaseConfig
     }
     buildTypes {
         release {
@@ -38,7 +37,6 @@ android {
     productFlavors {
     }
     dexOptions {
-        incremental true
     }
 }
 

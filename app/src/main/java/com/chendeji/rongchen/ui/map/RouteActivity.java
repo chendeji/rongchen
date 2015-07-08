@@ -116,18 +116,22 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
             @Override
             public void onGlobalLayout() {
                 clearButtonColor();
-                switch (route_type){
+                int cursorWidth = direction.getMeasuredWidth();
+                switch (route_type) {
                     case IMap.BUS_ROUTE:
-                        routeViewPager.setCurrentItem(0,true);
-                        ((RadioButton)route_group.getChildAt(0)).setTextColor(getResources().getColor(R.color.common_button_textcolor));
+                        routeViewPager.setCurrentItem(0, false);
+                        direction.setTranslateX(cursorWidth * 0);
+                        ((RadioButton) route_group.getChildAt(0)).setTextColor(getResources().getColor(R.color.common_button_textcolor));
                         break;
                     case IMap.CAR_ROUTE:
-                        routeViewPager.setCurrentItem(1,true);
-                        ((RadioButton)route_group.getChildAt(1)).setTextColor(getResources().getColor(R.color.common_button_textcolor));
+                        routeViewPager.setCurrentItem(1, false);
+                        direction.setTranslateX(cursorWidth * 1);
+                        ((RadioButton) route_group.getChildAt(1)).setTextColor(getResources().getColor(R.color.common_button_textcolor));
                         break;
                     case IMap.WALK_ROUTE:
-                        routeViewPager.setCurrentItem(2,true);
-                        ((RadioButton)route_group.getChildAt(2)).setTextColor(getResources().getColor(R.color.common_button_textcolor));
+                        routeViewPager.setCurrentItem(2, false);
+                        direction.setTranslateX(cursorWidth * 2);
+                        ((RadioButton) route_group.getChildAt(2)).setTextColor(getResources().getColor(R.color.common_button_textcolor));
                         break;
                 }
                 direction.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -251,22 +255,28 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
             case R.id.rt_bus_button:
                 routeViewPager.setCurrentItem(0, true);
                 if (busRoutes.getRouteCount() == 0) {
-                    iMap.startRoute(this, start_point_location, end_point_location, IMap.BUS_ROUTE);
+                    if (start_point_location == null)
+                        return;
                     busRoutes.showLoading();
+                    iMap.startRoute(this, start_point_location, end_point_location, IMap.BUS_ROUTE);
                 }
                 break;
             case R.id.rt_car_button:
                 routeViewPager.setCurrentItem(1, true);
                 if (carRoutes.getRouteCount() == 0) {
-                    iMap.startRoute(this, start_point_location, end_point_location, IMap.CAR_ROUTE);
+                    if (start_point_location == null)
+                        return;
                     carRoutes.showLoading();
+                    iMap.startRoute(this, start_point_location, end_point_location, IMap.CAR_ROUTE);
                 }
                 break;
             case R.id.rt_walk_button:
                 routeViewPager.setCurrentItem(2, true);
                 if (walkRoutes.getRouteCount() == 0) {
-                    iMap.startRoute(this, start_point_location, end_point_location, IMap.WALK_ROUTE);
+                    if (start_point_location == null)
+                        return;
                     walkRoutes.showLoading();
+                    iMap.startRoute(this, start_point_location, end_point_location, IMap.WALK_ROUTE);
                 }
                 break;
         }
@@ -290,14 +300,14 @@ public class RouteActivity extends AppCompatActivity implements RadioGroup.OnChe
         if (positionOffsetPixels != 0) {
             int currentCursorPosition = position * direction.getWidth();
             int delt = positionOffsetPixels / 3;
-            if (prePosition > position){
+            if (prePosition > position) {
                 //向右滑动 position - 1
                 direction.setTranslateX(currentCursorPosition + (direction.getWidth() - delt));
             } else {
                 //向左滑动 position + 1
                 direction.setTranslateX(currentCursorPosition + delt);
             }
-            if (positionOffset == 0){
+            if (positionOffset == 0) {
                 prePosition = position;
             }
         }

@@ -41,14 +41,14 @@
             android:value="com.chendeji.rongchen.model" />
 
         <!-- 高德地图的debug_version key -->
-        <!--<meta-data-->
-            <!--android:name="com.amap.api.v2.apikey"-->
-            <!--android:value="53eab95e819e8a76b1def54b6def6609" />-->
-
-        <!-- 高德地图的release_version key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="18cff9bcbb3808a46f56a40965998cde" />
+            android:value="53eab95e819e8a76b1def54b6def6609" />
+
+        <!-- 高德地图的release_version key -->
+        <!--<meta-data-->
+            <!--android:name="com.amap.api.v2.apikey"-->
+            <!--android:value="18cff9bcbb3808a46f56a40965998cde" />-->
 
         <activity
             android:name=".ui.welcome.WelcomeActivity"
