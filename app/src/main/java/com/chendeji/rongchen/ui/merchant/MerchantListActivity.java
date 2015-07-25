@@ -38,6 +38,7 @@ import com.chendeji.rongchen.ui.Html5WebActivity;
 import com.chendeji.rongchen.ui.category.DealCategoryActivity;
 import com.chendeji.rongchen.ui.city.ChooseCityActivity;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
+import com.chendeji.rongchen.ui.deal.DealHistoryActivity;
 import com.chendeji.rongchen.ui.merchant.adpter.MerchantRecycleAdapter;
 import com.chendeji.rongchen.ui.merchant.task.GetMerchantListTask;
 
@@ -197,7 +198,6 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
                 refreshLayout.setRefreshing(false);
             }
         });
-
     }
 
     private class LoadMoreClickListener implements View.OnClickListener {
@@ -264,9 +264,11 @@ public class MerchantListActivity extends AppCompatActivity implements UITaskCal
                 Intent intent = null;
                 int id = v.getId();
                 switch (id) {
-//                    case R.id.fab_app_setting:
-//                        //进入到设置界面
-//                        break;
+                    case R.id.fab_botton_deal_history:
+                        //进入到团购浏览历史记录
+                        intent = new Intent(MerchantListActivity.this, DealHistoryActivity.class);
+                        startActivity(intent);
+                        break;
                     case R.id.fab_botton_sort:
                         //显示一个选择分类和排序的对话框
                         showSortDialog();

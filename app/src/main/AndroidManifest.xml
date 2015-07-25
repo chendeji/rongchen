@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chendeji.rongchen"
     android:versionCode="29"
-    android:versionName="1.2.9">
+    android:versionName="1.2.9" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,13 +26,13 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/BaseTheme">
+        android:theme="@style/BaseTheme" >
         <meta-data
             android:name="DATABASE"
             android:value="rongchen.db" />
         <meta-data
             android:name="VERSION"
-            android:value="1" />
+            android:value="4" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -41,20 +41,20 @@
             android:value="com.chendeji.rongchen.model" />
 
         <!-- 高德地图的debug_version key -->
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="53eab95e819e8a76b1def54b6def6609" />
+        <!-- <meta-data -->
+        <!-- android:name="com.amap.api.v2.apikey" -->
+        <!-- android:value="53eab95e819e8a76b1def54b6def6609" /> -->
+
 
         <!-- 高德地图的release_version key -->
-        <!--<meta-data-->
-            <!--android:name="com.amap.api.v2.apikey"-->
-            <!--android:value="18cff9bcbb3808a46f56a40965998cde" />-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="18cff9bcbb3808a46f56a40965998cde" />
 
         <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:label="@string/app_name"
-            android:uiOptions="splitActionBarWhenNarrow">
-
+            android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -76,30 +76,34 @@
             android:label="团购详情" />
         <activity
             android:name=".ui.ShowImageActivity"
-            android:label="@string/title_activity_show_image"></activity>
+            android:label="@string/title_activity_show_image" />
         <activity
             android:name=".ui.map.MapActivity"
-            android:label="@string/title_activity_map"></activity>
+            android:label="@string/title_activity_map" />
         <activity
             android:name=".ui.map.RouteActivity"
             android:label="@string/title_activity_road_line_planning"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.city.ChooseCityActivity"
             android:label="@string/title_activity_choose_city"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.category.DealCategoryActivity"
-            android:label="@string/title_activity_deal_category"></activity>
+            android:label="@string/title_activity_deal_category" />
         <activity
             android:name=".ui.MyScrollViewActivity"
-            android:label="@string/title_activity_my_scroll_view_demo"></activity>
+            android:label="@string/title_activity_my_scroll_view_demo" />
         <activity
             android:name=".ui.Html5WebActivity"
-            android:label="@string/title_activity_html5_web"></activity>
+            android:label="@string/title_activity_html5_web" />
         <activity
             android:name=".ui.FAMLayoutActivity"
-            android:label="@string/title_activity_famlayout"></activity>
+            android:label="@string/title_activity_famlayout" />
+        <activity
+            android:name=".ui.deal.DealHistoryActivity"
+            android:label="@string/title_activity_deal_history" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chendeji.rongchen.ui.deal.DealHistoryActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_deal_history"
+        style="@style/ToolBar_Style" />
+
+    <com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayout
+        android:id="@+id/sr_deal_list_reflesh_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tb_deal_history"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_deal_history_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:clipToPadding="false"
+            android:fadingEdge="none"
+            android:paddingTop="@dimen/horizontal_10dp" />
+
+    </com.chendeji.rongchen.common.view.swipy.SwipyRefreshLayout>
+
+</RelativeLayout>

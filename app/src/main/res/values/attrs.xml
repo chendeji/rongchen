@@ -28,4 +28,5 @@
     <declare-styleable name="CursorView">
         <attr name="cursor_count" format="reference|integer"/>
     </declare-styleable>
+
 </resources>

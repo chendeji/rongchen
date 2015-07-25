@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.chendeji.rongchen.common.util.Logger;
 import com.chendeji.rongchen.common.util.ToastUtil;
+import com.chendeji.rongchen.dao.tables.deal.DealTable;
 import com.chendeji.rongchen.model.ErrorInfo;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.groupbuy.Deal;
@@ -14,6 +15,7 @@ import com.chendeji.rongchen.ui.common.BaseUITask;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by chendeji on 27/5/15.
@@ -67,6 +69,14 @@ public class GetDealDetailInfoTask extends BaseUITask<Void, Void, ReturnMes<Deal
     @Override
     protected ReturnMes<Deal> getDataFromNetwork() throws IOException, HttpException {
         ReturnMes<Deal> dealReturnMes = AppServerFactory.getFactory().getDealOperation().getDeal(mDeal_id);
+        if (dealReturnMes != null && dealReturnMes.status.equalsIgnoreCase(AppConst.OK)) {
+            Deal deal = dealReturnMes.object;
+            //将这个deal缓存到数据库
+            if (deal != null) {
+                deal.savingtime = System.currentTimeMillis() / 1000;
+                deal.save();
+            }
+        }
         return dealReturnMes;
     }
 

@@ -24,6 +24,8 @@ public class ImageLoaderOptionsUtil {
 
     public static DisplayImageOptions topImageOptions = new DisplayImageOptions.Builder()
             .bitmapConfig(Bitmap.Config.RGB_565)
+            .showImageOnLoading(R.drawable.avatar_96)
+            .showImageOnFail(R.drawable.avatar_96)
             .cacheInMemory(true)
             .cacheOnDisk(true)
             .imageScaleType(ImageScaleType.EXACTLY)

@@ -45,6 +45,8 @@ public class Deal extends SugarRecord {
 
     public String restrictions;
 
+    public long savingtime; //存入数据的时间
+
     public Restriction getRestrictions() {
         if (TextUtils.isEmpty(restrictions))
             return null;

@@ -78,6 +78,13 @@
                 android:layout_height="wrap_content"
                 app:fab_iconSrc="@drawable/ic_hourglass_empty_white_48dp" />
 
+            <com.rey.material.widget.FloatingActionButton
+                android:id="@+id/fab_botton_deal_history"
+                style="@style/Main_FAB_Light_SMALL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_iconSrc="@drawable/ic_local_grocery_store_white_48dp" />
+
         </com.chendeji.rongchen.common.view.FAMLayout>
 
         <LinearLayout

@@ -69,7 +69,7 @@ public class DealExtendableHolder extends ExtendableHolder {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, DealDetailActivity.class);
-                    intent.putExtra(DealDetailActivity.DEAL_KEY, info);
+                    intent.putExtra(DealDetailActivity.DEAL_KEY, info.id);
                     mContext.startActivity(intent);
                 }
             });

@@ -25,7 +25,6 @@ import com.chendeji.rongchen.common.view.scrollview.ObservableScrollViewCallback
 import com.chendeji.rongchen.common.view.scrollview.ScrollState;
 import com.chendeji.rongchen.model.ReturnMes;
 import com.chendeji.rongchen.model.groupbuy.Deal;
-import com.chendeji.rongchen.model.merchant.SimpleGroupBuyInfo;
 import com.chendeji.rongchen.ui.Html5WebActivity;
 import com.chendeji.rongchen.ui.common.ExtendableHolder;
 import com.chendeji.rongchen.ui.common.UITaskCallBack;
@@ -40,7 +39,6 @@ import com.rey.material.widget.FloatingActionButton;
 public class DealDetailActivity extends AppCompatActivity {
     public static final String DEAL_KEY = "deal";
     public static final String TAG = DealDetailActivity.class.getSimpleName();
-    private SimpleGroupBuyInfo info;
 
     //    private DealTopImageView topImageView;
     private DealInfoLayout infoLayout;
@@ -73,6 +71,7 @@ public class DealDetailActivity extends AppCompatActivity {
     private boolean fabIsShown;
     private Deal mDeal;
     private CommonProgressDialog progressDialog;
+    private String deal_id;
 
     @Override
     protected void onDestroy() {
@@ -94,7 +93,7 @@ public class DealDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        StatusBarUtil.translucentStatusBar(this);
         setContentView(R.layout.activity_material_deal_detail);
-        info = (SimpleGroupBuyInfo) getIntent().getExtras().getSerializable(DEAL_KEY);
+        deal_id = getIntent().getStringExtra(DEAL_KEY);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
@@ -249,7 +248,7 @@ public class DealDetailActivity extends AppCompatActivity {
             public void onExecuteError(String errorMsg) {
 
             }
-        }, info.id).excuteProxy((Void[]) null);
+        }, deal_id).excuteProxy((Void[]) null);
     }
 
     private void setComponentValue(Deal deal) {
